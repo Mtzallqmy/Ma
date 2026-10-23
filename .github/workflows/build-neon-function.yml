@@ -1,0 +1,32 @@
+name: Bundle Neon Public Read Function
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'neon/functions/appdb-public-api/**'
+      - '.github/workflows/build-neon-function.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  bundle:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Build isolated server function
+        run: |
+          npm install --prefix neon/functions/appdb-public-api --no-save --no-package-lock pg@8.16.3 esbuild@0.25.12
+          cd neon/functions/appdb-public-api
+          ./node_modules/.bin/esbuild index.mjs --bundle --platform=node --target=node24 --format=cjs --outfile=dist/bundle.cjs
+          node -e "const out=require('./dist/bundle.cjs'); if(typeof (out.default ?? out).fetch !== 'function') process.exit(1)"
+      - name: Upload function bundle for controlled deployment
+        uses: actions/upload-artifact@v4
+        with:
+          name: neon-public-read-function
+          path: neon/functions/appdb-public-api/dist/bundle.cjs
+          retention-days: 7
