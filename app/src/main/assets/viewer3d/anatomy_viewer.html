@@ -21,7 +21,7 @@
     <p id="fallbackReason" style="margin-top:8px;font-size:13px;color:#B8C7C9;">تعذر تهيئة WebGL على معالج الرسوميات في هذا الجهاز.</p>
   </div>
   <div class="hud-bar">
-    <div class="hud-tag" id="hudTelemetry">GLB Ready · 6 TA2 Sub-Meshes</div>
+    <div class="hud-tag" id="hudTelemetry">Waiting for verified GLB</div>
     <div class="hud-tag" id="hudSelection">انقر على أي جزء تشريحي لتحديده</div>
   </div>
 
@@ -42,13 +42,21 @@
       const hudTelemetry = document.getElementById('hudTelemetry');
       const hudSelection = document.getElementById('hudSelection');
 
-      const gl = canvas.getContext('webgl', { antialias: true, alpha: false });
-      if (!gl) {
+      function showFallback(reason) {
         canvas.style.display = 'none';
         fallback2d.style.display = 'flex';
+        hudTelemetry.textContent = '3D unavailable';
         if (window.AndroidAnatomyBridge && window.AndroidAnatomyBridge.onWebGlFallback) {
-          window.AndroidAnatomyBridge.onWebGlFallback('WebGL context unavailable on device GPU');
+          window.AndroidAnatomyBridge.onWebGlFallback(reason);
         }
+      }
+      canvas.addEventListener('webglcontextlost', function (event) {
+        event.preventDefault();
+        showFallback('WebGL context lost');
+      });
+      const gl = canvas.getContext('webgl', { antialias: true, alpha: false });
+      if (!gl) {
+        showFallback('WebGL context unavailable on device GPU');
         return;
       }
 
@@ -124,40 +132,6 @@
       let panX = 0.0;
       let panY = 0.0;
 
-      // Default procedural fallback matching the exact GLB geometry until binary GLB bytes are injected or fetched
-      function buildDefaultCorMeshes() {
-        const specs = [
-          { name: 'Atrium_Dextrum', radii: [0.38, 0.34, 0.34], center: [-0.42, 0.48, 0.08], color: [0.18, 0.45, 0.72, 1.0] },
-          { name: 'Atrium_Sinistrum', radii: [0.36, 0.33, 0.33], center: [0.42, 0.50, -0.06], color: [0.78, 0.24, 0.28, 1.0] },
-          { name: 'Ventriculus_Dexter', radii: [0.44, 0.62, 0.40], center: [-0.34, -0.32, 0.14], color: [0.22, 0.56, 0.78, 1.0] },
-          { name: 'Ventriculus_Sinister', radii: [0.48, 0.70, 0.46], center: [0.34, -0.35, -0.04], color: [0.85, 0.20, 0.22, 1.0] },
-          { name: 'Arcus_Aortae', radii: [0.24, 0.48, 0.24], center: [0.08, 0.96, 0.00], color: [0.92, 0.32, 0.26, 1.0] },
-          { name: 'Nodus_Sinuatrialis', radii: [0.13, 0.13, 0.13], center: [-0.62, 0.66, 0.26], color: [0.92, 0.76, 0.24, 1.0] }
-        ];
-        sceneParts = specs.map(spec => {
-          const lat = 14, lon = 18;
-          const pos = [], norm = [], ind = [];
-          for (let i = 0; i <= lat; i++) {
-            const t = i * Math.PI / lat;
-            const st = Math.sin(t), ct = Math.cos(t);
-            for (let j = 0; j <= lon; j++) {
-              const p = j * 2 * Math.PI / lon;
-              const nx = st * Math.cos(p), ny = ct, nz = st * Math.sin(p);
-              pos.push(spec.center[0] + spec.radii[0] * nx, spec.center[1] + spec.radii[1] * ny, spec.center[2] + spec.radii[2] * nz);
-              norm.push(nx, ny, nz);
-            }
-          }
-          for (let i = 0; i < lat; i++) {
-            for (let j = 0; j < lon; j++) {
-              const f = i * (lon + 1) + j;
-              const s = f + lon + 1;
-              ind.push(f, s, f + 1, s, s + 1, f + 1);
-            }
-          }
-          return uploadMesh(spec.name, new Float32Array(pos), new Float32Array(norm), new Uint16Array(ind), spec.color, spec.center, Math.max(...spec.radii));
-        });
-      }
-
       function uploadMesh(name, posArray, normArray, indArray, color, center, radius) {
         const posBuf = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, posBuf);
@@ -183,13 +157,20 @@
           const bytes = new Uint8Array(len);
           for (let i = 0; i < len; i++) bytes[i] = binStr.charCodeAt(i);
           const dv = new DataView(bytes.buffer);
-          const magic = dv.getUint32(0, true);
-          if (magic !== 0x46546C67) throw new Error('Invalid GLB magic header');
+          if (len < 28 || dv.getUint32(0, true) !== 0x46546C67 ||
+              dv.getUint32(4, true) !== 2 || dv.getUint32(8, true) !== len ||
+              dv.getUint32(16, true) !== 0x4E4F534A) throw new Error('Invalid GLB header');
           const jsonLen = dv.getUint32(12, true);
+          if (20 + jsonLen + 8 > len) throw new Error('Invalid JSON chunk length');
           const jsonBytes = bytes.subarray(20, 20 + jsonLen);
           const gltf = JSON.parse(new TextDecoder('utf-8').decode(jsonBytes));
-          const binOffset = 20 + jsonLen + 8;
+          const binHeader = 20 + jsonLen;
+          const binLength = dv.getUint32(binHeader, true);
+          if (dv.getUint32(binHeader + 4, true) !== 0x004E4942 || binHeader + 8 + binLength !== len)
+            throw new Error('Invalid BIN chunk');
+          const binOffset = binHeader + 8;
           const binChunk = bytes.buffer.slice(binOffset);
+          if (!gltf.meshes || !gltf.meshes.length) throw new Error('No GLB meshes');
 
           const loaded = [];
           for (let i = 0; i < gltf.meshes.length; i++) {
@@ -218,8 +199,11 @@
           const dt = Math.round(performance.now() - t0);
           hudTelemetry.textContent = 'GLB Loaded (' + Math.round(len / 1024) + ' KB · ' + dt + ' ms · ' + sceneParts.length + ' TA2 Meshes)';
           render();
+          if (window.AndroidAnatomyBridge && window.AndroidAnatomyBridge.onModelLoaded)
+            window.AndroidAnatomyBridge.onModelLoaded(sceneParts.length);
         } catch (err) {
-          hudTelemetry.textContent = 'GLB Error: ' + err.message;
+          sceneParts = [];
+          showFallback('GLB parsing failed');
         }
       };
 
@@ -377,7 +361,6 @@
       }, { passive: false });
 
       window.addEventListener('resize', render);
-      buildDefaultCorMeshes();
       render();
     })();
   </script>
