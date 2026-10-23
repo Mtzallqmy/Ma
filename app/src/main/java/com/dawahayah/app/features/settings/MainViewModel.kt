@@ -236,6 +236,7 @@ class MainViewModel(
     }
 
     fun deleteContentPack(packId: String) {
+        container.cancelPackDownload(packId)
         viewModelScope.launch {
             when (val res = container.knowledgeRepository.deletePack(packId)) {
                 is AppResult.Success -> {

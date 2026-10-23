@@ -19,7 +19,7 @@ class DawaHayahComposeOfflineTest {
         composeTestRule.waitUntil(20_000) {
             composeTestRule.onAllNodesWithText("جسم الإنسان").fetchSemanticsNodes().isNotEmpty()
         }
-        assert(composeTestRule.onAllNodesWithText("دواء وحياة", substring = true).fetchSemanticsNodes().isNotEmpty())
+        org.junit.Assert.assertTrue(composeTestRule.onAllNodesWithText("دواء وحياة", substring = true).fetchSemanticsNodes().isNotEmpty())
         composeTestRule.onNodeWithText("الرئيسية").assertExists()
         composeTestRule.onNodeWithText("جسم الإنسان").assertExists()
         composeTestRule.onNodeWithText("الأمراض").assertExists()

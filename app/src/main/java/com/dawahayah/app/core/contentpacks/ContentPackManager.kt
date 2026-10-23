@@ -14,6 +14,9 @@ import com.dawahayah.app.data.remote.RemoteContentDataSource
 import com.dawahayah.app.domain.model.ContentPackManifest
 import com.dawahayah.app.domain.model.PackInstallState
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.ensureActive
+import kotlin.coroutines.coroutineContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -114,6 +117,7 @@ class ContentPackManager(
             downloadedBytes = 0L,
             lastErrorMessage = null
         )
+        try {
         dao.upsertPackRecord(runningRecord)
 
         val manifest = if (remoteManifest != null) {
@@ -207,6 +211,7 @@ class ContentPackManager(
                             stagedFile.outputStream().buffered().use { output ->
                                 val buffer = ByteArray(32 * 1024)
                                 while (true) {
+                                    coroutineContext.ensureActive()
                                     val n = input.read(buffer)
                                     if (n < 0) break
                                     if (n == 0) continue
@@ -259,42 +264,26 @@ class ContentPackManager(
             stagedFiles.add(fileEntry to stagedFile)
         }
 
-        // Keep the currently indexed files until the replacement commits in Room.
-        // A unique generation also makes a same-version reinstall safe.
-        val persistentPackDir = File(persistentPacksRootDir,
-            "${manifest.packId}/${manifest.version}-${UUID.randomUUID()}")
-        persistentPackDir.parentFile?.mkdirs()
-        if (!packStagingDir.renameTo(persistentPackDir)) {
-            packStagingDir.deleteRecursively()
-            return@withContext failPack(currentRecord, AppError.GeneralFailure(
-                "تعذر تثبيت ملفات الحزمة.", "Could not promote staged pack files."
-            ))
-        }
-
-        val now = System.currentTimeMillis()
-        val localAssets = manifest.files.map { entry ->
-            val finalFile = File(persistentPackDir, entry.path)
-            LocalAssetEntity(
-                assetId = entry.assetId,
-                packId = manifest.packId,
-                relativePath = entry.path,
-                absolutePersistentPath = finalFile.absolutePath,
-                contentType = entry.contentType,
-                sizeBytes = entry.sizeBytes,
-                sha256 = entry.sha256,
-                verifiedAtEpochMillis = now
-            )
-        }
-
-        // Parse lesson JSON from persistent storage to index in Room LocalContent
+        // Parse lesson JSON from verified staging to index in Room LocalContent
         val lessonFile = manifest.files
             .firstOrNull { it.path.startsWith("content/") && it.path.endsWith(".json") }
-            ?.let { File(persistentPackDir, it.path) }
+            ?.let { File(packStagingDir, it.path) }
         val installedContentEntity = if (lessonFile?.exists() == true) {
+            if (lessonFile.length() > 2L * 1024L * 1024L) {
+                packStagingDir.deleteRecursively()
+                return@withContext failPack(currentRecord, AppError.GeneralFailure(
+                    "ملف الدرس يتجاوز الحد المسموح.", "Lesson exceeds indexing size limit."
+                ))
+            }
             val lessonDto = runCatching { json.decodeFromString<BundledPackLessonDto>(
                 lessonFile.readText(Charsets.UTF_8)
             ) }.getOrNull()
-            if (lessonDto == null) null else {
+            if (lessonDto == null || lessonDto.packId != packId) {
+                packStagingDir.deleteRecursively()
+                return@withContext failPack(currentRecord, AppError.GeneralFailure(
+                    "محتوى الدرس لا يطابق الحزمة.", "Invalid lesson or mismatched pack identity."
+                ))
+            } else {
             val fullBodyAr = lessonDto.sectionsAr.joinToString("\n\n") { "${it.heading}\n${it.body}" }
             val fullBodyEn = lessonDto.sectionsEn.joinToString("\n\n") { "${it.heading}\n${it.body}" }
             LocalContentEntity(
@@ -321,6 +310,33 @@ class ContentPackManager(
             }
         } else {
             null
+        }
+
+        // Keep the currently indexed files until the replacement commits in Room.
+        // A unique generation also makes a same-version reinstall safe.
+        val persistentPackDir = File(persistentPacksRootDir,
+            "${manifest.packId}/${manifest.version}-${UUID.randomUUID()}")
+        persistentPackDir.parentFile?.mkdirs()
+        if (!packStagingDir.renameTo(persistentPackDir)) {
+            packStagingDir.deleteRecursively()
+            return@withContext failPack(currentRecord, AppError.GeneralFailure(
+                "تعذر تثبيت ملفات الحزمة.", "Could not promote staged pack files."
+            ))
+        }
+
+        val now = System.currentTimeMillis()
+        val localAssets = manifest.files.map { entry ->
+            val finalFile = File(persistentPackDir, entry.path)
+            LocalAssetEntity(
+                assetId = entry.assetId,
+                packId = manifest.packId,
+                relativePath = entry.path,
+                absolutePersistentPath = finalFile.absolutePath,
+                contentType = entry.contentType,
+                sizeBytes = entry.sizeBytes,
+                sha256 = entry.sha256,
+                verifiedAtEpochMillis = now
+            )
         }
 
         val completedRecord = currentRecord.copy(
@@ -364,6 +380,19 @@ class ContentPackManager(
         persistentPackDir.parentFile?.listFiles()?.filter { it != persistentPackDir }
             ?.forEach { it.deleteRecursively() }
         AppResult.Success(completedRecord)
+        } catch (e: CancellationException) {
+            withContext(NonCancellable) {
+                val latest = dao.getPackRecordById(packId)
+                // Keep a transaction that completed just before cancellation.
+                if (latest?.installState == PackInstallState.RUNNING.name) {
+                    dao.upsertPackRecord(currentRecord.copy(
+                        installState = if (currentRecord.installedAt != null) currentRecord.installState
+                            else PackInstallState.PAUSED.name
+                    ))
+                }
+            }
+            throw e
+        }
     } }
 
     /**
@@ -401,7 +430,7 @@ class ContentPackManager(
      * Discover cloud metadata on demand; do not download any payload automatically.
      * Persist only the pack listing in Room so users can choose granular downloads.
      */
-    suspend fun discoverCloudPacks(locale: String): AppResult<Int> = withContext(Dispatchers.IO) {
+    suspend fun discoverCloudPacks(locale: String): AppResult<Int> = operationMutex.withLock { withContext(Dispatchers.IO) {
         when (val catalog = remoteDataSource.fetchCatalog(locale)) {
             is AppResult.Error -> catalog
             is AppResult.Success -> {
@@ -410,6 +439,12 @@ class ContentPackManager(
                     if (!PackManifestValidator.isValid(pack, pack.packId)) continue
                     val current = dao.getPackRecordById(pack.packId)
                     if (current?.isBundledOfflineDemoAvailable == true) continue
+                    if (current?.installedAt != null) {
+                        if (current.version != pack.version) {
+                            dao.upsertPackRecord(current.copy(installState = PackInstallState.UPDATE_AVAILABLE.name))
+                        }
+                        continue
+                    }
                     dao.upsertPackRecord(PackRecordEntity(
                         id = pack.packId,
                         version = pack.version,
@@ -436,7 +471,7 @@ class ContentPackManager(
                 AppResult.Success(added)
             }
         }
-    }
+    } }
 
     private suspend fun failPack(
         record: PackRecordEntity,

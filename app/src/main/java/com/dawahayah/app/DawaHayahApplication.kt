@@ -90,6 +90,10 @@ class AppContainer(context: Context) {
         )
     }
 
+    fun cancelPackDownload(packId: String) {
+        androidx.work.WorkManager.getInstance(appContext).cancelUniqueWork("download_$packId")
+    }
+
     val knowledgeRepository: LocalFirstKnowledgeRepository by lazy {
         LocalFirstKnowledgeRepository(
             dao = database.knowledgeDao(),
