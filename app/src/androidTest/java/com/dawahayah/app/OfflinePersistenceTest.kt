@@ -85,4 +85,22 @@ class OfflinePersistenceTest {
         assertEquals("COMPLETED", dao.getPackRecordById(packId)?.installState)
         assertTrue(dao.observeLocalContents().first().any { it.origin == packId })
     }
+    @Test fun failedRoomCommitLeavesPreviousGenerationReadable() = runBlocking {
+        assertTrue(manager.installPack(packId) is AppResult.Success)
+        val dao = db.knowledgeDao()
+        val original = dao.observeAssetsForPack(packId).first()
+        db.openHelper.writableDatabase.execSQL(
+            "CREATE TRIGGER fail_asset_replace BEFORE DELETE ON local_assets BEGIN SELECT RAISE(ABORT, 'injected transaction failure'); END"
+        )
+        try {
+            assertTrue(manager.installPack(packId) is AppResult.Error)
+            assertEquals(original, dao.observeAssetsForPack(packId).first())
+            assertTrue(original.all { File(it.absolutePersistentPath).isFile })
+            assertEquals("COMPLETED", dao.getPackRecordById(packId)?.installState)
+            assertTrue(dao.observeLocalContents().first().any { it.origin == packId })
+        } finally {
+            db.openHelper.writableDatabase.execSQL("DROP TRIGGER fail_asset_replace")
+        }
+    }
+
 }

@@ -12,6 +12,10 @@ on:
     branches:
       - main
 
+concurrency:
+  group: android-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: true
+
 jobs:
   lint-test-and-build:
     name: Android Quality Gate (Security + JVM Tests + Lint + Debug Build)
