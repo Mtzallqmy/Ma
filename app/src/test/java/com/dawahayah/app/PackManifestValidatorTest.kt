@@ -28,6 +28,8 @@ class PackManifestValidatorTest {
             manifest.copy(files = listOf(entry, entry), sizeBytes = 40),
             manifest.copy(files = listOf(entry.copy(sha256 = "bad"))),
             manifest.copy(files = listOf(entry.copy(path = "../db"))),
+            manifest.copy(files = listOf(entry.copy(path = "content/./lesson.json"))),
+            manifest.copy(files = listOf(entry.copy(path = "content//lesson.json"))),
             manifest.copy(files = listOf(entry.copy(path = "a\\b"))),
             manifest.copy(packId = "different"),
             manifest.copy(schemaVersion = 2)

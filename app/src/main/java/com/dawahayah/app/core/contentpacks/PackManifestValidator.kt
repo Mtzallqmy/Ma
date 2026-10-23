@@ -21,6 +21,7 @@ object PackManifestValidator {
         if (manifest.files.any {
             it.sizeBytes !in 1..MAX_BYTES || !idPattern.matches(it.assetId) ||
                 !it.sha256.matches(Regex("[0-9a-fA-F]{64}")) || it.path.contains('\\') ||
+                it.path.split('/').any { part -> part.isBlank() || part == "." || part == ".." } ||
                 !IntegrityVerifier.isSafeRelativePath(it.path, File("pack-validation"))
         }) return false
         // Every value was bounded above, so this sum cannot overflow Long.
