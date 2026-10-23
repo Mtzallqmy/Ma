@@ -1,6 +1,7 @@
 package com.dawahayah.app.data.remote
 
 import com.dawahayah.app.core.contentpacks.Anatomy3DAsset
+import kotlinx.coroutines.CancellationException
 import com.dawahayah.app.core.errors.AppError
 import com.dawahayah.app.core.errors.AppResult
 import com.dawahayah.app.core.security.IntegrityVerifier
@@ -194,6 +195,16 @@ class RetrofitNeonDataSource(
         }
         return try {
             AppResult.Success(block())
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: retrofit2.HttpException) {
+            if (e.code() >= 500 || e.code() == 429 || e.code() == 408) {
+                AppResult.Error(AppError.NetworkUnavailable)
+            } else AppResult.Error(AppError.GeneralFailure(
+                "تعذر جلب المحتوى المنشور من الخادم.", "Could not retrieve published server content."
+            ))
+        } catch (e: java.io.IOException) {
+            AppResult.Error(AppError.NetworkUnavailable)
         } catch (e: Exception) {
             AppResult.Error(
                 AppError.GeneralFailure(

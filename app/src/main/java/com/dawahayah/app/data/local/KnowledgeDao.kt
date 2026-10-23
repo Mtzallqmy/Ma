@@ -213,6 +213,7 @@ interface KnowledgeDao {
         upsertDownloadTask(task)
         deleteAssetsByPackId(updatedPack.id)
         insertLocalAssets(assets)
+        deleteLocalContentByPackOrigin(updatedPack.id)
         if (installedContent != null) {
             insertLocalContent(installedContent)
         }

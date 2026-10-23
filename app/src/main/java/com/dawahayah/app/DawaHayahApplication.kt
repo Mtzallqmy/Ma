@@ -84,6 +84,16 @@ class AppContainer(context: Context) {
         )
     }
 
+    fun enqueuePackDownload(packId: String, wifiOnly: Boolean) {
+        com.dawahayah.app.core.contentpacks.ContentPackDownloadWorker.enqueuePackDownload(
+            appContext, packId, wifiOnly
+        )
+    }
+
+    fun cancelPackDownload(packId: String) {
+        androidx.work.WorkManager.getInstance(appContext).cancelUniqueWork("download_$packId")
+    }
+
     val knowledgeRepository: LocalFirstKnowledgeRepository by lazy {
         LocalFirstKnowledgeRepository(
             dao = database.knowledgeDao(),

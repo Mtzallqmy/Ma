@@ -203,12 +203,14 @@ class MainViewModel(
                     _transientBannerMessage.value = "لا يوجد اتصال بالإنترنت. المحتوى المحفوظ على الهاتف متاح دون إنترنت."
                     return@launch
                 }
-                if (container.preferencesDataStore.settingsFlow.first().wifiOnlyDownloads &&
-                    !network.isUnmeteredWifi
-                ) {
+                val wifiOnly = container.preferencesDataStore.settingsFlow.first().wifiOnlyDownloads
+                if (wifiOnly && !network.isUnmeteredWifi) {
                     _transientBannerMessage.value = "التنزيل مضبوط على Wi-Fi فقط. يمكنك تغيير ذلك من الإعدادات."
                     return@launch
                 }
+                container.enqueuePackDownload(packId, wifiOnly)
+                _transientBannerMessage.value = "أُضيفت الحزمة إلى التنزيلات في الخلفية. تابع حالتها من مكتبتي."
+                return@launch
             }
             when (val res = container.knowledgeRepository.installPack(packId, simulateCorruptedHash)) {
                 is AppResult.Success -> {
@@ -234,6 +236,7 @@ class MainViewModel(
     }
 
     fun deleteContentPack(packId: String) {
+        container.cancelPackDownload(packId)
         viewModelScope.launch {
             when (val res = container.knowledgeRepository.deletePack(packId)) {
                 is AppResult.Success -> {
