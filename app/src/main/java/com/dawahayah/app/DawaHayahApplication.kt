@@ -84,6 +84,12 @@ class AppContainer(context: Context) {
         )
     }
 
+    fun enqueuePackDownload(packId: String, wifiOnly: Boolean) {
+        com.dawahayah.app.core.contentpacks.ContentPackDownloadWorker.enqueuePackDownload(
+            appContext, packId, wifiOnly
+        )
+    }
+
     val knowledgeRepository: LocalFirstKnowledgeRepository by lazy {
         LocalFirstKnowledgeRepository(
             dao = database.knowledgeDao(),

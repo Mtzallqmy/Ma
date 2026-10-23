@@ -45,5 +45,10 @@ sealed class AppError(val messageAr: String, val messageEn: String) {
         messageEn = "Missing files inside content pack: ${missingPaths.joinToString()}"
     )
 
+    data class DownloadInterrupted(val filePath: String) : AppError(
+        "انقطع تنزيل الملف: $filePath. ستتم إعادة المحاولة في الخلفية.",
+        "Download interrupted: $filePath. A background retry is scheduled."
+    )
+
     data class GeneralFailure(val reasonAr: String, val reasonEn: String) : AppError(reasonAr, reasonEn)
 }

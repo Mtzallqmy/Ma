@@ -11,6 +11,7 @@ import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import com.dawahayah.app.DawaHayahApplication
 import com.dawahayah.app.core.errors.AppResult
+import com.dawahayah.app.core.errors.AppError
 
 /**
  * WorkManager background worker for resilient, battery-aware content pack installation.
@@ -23,9 +24,11 @@ class ContentPackDownloadWorker(
     override suspend fun doWork(): Result {
         val packId = inputData.getString(KEY_PACK_ID) ?: return Result.failure()
         val app = applicationContext as? DawaHayahApplication ?: return Result.failure()
-        return when (app.container.contentPackManager.installPack(packId)) {
+        return when (val result = app.container.contentPackManager.installPack(packId)) {
             is AppResult.Success -> Result.success()
-            is AppResult.Error -> Result.failure()
+            is AppResult.Error -> if (runAttemptCount < 3 &&
+                (result.error == AppError.NetworkUnavailable || result.error is AppError.DownloadInterrupted)
+            ) Result.retry() else Result.failure()
         }
     }
 

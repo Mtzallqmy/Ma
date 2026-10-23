@@ -2,6 +2,7 @@ package com.dawahayah.app.core.security
 
 import java.io.File
 import java.io.InputStream
+import java.net.URI
 import java.security.MessageDigest
 
 /**
@@ -51,9 +52,11 @@ object IntegrityVerifier {
      * Enforces HTTPS-only URLs for Neon Functions and Object Storage endpoints.
      */
     fun isSecureHttpsEndpoint(url: String): Boolean {
-        val trimmed = url.trim()
-        return trimmed.startsWith("https://", ignoreCase = true) &&
-            !trimmed.contains("postgresql://", ignoreCase = true) &&
-            !trimmed.contains("AWS_SECRET_ACCESS_KEY", ignoreCase = true)
+        return runCatching {
+            val uri = URI(url)
+            uri.scheme.equals("https", ignoreCase = true) &&
+                !uri.host.isNullOrBlank() && uri.rawUserInfo == null &&
+                uri.rawFragment == null && (uri.port == -1 || uri.port in 1..65535)
+        }.getOrDefault(false)
     }
 }
