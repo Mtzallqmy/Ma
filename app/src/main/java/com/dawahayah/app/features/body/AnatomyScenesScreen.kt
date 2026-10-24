@@ -1,5 +1,6 @@
 package com.dawahayah.app.features.body
 
+import android.widget.FrameLayout
 import android.annotation.SuppressLint
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
@@ -143,21 +144,36 @@ fun AnatomyScenesScreen(
                                 .fillMaxWidth()
                                 .height(320.dp),
                             factory = { ctx ->
-                                LocalAnatomyWebView(
-                                    ctx,
-                                    onMeshSelected = { selectedMeshNode = it },
-                                    onFallback = { force2dFallback = true },
-                                    onModelLoaded = { modelLoaded = true }
-                                ).also { webViewRef = it }
+                                FrameLayout(ctx).apply {
+                                    try {
+                                        val viewer = LocalAnatomyWebView(
+                                            ctx,
+                                            onMeshSelected = { selectedMeshNode = it },
+                                            onFallback = { force2dFallback = true },
+                                            onModelLoaded = { modelLoaded = true }
+                                        )
+                                        addView(viewer, FrameLayout.LayoutParams(
+                                            FrameLayout.LayoutParams.MATCH_PARENT,
+                                            FrameLayout.LayoutParams.MATCH_PARENT
+                                        ))
+                                        webViewRef = viewer
+                                    } catch (_: Exception) {
+                                        // Some Android 8 devices have a disabled/missing WebView provider.
+                                        post { force2dFallback = true }
+                                    }
+                                }
                             },
-                            onRelease = { view ->
-                                if (webViewRef === view) webViewRef = null
+                            onRelease = { host ->
+                                val viewer = host.getChildAt(0) as? LocalAnatomyWebView
+                                if (webViewRef === viewer) webViewRef = null
                                 modelLoaded = false
-                                view.releaseViewer()
+                                viewer?.releaseViewer()
+                                host.removeAllViews()
                             },
-                            update = { view ->
-                                view.updateControls(selectedMeshNode, transparentXrayMode,
-                                    isolateSelectedMode, darkCanvasMode, hiddenMeshes)
+                            update = { host ->
+                                (host.getChildAt(0) as? LocalAnatomyWebView)?.updateControls(
+                                    selectedMeshNode, transparentXrayMode, isolateSelectedMode,
+                                    darkCanvasMode, hiddenMeshes)
                             }
                         )
 
