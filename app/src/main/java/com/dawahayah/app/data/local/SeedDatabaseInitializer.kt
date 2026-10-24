@@ -39,6 +39,7 @@ class SeedDatabaseInitializer(
 
     suspend fun ensureSeededIfEmpty() = withContext(Dispatchers.IO) {
         clearUnsupportedLegacyReviewLabels()
+        refreshBundledPackMetadata()
         if (dao.getSyncValue("seed_revision") != null) {
             ensureMedicineMetadata()
             return@withContext
@@ -53,15 +54,30 @@ class SeedDatabaseInitializer(
         }
         persistBundle(seedBundle)
         ensureMedicineMetadata()
+        refreshBundledPackMetadata()
+    }
+
+    private suspend fun refreshBundledPackMetadata() {
+        for(id in listOf("respiratory-diseases-ar-v1","heart-model-low-v1")) {
+        val current=dao.getPackRecordById(id) ?: continue
+        if(!current.isBundledOfflineDemoAvailable) continue
+        val manifest=json.decodeFromString<com.dawahayah.app.domain.model.ContentPackManifest>(context.assets.open("packs/$id/manifest.json").bufferedReader().use{it.readText()})
+        if(current.version!=manifest.version) {
+            dao.upsertPackRecord(if(current.installedAt!=null) current.copy(installState=PackInstallState.UPDATE_AVAILABLE.name)
+                else current.copy(version=manifest.version,sizeBytes=manifest.sizeBytes))
+        }
+    }
+
     }
 
     private suspend fun clearUnsupportedLegacyReviewLabels() {
-        if (dao.getSyncValue("legacy_seed_review_cleanup") != null) return
+        if (dao.getSyncValue("legacy_seed_review_cleanup_v2") != null) return
         val bundle=json.decodeFromString<SeedBundleDto>(context.assets.open("seed/base_seed_v1.json").bufferedReader().use {it.readText()})
         dao.clearLegacySeedDiseaseReview(bundle.diseases.map {it.id})
         dao.clearLegacySeedAttributionReview(bundle.diseases.map {it.id})
         dao.clearLegacySeedSystemReview(bundle.systems.map {it.id})
-        dao.putSyncValue(SyncStateEntity("legacy_seed_review_cleanup","1"))
+        dao.clearLegacyRespiratoryLessonReview()
+        dao.putSyncValue(SyncStateEntity("legacy_seed_review_cleanup_v2","1"))
     }
 
     private suspend fun ensureMedicineMetadata() {

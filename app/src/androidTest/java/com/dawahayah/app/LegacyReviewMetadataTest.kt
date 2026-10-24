@@ -19,7 +19,7 @@ class LegacyReviewMetadataTest {
    val first=diseases[0].id;val reviewed=diseases[1].id
    db.openHelper.writableDatabase.execSQL("UPDATE diseases SET reviewStatus='verified',humanReviewedAt='2026-10-22' WHERE id=?",arrayOf(first))
    db.openHelper.writableDatabase.execSQL("UPDATE diseases SET reviewStatus='CLINICALLY_REVIEWED_PUBLISHED',humanReviewedAt='2026-10-23' WHERE id=?",arrayOf(reviewed))
-   db.openHelper.writableDatabase.execSQL("DELETE FROM sync_state WHERE `key`='legacy_seed_review_cleanup'")
+   db.openHelper.writableDatabase.execSQL("DELETE FROM sync_state WHERE `key`='legacy_seed_review_cleanup_v2'")
    initializer.ensureSeededIfEmpty()
    val after=db.knowledgeDao().observeAllDiseases().first().associateBy{it.id}
    assertEquals("EDUCATIONAL_UNREVIEWED",after.getValue(first).reviewStatus);assertNull(after.getValue(first).humanReviewedAt)

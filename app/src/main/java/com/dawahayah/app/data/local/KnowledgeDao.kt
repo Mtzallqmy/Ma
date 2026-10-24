@@ -199,6 +199,8 @@ interface KnowledgeDao {
     suspend fun clearLegacySeedAttributionReview(ids: List<String>)
     @Query("UPDATE body_systems SET lastReviewedAt=NULL WHERE id IN (:ids) AND lastReviewedAt='2026-10-22'")
     suspend fun clearLegacySeedSystemReview(ids: List<String>)
+    @Query("UPDATE local_contents SET reviewStatus='EDUCATIONAL_UNREVIEWED' WHERE origin='respiratory-diseases-ar-v1' AND reviewStatus='verified'")
+    suspend fun clearLegacyRespiratoryLessonReview()
 
     @Query("SELECT * FROM reading_progress")
     suspend fun allReadingProgress(): List<ReadingProgressEntity>
