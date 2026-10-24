@@ -32,7 +32,8 @@ class PublishedSnapshotSyncTest {
     @Before fun setUp() = runBlocking {
         db = Room.inMemoryDatabaseBuilder(context, DawaHayahDatabase::class.java).build()
         SeedDatabaseInitializer(context, db.knowledgeDao()).ensureSeededIfEmpty()
-        seed = json.decodeFromString(context.assets.open("seed/base_seed_v1.json").bufferedReader().use { it.readText() })
+        // Cloud transport schema v1 is independent of the bundled seed's Room-era version.
+        seed = json.decodeFromString<SeedBundleDto>(context.assets.open("seed/base_seed_v1.json").bufferedReader().use { it.readText() }).copy(schemaVersion = 1)
         sync = PublishedKnowledgeSynchronizer(context, db, DisabledNeonDataSource())
         db.knowledgeDao().upsertBookmark(BookmarkEntity("organ-heart", "ORGAN", "القلب", "Heart", "", 1))
     }
