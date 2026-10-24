@@ -1,9 +1,7 @@
 package com.dawahayah.app.features.body
 
+import android.widget.FrameLayout
 import android.annotation.SuppressLint
-import android.util.Base64
-import android.webkit.WebSettings
-import android.webkit.WebView
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Arrangement
@@ -69,9 +67,10 @@ fun AnatomyScenesScreen(
     var isolateSelectedMode by rememberSaveable { mutableStateOf(false) }
     var darkCanvasMode by rememberSaveable { mutableStateOf(true) }
     var force2dFallback by rememberSaveable { mutableStateOf(false) }
+    var modelLoaded by remember { mutableStateOf(false) }
     var labelMode by rememberSaveable { mutableStateOf(TerminologyLabelMode.TRILINGUAL) }
     var hiddenMeshes by remember { mutableStateOf(setOf<String>()) }
-    var webViewRef by remember { mutableStateOf<WebView?>(null) }
+    var webViewRef by remember { mutableStateOf<LocalAnatomyWebView?>(null) }
 
     val heartOrgan = state.organs.firstOrNull { it.id == "organ-heart" }
     val structures = heartOrgan?.structures.orEmpty()
@@ -145,35 +144,36 @@ fun AnatomyScenesScreen(
                                 .fillMaxWidth()
                                 .height(320.dp),
                             factory = { ctx ->
-                                WebView(ctx).apply {
-                                    settings.apply {
-                                        javaScriptEnabled = true
-                                        domStorageEnabled = false
-                                        allowFileAccess = true
-                                        allowContentAccess = false
-                                        @Suppress("DEPRECATION")
-                                        allowFileAccessFromFileURLs = false
-                                        @Suppress("DEPRECATION")
-                                        allowUniversalAccessFromFileURLs = false
-                                        mixedContentMode = WebSettings.MIXED_CONTENT_NEVER_ALLOW
-                                        cacheMode = WebSettings.LOAD_NO_CACHE
+                                FrameLayout(ctx).apply {
+                                    try {
+                                        val viewer = LocalAnatomyWebView(
+                                            ctx,
+                                            onMeshSelected = { selectedMeshNode = it },
+                                            onFallback = { force2dFallback = true },
+                                            onModelLoaded = { modelLoaded = true }
+                                        )
+                                        addView(viewer, FrameLayout.LayoutParams(
+                                            FrameLayout.LayoutParams.MATCH_PARENT,
+                                            FrameLayout.LayoutParams.MATCH_PARENT
+                                        ))
+                                        webViewRef = viewer
+                                    } catch (_: Exception) {
+                                        // Some Android 8 devices have a disabled/missing WebView provider.
+                                        post { force2dFallback = true }
                                     }
-                                    loadUrl("file:///android_asset/viewer3d/anatomy_viewer.html")
-                                    postDelayed({
-                                        runCatching {
-                                            val glbBytes = ctx.assets.open("models/cor_chambers_low_v1.glb").use { it.readBytes() }
-                                            val b64 = Base64.encodeToString(glbBytes, Base64.NO_WRAP)
-                                            evaluateJavascript("window.loadGlbFromBase64('$b64');", null)
-                                        }
-                                    }, 350L)
-                                    webViewRef = this
                                 }
                             },
-                            update = { wv ->
-                                wv.evaluateJavascript("window.viewerControl && window.viewerControl.selectMesh('$selectedMeshNode');", null)
-                                wv.evaluateJavascript("window.viewerControl && window.viewerControl.setTransparentMode($transparentXrayMode);", null)
-                                wv.evaluateJavascript("window.viewerControl && window.viewerControl.setIsolateMode($isolateSelectedMode);", null)
-                                wv.evaluateJavascript("window.viewerControl && window.viewerControl.setDarkCanvas($darkCanvasMode);", null)
+                            onRelease = { host ->
+                                val viewer = host.getChildAt(0) as? LocalAnatomyWebView
+                                if (webViewRef === viewer) webViewRef = null
+                                modelLoaded = false
+                                viewer?.releaseViewer()
+                                host.removeAllViews()
+                            },
+                            update = { host ->
+                                (host.getChildAt(0) as? LocalAnatomyWebView)?.updateControls(
+                                    selectedMeshNode, transparentXrayMode, isolateSelectedMode,
+                                    darkCanvasMode, hiddenMeshes)
                             }
                         )
 
@@ -210,7 +210,7 @@ fun AnatomyScenesScreen(
                             UnboxedMetadataLine(
                                 items = listOf(
                                     "GLB: cor_chambers_low_v1.glb (50.5 KB)",
-                                    "SHA-256 Verified",
+                                    if (modelLoaded) "SHA-256 verified · GLB loaded" else if (isAr) "جارٍ التحقق من المجسم وتحميله" else "Verifying and loading model",
                                     if (isAr) "تصنيف الأصل: مجسم تعليمي متعدد الأجزاء (TA2)" else "Asset Type: Schematic Multi-Mesh GLB (TA2)"
                                 )
                             )
@@ -304,11 +304,8 @@ fun AnatomyScenesScreen(
                             Button(onClick = {
                                 val nextHidden = if (isHidden) hiddenMeshes - node else hiddenMeshes + node
                                 hiddenMeshes = nextHidden
-                                val visible = !nextHidden.contains(node)
-                                webViewRef?.evaluateJavascript(
-                                    "window.viewerControl && window.viewerControl.toggleLayer('$node', $visible);",
-                                    null
-                                )
+                                webViewRef?.updateControls(selectedMeshNode, transparentXrayMode,
+                                    isolateSelectedMode, darkCanvasMode, nextHidden)
                             }) {
                                 Text(
                                     if (isHidden) {
