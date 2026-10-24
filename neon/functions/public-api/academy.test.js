@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { generateKeyPair, SignJWT, jwtVerify } from 'jose';
 import { academyIdentity } from './academy-auth.js';
-import { academyAdmin, validateLesson } from './academy-admin.js';
+import { academyAdmin, validateLesson } from './academy-service.js';
 import { academySnapshot } from './academy-snapshot.js';
 import { readFileSync } from 'node:fs';
 const bundle=JSON.parse(readFileSync(new URL('../../../app/src/main/assets/seed/academy_v1.json',import.meta.url)));
@@ -34,6 +34,6 @@ test('anonymous and unassigned users cannot read drafts or mutate; identity neve
 test('public catalog uses only published payloads and referenced sources',async()=>{
  const queries=[];
  const b=await academySnapshot(async sql=>{queries.push(sql);if(sql.includes('academy.lessons'))return [{payload:bundle.lessons[0]}];if(sql.includes('academy.courses'))return bundle.courses.map(payload=>({payload}));return [...bundle.sources.map(payload=>({payload})),{payload:{id:'private-reference'}}];});
- assert.equal(b.lessons.length,1);assert.equal(b.courses.length,1);assert.deepEqual(b.sources,bundle.sources);
+ assert.equal(b.lessons.length,1);assert.equal(b.courses.length,1);assert.deepEqual(b.sources,bundle.sources.filter(s=>bundle.lessons[0].sourceIds.includes(s.id)));
  assert.match(queries[0],/published_body IS NOT NULL/);assert.doesNotMatch(queries[0],/draft/);
 });

@@ -26,7 +26,7 @@ class AcademyRepository(private val context: Context, private val dao: AcademyDa
             val raw = context.assets.open("seed/academy_v1.json").bufferedReader().use { it.readText() }
             val bundle = json.decodeFromString<AcademyBundle>(raw)
             AcademyContracts.validate(bundle)
-            dao.putCatalog(AcademyContentEntity("catalog", json.encodeToString(bundle)))
+            dao.seedCatalog(AcademyContentEntity("catalog", json.encodeToString(bundle)))
         }
     }
     suspend fun refresh() = withContext(Dispatchers.IO) {

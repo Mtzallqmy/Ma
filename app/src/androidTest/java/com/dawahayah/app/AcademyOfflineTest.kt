@@ -43,7 +43,7 @@ class AcademyOfflineTest {
             val repository=AcademyRepository(context,db.academyDao(),BuildConfig.NEON_PUBLIC_API_BASE_URL)
             repository.ensureSeed();repository.refresh()
             val bundle=repository.catalog.first {it!=null}!!;AcademyContracts.validate(bundle)
-            assertEquals(3,bundle.lessons.size)
+            assertEquals(9,bundle.lessons.size)
             assertTrue(bundle.lessons.all {it.reviewStatus=="EDUCATIONAL_UNREVIEWED"})
         }finally {db.close()}
     }

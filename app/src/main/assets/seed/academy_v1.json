@@ -33,6 +33,72 @@
         "ar": "فهم الافتراضات قبل التطبيق.",
         "en": "Understand assumptions before applying models."
       }
+    },
+    {
+      "id": "course-anatomy",
+      "title": {
+        "ar": "التشريح والفيزيولوجيا",
+        "en": "Anatomy and physiology"
+      },
+      "description": {
+        "ar": "نشاط تطبيقي أصيل مع تقييم ذاتي.",
+        "en": "An original applied activity with self-assessment."
+      }
+    },
+    {
+      "id": "course-toxicology",
+      "title": {
+        "ar": "علم السموم",
+        "en": "Toxicology"
+      },
+      "description": {
+        "ar": "نشاط تطبيقي أصيل مع تقييم ذاتي.",
+        "en": "An original applied activity with self-assessment."
+      }
+    },
+    {
+      "id": "course-clinical",
+      "title": {
+        "ar": "الصيدلة السريرية",
+        "en": "Clinical pharmacy"
+      },
+      "description": {
+        "ar": "نشاط تطبيقي أصيل مع تقييم ذاتي.",
+        "en": "An original applied activity with self-assessment."
+      }
+    },
+    {
+      "id": "course-interactions",
+      "title": {
+        "ar": "التداخلات الدوائية",
+        "en": "Drug interactions"
+      },
+      "description": {
+        "ar": "نشاط تطبيقي أصيل مع تقييم ذاتي.",
+        "en": "An original applied activity with self-assessment."
+      }
+    },
+    {
+      "id": "course-professional",
+      "title": {
+        "ar": "الممارسة المهنية",
+        "en": "Professional practice"
+      },
+      "description": {
+        "ar": "نشاط تطبيقي أصيل مع تقييم ذاتي.",
+        "en": "An original applied activity with self-assessment."
+      }
+    },
+    {
+      "id": "course-regional",
+      "title": {
+        "ar": "الدواء في اليمن والعالم العربي",
+        "en": "Medicines in Yemen and the Arab region"
+      },
+      "description": {
+        "ar": "نشاط تطبيقي أصيل مع تقييم ذاتي.",
+        "en": "An original applied activity with self-assessment."
+      }
     }
   ],
   "lessons": [
@@ -295,6 +361,492 @@
       ],
       "license": "CC BY 4.0",
       "attribution": "Original educational text and fictional arithmetic examples — Dawa & Hayah, 2026. Scientific review pending."
+    },
+    {
+      "id": "academy-anatomy",
+      "courseId": "course-anatomy",
+      "moduleId": "module-anatomy",
+      "revision": 1,
+      "title": {
+        "ar": "قراءة البنية والوظيفة",
+        "en": "Reading structure and function"
+      },
+      "outcomes": [
+        {
+          "ar": "تمييز المعلومة الموثقة من الافتراض.",
+          "en": "Distinguish sourced information from assumptions."
+        },
+        {
+          "ar": "كتابة ملاحظة تعليمية قابلة للمراجعة.",
+          "en": "Write a reviewable educational note."
+        }
+      ],
+      "body": {
+        "ar": "افتح صفحة القلب في أطلس التطبيق. سجّل اسم تركيب بالعربية والإنجليزية واللاتينية، ثم افصل وصف موضعه عن وصف وظيفته. افحص مصدر الصفحة وحالة مراجعتها قبل استعمالها في تقرير. المجسم التخطيطي وسيلة تعليم، وليس تصويرًا تشخيصيًا لمريض.",
+        "en": "Open the heart page in the app atlas. Record one structure in Arabic, English and Latin, then distinguish its location from its function. Check the page source and review status before using it in a report. A schematic model is a learning aid, not patient diagnostic imaging."
+      },
+      "example": {
+        "ar": "تطبيق: اكتب جدولًا صغيرًا للمعلومة ومصدرها وحالة التحقق، ثم أجب عن السؤالين.",
+        "en": "Exercise: make a short table of information, source and verification state, then answer both questions."
+      },
+      "questions": [
+        {
+          "id": "anatomy-1",
+          "prompt": {
+            "ar": "هل المجسم التخطيطي فحص تشخيصي لمريض؟",
+            "en": "Is a schematic model a patient diagnostic examination?"
+          },
+          "options": [
+            {
+              "ar": "نعم",
+              "en": "Yes"
+            },
+            {
+              "ar": "لا",
+              "en": "No"
+            }
+          ],
+          "correctIndex": 1,
+          "explanation": {
+            "ar": "لا؛ يجب التحقق من الدليل والسياق بدل الافتراض.",
+            "en": "No; verify evidence and context instead of assuming."
+          }
+        },
+        {
+          "id": "anatomy-2",
+          "prompt": {
+            "ar": "ما الخطوة الأنسب عند نقص الدليل؟",
+            "en": "What is appropriate when evidence is missing?"
+          },
+          "options": [
+            {
+              "ar": "اختلاق المعلومة",
+              "en": "Invent the information"
+            },
+            {
+              "ar": "توثيق النقص وطلب تحقق مؤهل",
+              "en": "Document the gap and seek qualified verification"
+            }
+          ],
+          "correctIndex": 1,
+          "explanation": {
+            "ar": "تُسجَّل حدود المعرفة بدل تقديم يقين غير موثق.",
+            "en": "Record knowledge limits rather than unsupported certainty."
+          }
+        }
+      ],
+      "sourceIds": [
+        "src-academy-original"
+      ],
+      "reviewStatus": "EDUCATIONAL_UNREVIEWED",
+      "license": "CC BY 4.0",
+      "attribution": "Original Dawa & Hayah learning activity, 2026; scientific review pending.",
+      "isSimulation": false
+    },
+    {
+      "id": "academy-toxicology",
+      "courseId": "course-toxicology",
+      "moduleId": "module-toxicology",
+      "revision": 1,
+      "title": {
+        "ar": "تقييم المعلومات في محاكاة التعرض",
+        "en": "Evaluating information in an exposure simulation"
+      },
+      "outcomes": [
+        {
+          "ar": "تمييز المعلومة الموثقة من الافتراض.",
+          "en": "Distinguish sourced information from assumptions."
+        },
+        {
+          "ar": "كتابة ملاحظة تعليمية قابلة للمراجعة.",
+          "en": "Write a reviewable educational note."
+        }
+      ],
+      "body": {
+        "ar": "محاكاة تعليمية: وُجدت عبوة مجهولة في سجل تدريب. المهمة هي تحديد المعلومات الناقصة: هوية المادة، وطريق التعرض، والزمن، ووحدات الكمية ومصدرها. لا تفترض هوية المادة من لون العبوة ولا تستنتج علاجًا أو ترياقًا من هذا النشاط. دوّن عدم اليقين وأحِل القرار إلى مختص مؤهل.",
+        "en": "Training simulation: an unidentified container appears in a practice record. Identify missing information: substance identity, exposure route, time, amount units and their source. Do not infer substance identity from container color or infer a treatment or antidote from this activity. Document uncertainty and refer decisions to a qualified specialist."
+      },
+      "example": {
+        "ar": "تطبيق: اكتب جدولًا صغيرًا للمعلومة ومصدرها وحالة التحقق، ثم أجب عن السؤالين.",
+        "en": "Exercise: make a short table of information, source and verification state, then answer both questions."
+      },
+      "questions": [
+        {
+          "id": "toxicology-1",
+          "prompt": {
+            "ar": "هل يكفي لون العبوة لتحديد المادة؟",
+            "en": "Is container color sufficient to identify a substance?"
+          },
+          "options": [
+            {
+              "ar": "نعم",
+              "en": "Yes"
+            },
+            {
+              "ar": "لا",
+              "en": "No"
+            }
+          ],
+          "correctIndex": 1,
+          "explanation": {
+            "ar": "لا؛ يجب التحقق من الدليل والسياق بدل الافتراض.",
+            "en": "No; verify evidence and context instead of assuming."
+          }
+        },
+        {
+          "id": "toxicology-2",
+          "prompt": {
+            "ar": "ما الخطوة الأنسب عند نقص الدليل؟",
+            "en": "What is appropriate when evidence is missing?"
+          },
+          "options": [
+            {
+              "ar": "اختلاق المعلومة",
+              "en": "Invent the information"
+            },
+            {
+              "ar": "توثيق النقص وطلب تحقق مؤهل",
+              "en": "Document the gap and seek qualified verification"
+            }
+          ],
+          "correctIndex": 1,
+          "explanation": {
+            "ar": "تُسجَّل حدود المعرفة بدل تقديم يقين غير موثق.",
+            "en": "Record knowledge limits rather than unsupported certainty."
+          }
+        }
+      ],
+      "sourceIds": [
+        "src-academy-original"
+      ],
+      "reviewStatus": "EDUCATIONAL_UNREVIEWED",
+      "license": "CC BY 4.0",
+      "attribution": "Original Dawa & Hayah learning activity, 2026; scientific review pending.",
+      "isSimulation": true
+    },
+    {
+      "id": "academy-clinical",
+      "courseId": "course-clinical",
+      "moduleId": "module-clinical",
+      "revision": 1,
+      "title": {
+        "ar": "تنظيم مراجعة قائمة دوائية افتراضية",
+        "en": "Organizing a fictional medication-list review"
+      },
+      "outcomes": [
+        {
+          "ar": "تمييز المعلومة الموثقة من الافتراض.",
+          "en": "Distinguish sourced information from assumptions."
+        },
+        {
+          "ar": "كتابة ملاحظة تعليمية قابلة للمراجعة.",
+          "en": "Write a reviewable educational note."
+        }
+      ],
+      "body": {
+        "ar": "حالة محاكاة: لدى سجل تعليمي قائمتان مختلفتان للأدوية. قارن الاسم العلمي والشكل والتركيز ومصدر كل قائمة وتاريخها، واكتب مواضع الاختلاف دون تقرير إيقاف أو بدء علاج. وجود اسم في قائمة لا يثبت أن المريض يتناوله الآن. اربط كل ملاحظة بمصدرها وبيّن ما يحتاج تحققًا بشريًا.",
+        "en": "Simulation: a training record contains two different medication lists. Compare generic name, formulation, strength, source and date; record discrepancies without deciding to start or stop treatment. A listed name does not establish current use. Link each observation to its source and mark what needs human verification."
+      },
+      "example": {
+        "ar": "تطبيق: اكتب جدولًا صغيرًا للمعلومة ومصدرها وحالة التحقق، ثم أجب عن السؤالين.",
+        "en": "Exercise: make a short table of information, source and verification state, then answer both questions."
+      },
+      "questions": [
+        {
+          "id": "clinical-1",
+          "prompt": {
+            "ar": "هل تُحسم الخلافات بين القائمتين بالتخمين؟",
+            "en": "Should discrepancies be resolved by guessing?"
+          },
+          "options": [
+            {
+              "ar": "نعم",
+              "en": "Yes"
+            },
+            {
+              "ar": "لا",
+              "en": "No"
+            }
+          ],
+          "correctIndex": 1,
+          "explanation": {
+            "ar": "لا؛ يجب التحقق من الدليل والسياق بدل الافتراض.",
+            "en": "No; verify evidence and context instead of assuming."
+          }
+        },
+        {
+          "id": "clinical-2",
+          "prompt": {
+            "ar": "ما الخطوة الأنسب عند نقص الدليل؟",
+            "en": "What is appropriate when evidence is missing?"
+          },
+          "options": [
+            {
+              "ar": "اختلاق المعلومة",
+              "en": "Invent the information"
+            },
+            {
+              "ar": "توثيق النقص وطلب تحقق مؤهل",
+              "en": "Document the gap and seek qualified verification"
+            }
+          ],
+          "correctIndex": 1,
+          "explanation": {
+            "ar": "تُسجَّل حدود المعرفة بدل تقديم يقين غير موثق.",
+            "en": "Record knowledge limits rather than unsupported certainty."
+          }
+        }
+      ],
+      "sourceIds": [
+        "src-academy-original"
+      ],
+      "reviewStatus": "EDUCATIONAL_UNREVIEWED",
+      "license": "CC BY 4.0",
+      "attribution": "Original Dawa & Hayah learning activity, 2026; scientific review pending.",
+      "isSimulation": true
+    },
+    {
+      "id": "academy-interactions",
+      "courseId": "course-interactions",
+      "moduleId": "module-interactions",
+      "revision": 1,
+      "title": {
+        "ar": "قراءة ادعاء تداخل بصورة نقدية",
+        "en": "Critically reading an interaction claim"
+      },
+      "outcomes": [
+        {
+          "ar": "تمييز المعلومة الموثقة من الافتراض.",
+          "en": "Distinguish sourced information from assumptions."
+        },
+        {
+          "ar": "كتابة ملاحظة تعليمية قابلة للمراجعة.",
+          "en": "Write a reviewable educational note."
+        }
+      ],
+      "body": {
+        "ar": "نشاط أصيل: أنشئ بطاقة تقييم لادعاء تداخل، تتضمن المادة الفعالة الأخرى، ونوع الدليل، وتاريخه وسياقه وحدود انطباقه. نتيجة بحث آلية واحدة ليست قرارًا فرديًا. في هذا التطبيق تُعرض الحقائق السريرية المنشورة فقط بعد اجتياز بوابة المراجعة؛ عدم وجود سجل منشور لا يثبت عدم وجود تداخل.",
+        "en": "Original activity: build an evaluation card for an interaction claim, recording the other ingredient, evidence type, date, context and applicability limits. One automated search result is not an individual decision. This app exposes published clinical facts only after the review gate; absence of a published record does not establish absence of an interaction."
+      },
+      "example": {
+        "ar": "تطبيق: اكتب جدولًا صغيرًا للمعلومة ومصدرها وحالة التحقق، ثم أجب عن السؤالين.",
+        "en": "Exercise: make a short table of information, source and verification state, then answer both questions."
+      },
+      "questions": [
+        {
+          "id": "interactions-1",
+          "prompt": {
+            "ar": "هل غياب سجل في التطبيق ينفي وجود تداخل؟",
+            "en": "Does absence of an app record rule out an interaction?"
+          },
+          "options": [
+            {
+              "ar": "نعم",
+              "en": "Yes"
+            },
+            {
+              "ar": "لا",
+              "en": "No"
+            }
+          ],
+          "correctIndex": 1,
+          "explanation": {
+            "ar": "لا؛ يجب التحقق من الدليل والسياق بدل الافتراض.",
+            "en": "No; verify evidence and context instead of assuming."
+          }
+        },
+        {
+          "id": "interactions-2",
+          "prompt": {
+            "ar": "ما الخطوة الأنسب عند نقص الدليل؟",
+            "en": "What is appropriate when evidence is missing?"
+          },
+          "options": [
+            {
+              "ar": "اختلاق المعلومة",
+              "en": "Invent the information"
+            },
+            {
+              "ar": "توثيق النقص وطلب تحقق مؤهل",
+              "en": "Document the gap and seek qualified verification"
+            }
+          ],
+          "correctIndex": 1,
+          "explanation": {
+            "ar": "تُسجَّل حدود المعرفة بدل تقديم يقين غير موثق.",
+            "en": "Record knowledge limits rather than unsupported certainty."
+          }
+        }
+      ],
+      "sourceIds": [
+        "src-academy-original"
+      ],
+      "reviewStatus": "EDUCATIONAL_UNREVIEWED",
+      "license": "CC BY 4.0",
+      "attribution": "Original Dawa & Hayah learning activity, 2026; scientific review pending.",
+      "isSimulation": false
+    },
+    {
+      "id": "academy-professional",
+      "courseId": "course-professional",
+      "moduleId": "module-professional",
+      "revision": 1,
+      "title": {
+        "ar": "التوثيق والخصوصية وحدود الدليل",
+        "en": "Documentation, privacy and evidence limits"
+      },
+      "outcomes": [
+        {
+          "ar": "تمييز المعلومة الموثقة من الافتراض.",
+          "en": "Distinguish sourced information from assumptions."
+        },
+        {
+          "ar": "كتابة ملاحظة تعليمية قابلة للمراجعة.",
+          "en": "Write a reviewable educational note."
+        }
+      ],
+      "body": {
+        "ar": "اكتب ملاحظة تدريبية دون أسماء مرضى أو معرفات شخصية. افصل ما شوهد عما استُنتج وما بقي مجهولًا. سجّل المصدر وتاريخ الاطلاع وحالة المراجعة. لا تُعدّل ملاحظة منشورة بصمت: احتفظ بنسختها ثم أنشئ مسودة جديدة، واطلب مراجعة مستقلة قبل نشرها.",
+        "en": "Write a training note without patient names or personal identifiers. Separate observations, inferences and unknowns. Record the source, access date and review status. Do not silently overwrite a published note: retain its version, create a new draft and seek independent review before publication."
+      },
+      "example": {
+        "ar": "تطبيق: اكتب جدولًا صغيرًا للمعلومة ومصدرها وحالة التحقق، ثم أجب عن السؤالين.",
+        "en": "Exercise: make a short table of information, source and verification state, then answer both questions."
+      },
+      "questions": [
+        {
+          "id": "professional-1",
+          "prompt": {
+            "ar": "هل ينبغي إدخال هوية مريض حقيقي في هذا النشاط؟",
+            "en": "Should a real patient identity be entered in this activity?"
+          },
+          "options": [
+            {
+              "ar": "نعم",
+              "en": "Yes"
+            },
+            {
+              "ar": "لا",
+              "en": "No"
+            }
+          ],
+          "correctIndex": 1,
+          "explanation": {
+            "ar": "لا؛ يجب التحقق من الدليل والسياق بدل الافتراض.",
+            "en": "No; verify evidence and context instead of assuming."
+          }
+        },
+        {
+          "id": "professional-2",
+          "prompt": {
+            "ar": "ما الخطوة الأنسب عند نقص الدليل؟",
+            "en": "What is appropriate when evidence is missing?"
+          },
+          "options": [
+            {
+              "ar": "اختلاق المعلومة",
+              "en": "Invent the information"
+            },
+            {
+              "ar": "توثيق النقص وطلب تحقق مؤهل",
+              "en": "Document the gap and seek qualified verification"
+            }
+          ],
+          "correctIndex": 1,
+          "explanation": {
+            "ar": "تُسجَّل حدود المعرفة بدل تقديم يقين غير موثق.",
+            "en": "Record knowledge limits rather than unsupported certainty."
+          }
+        }
+      ],
+      "sourceIds": [
+        "src-academy-original"
+      ],
+      "reviewStatus": "EDUCATIONAL_UNREVIEWED",
+      "license": "CC BY 4.0",
+      "attribution": "Original Dawa & Hayah learning activity, 2026; scientific review pending.",
+      "isSimulation": false
+    },
+    {
+      "id": "academy-regional",
+      "courseId": "course-regional",
+      "moduleId": "module-regional",
+      "revision": 1,
+      "title": {
+        "ar": "التمييز بين التسجيل والتوفر",
+        "en": "Distinguishing registration from availability"
+      },
+      "outcomes": [
+        {
+          "ar": "تمييز المعلومة الموثقة من الافتراض.",
+          "en": "Distinguish sourced information from assumptions."
+        },
+        {
+          "ar": "كتابة ملاحظة تعليمية قابلة للمراجعة.",
+          "en": "Write a reviewable educational note."
+        }
+      ],
+      "body": {
+        "ar": "صمّم نموذج تحقق لمنتج يتضمن الدولة والجهة الرقابية ورقم التسجيل والشركة والشكل والتركيز ورابط الدليل وتاريخه. لا تنشئ اسمًا تجاريًا بالتخمين. التسجيل معلومة منفصلة عن التوفر في صيدلية بعينها؛ دوّن مصدرًا منفصلًا وتاريخًا لأي ادعاء توفر. لا تعرض سعرًا بلا دليل مؤرخ.",
+        "en": "Design a product-verification record with country, regulator, registration number, manufacturer, formulation, strength, evidence URL and date. Do not invent a brand name. Registration is separate from availability at a particular pharmacy; record a separate dated source for any availability claim. Do not display a price without dated evidence."
+      },
+      "example": {
+        "ar": "تطبيق: اكتب جدولًا صغيرًا للمعلومة ومصدرها وحالة التحقق، ثم أجب عن السؤالين.",
+        "en": "Exercise: make a short table of information, source and verification state, then answer both questions."
+      },
+      "questions": [
+        {
+          "id": "regional-1",
+          "prompt": {
+            "ar": "هل يكفي التسجيل لإثبات توفر المنتج في كل صيدلية؟",
+            "en": "Does registration prove availability at every pharmacy?"
+          },
+          "options": [
+            {
+              "ar": "نعم",
+              "en": "Yes"
+            },
+            {
+              "ar": "لا",
+              "en": "No"
+            }
+          ],
+          "correctIndex": 1,
+          "explanation": {
+            "ar": "لا؛ يجب التحقق من الدليل والسياق بدل الافتراض.",
+            "en": "No; verify evidence and context instead of assuming."
+          }
+        },
+        {
+          "id": "regional-2",
+          "prompt": {
+            "ar": "ما الخطوة الأنسب عند نقص الدليل؟",
+            "en": "What is appropriate when evidence is missing?"
+          },
+          "options": [
+            {
+              "ar": "اختلاق المعلومة",
+              "en": "Invent the information"
+            },
+            {
+              "ar": "توثيق النقص وطلب تحقق مؤهل",
+              "en": "Document the gap and seek qualified verification"
+            }
+          ],
+          "correctIndex": 1,
+          "explanation": {
+            "ar": "تُسجَّل حدود المعرفة بدل تقديم يقين غير موثق.",
+            "en": "Record knowledge limits rather than unsupported certainty."
+          }
+        }
+      ],
+      "sourceIds": [
+        "src-academy-original"
+      ],
+      "reviewStatus": "EDUCATIONAL_UNREVIEWED",
+      "license": "CC BY 4.0",
+      "attribution": "Original Dawa & Hayah learning activity, 2026; scientific review pending.",
+      "isSimulation": false
     }
   ],
   "sources": [
@@ -304,6 +856,13 @@
       "url": "https://www.bipm.org/en/publications/si-brochure",
       "license": "CC BY 4.0",
       "attribution": "Bureau International des Poids et Mesures; original worked examples by Dawa & Hayah; not a BIPM endorsement."
+    },
+    {
+      "id": "src-academy-original",
+      "title": "Dawa & Hayah — original learning activities",
+      "url": "https://github.com/Mtzallqmy/Ma",
+      "license": "CC BY 4.0 (original learning activities only)",
+      "attribution": "Original educational scenarios and assessment design; scientific review pending. This license does not relicense third-party clinical sources."
     }
   ]
 }

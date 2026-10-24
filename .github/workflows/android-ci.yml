@@ -52,6 +52,9 @@ jobs:
           node-version: '24'
       - name: Install pinned API dependencies for contract tests
         run: npm ci --ignore-scripts --prefix neon/functions/public-api
+      - name: Build browser and server bundles
+        run: node build.mjs
+        working-directory: neon/functions/public-api
       - name: Published API snapshot contract tests
         run: node --test neon/functions/public-api/*.test.js
 

@@ -106,6 +106,10 @@ class AppContainer(context: Context) {
         )
     }
 
+    val learnerSyncRepository by lazy {
+        com.dawahayah.app.data.repository.LearnerSyncRepository(appContext,database.academyDao())
+    }
+
     val academyRepository by lazy {
         com.dawahayah.app.data.repository.AcademyRepository(appContext, database.academyDao(), BuildConfig.NEON_PUBLIC_API_BASE_URL, json)
     }
