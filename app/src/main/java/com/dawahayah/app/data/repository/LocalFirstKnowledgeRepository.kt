@@ -190,7 +190,9 @@ class LocalFirstKnowledgeRepository(
                 generalDescriptionEn = it.generalDescriptionEn,
                 safetyNote = it.safetyNote,
                 citationIds = it.citationIdsCsv.split(",").filter { s -> s.isNotBlank() },
-                reviewStatus = it.reviewStatus
+                reviewStatus = it.reviewStatus,
+                details = runCatching { json.decodeFromString<com.dawahayah.app.domain.model.MedicineDetails>(it.detailsJson) }
+                    .getOrDefault(com.dawahayah.app.domain.model.MedicineDetails())
             )
         }
     }

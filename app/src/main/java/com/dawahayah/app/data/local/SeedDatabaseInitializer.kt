@@ -38,15 +38,32 @@ class SeedDatabaseInitializer(
 ) {
 
     suspend fun ensureSeededIfEmpty() = withContext(Dispatchers.IO) {
-        if (dao.getSyncValue("seed_revision") != null) return@withContext
+        if (dao.getSyncValue("seed_revision") != null) {
+            ensureMedicineMetadata()
+            return@withContext
+        }
         val rawJson = context.assets.open("seed/base_seed_v1.json")
             .bufferedReader(Charsets.UTF_8).use { it.readText() }
         val seedBundle = json.decodeFromString<SeedBundleDto>(rawJson)
         if (dao.getBodySystemsCount() >= 13 && dao.getAnatomicalStructuresCount() > 0) {
             dao.putSyncValue(SyncStateEntity("seed_revision", seedBundle.seedRevision))
+            ensureMedicineMetadata()
             return@withContext
         }
         persistBundle(seedBundle)
+        ensureMedicineMetadata()
+    }
+
+    private suspend fun ensureMedicineMetadata() {
+        if (dao.getSyncValue("medicine_metadata_seed") != null) return
+        val bundle = json.decodeFromString<SeedBundleDto>(context.assets.open("seed/base_seed_v1.json").bufferedReader().use { it.readText() })
+        dao.insertMedicalSources(bundle.sources.filter { it.id == "src-rxnorm-nlm" }.map {
+            MedicalSourceEntity(it.id,it.title,it.url,it.publisher,it.publicationDate,it.accessedAt,it.license,it.attribution)
+        })
+        bundle.activeIngredients.forEach { ing ->
+            dao.backfillMedicineDetails(ing.id, json.encodeToString(ing.details), ing.details.identifiers.joinToString(" ") { it.identifier })
+        }
+        dao.putSyncValue(SyncStateEntity("medicine_metadata_seed", "rxnorm-20261024"))
     }
 
     // Same entity mapping for first launch and an atomic, authoritative cloud snapshot.
@@ -307,12 +324,15 @@ class SeedDatabaseInitializer(
                 safetyNote = ing.safetyNote,
                 citationIdsCsv = ing.citationIds.joinToString(","),
                 reviewStatus = ing.reviewStatus,
+                detailsJson = json.encodeToString(ing.details),
                 normalizedSearchText = ArabicSearchNormalizer.buildIndexableTokens(
                     ing.nameAr,
                     ing.nameEn,
                     ing.className,
                     ing.generalDescriptionAr,
-                    ing.generalDescriptionEn
+                    ing.generalDescriptionEn,
+                    ing.details.identifiers.joinToString(" ") { it.identifier },
+                    ing.details.regionalProducts.joinToString(" ") { it.brandName + " " + it.manufacturer }
                 )
             )
         }

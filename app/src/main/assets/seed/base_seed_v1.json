@@ -3495,9 +3495,19 @@
       "safetyNote": "معلومات دوائية تعليمية فقط — لا يُتوقف عن حاصرات بيتا فجأة لتجنب تسرع القلب الارتدادي، ولا تُحدد الجرعات إلا بوصفة طبية.",
       "citationIds": [
         "src-medlineplus-nlm",
-        "src-ncbi-bookshelf-statpearls"
+        "src-ncbi-bookshelf-statpearls",
+        "src-rxnorm-nlm"
       ],
-      "reviewStatus": "verified"
+      "reviewStatus": "EDUCATIONAL_UNREVIEWED",
+      "details": {
+        "identifiers": [
+          {
+            "vocabulary": "RXNORM",
+            "identifier": "19484",
+            "sourceId": "src-rxnorm-nlm"
+          }
+        ]
+      }
     },
     {
       "id": "ing-lisinopril",
@@ -3509,9 +3519,19 @@
       "safetyNote": "معلومات تعليمية فقط — يمنع استخدامه أثناء الحمل ويستلزم مراقبة البوتاسيوم ووظيفة الكلية بإشراف الطبيب.",
       "citationIds": [
         "src-medlineplus-nlm",
-        "src-ncbi-bookshelf-statpearls"
+        "src-ncbi-bookshelf-statpearls",
+        "src-rxnorm-nlm"
       ],
-      "reviewStatus": "verified"
+      "reviewStatus": "EDUCATIONAL_UNREVIEWED",
+      "details": {
+        "identifiers": [
+          {
+            "vocabulary": "RXNORM",
+            "identifier": "29046",
+            "sourceId": "src-rxnorm-nlm"
+          }
+        ]
+      }
     },
     {
       "id": "ing-amlodipine",
@@ -3523,9 +3543,19 @@
       "safetyNote": "معلومات تعليمية فقط — قد يسبب وذمة محيطية في الكاحلين نتيجة توسع الشرينات قبل الشعرية.",
       "citationIds": [
         "src-medlineplus-nlm",
-        "src-ncbi-bookshelf-statpearls"
+        "src-ncbi-bookshelf-statpearls",
+        "src-rxnorm-nlm"
       ],
-      "reviewStatus": "verified"
+      "reviewStatus": "EDUCATIONAL_UNREVIEWED",
+      "details": {
+        "identifiers": [
+          {
+            "vocabulary": "RXNORM",
+            "identifier": "17767",
+            "sourceId": "src-rxnorm-nlm"
+          }
+        ]
+      }
     },
     {
       "id": "ing-furosemide",
@@ -3537,9 +3567,19 @@
       "safetyNote": "معلومات تعليمية فقط — يستلزم مراقبة شوارد الدم (البوتاسيوم والمغنيسيوم) ووظيفة الكلية تحت إشراف طبي.",
       "citationIds": [
         "src-medlineplus-nlm",
-        "src-ncbi-bookshelf-statpearls"
+        "src-ncbi-bookshelf-statpearls",
+        "src-rxnorm-nlm"
       ],
-      "reviewStatus": "verified"
+      "reviewStatus": "EDUCATIONAL_UNREVIEWED",
+      "details": {
+        "identifiers": [
+          {
+            "vocabulary": "RXNORM",
+            "identifier": "4603",
+            "sourceId": "src-rxnorm-nlm"
+          }
+        ]
+      }
     },
     {
       "id": "ing-salbutamol",
@@ -3551,9 +3591,19 @@
       "safetyNote": "معلومات تعليمية فقط — الاعتماد المفرط على موسعات القصبات الإسعافية دون علاج الالتهاب الأساسي يستوجب مراجعة الطبيب.",
       "citationIds": [
         "src-medlineplus-nlm",
-        "src-who-icd11"
+        "src-who-icd11",
+        "src-rxnorm-nlm"
       ],
-      "reviewStatus": "verified"
+      "reviewStatus": "EDUCATIONAL_UNREVIEWED",
+      "details": {
+        "identifiers": [
+          {
+            "vocabulary": "RXNORM",
+            "identifier": "435",
+            "sourceId": "src-rxnorm-nlm"
+          }
+        ]
+      }
     },
     {
       "id": "ing-omeprazole",
@@ -3565,9 +3615,19 @@
       "safetyNote": "معلومات تعليمية فقط — يُنصح بمراجعة التداخلات الدوائية (مثل CYP2C19) مع الصيدلاني أو الطبيب.",
       "citationIds": [
         "src-medlineplus-nlm",
-        "src-ncbi-bookshelf-statpearls"
+        "src-ncbi-bookshelf-statpearls",
+        "src-rxnorm-nlm"
       ],
-      "reviewStatus": "verified"
+      "reviewStatus": "EDUCATIONAL_UNREVIEWED",
+      "details": {
+        "identifiers": [
+          {
+            "vocabulary": "RXNORM",
+            "identifier": "7646",
+            "sourceId": "src-rxnorm-nlm"
+          }
+        ]
+      }
     },
     {
       "id": "ing-metformin",
@@ -3579,9 +3639,19 @@
       "safetyNote": "معلومات تعليمية فقط — تتطلب وظيفة الكلية (eGFR) تقييماً دورياً لتجنب تراكم الدواء.",
       "citationIds": [
         "src-medlineplus-nlm",
-        "src-nice-guidelines"
+        "src-nice-guidelines",
+        "src-rxnorm-nlm"
       ],
-      "reviewStatus": "verified"
+      "reviewStatus": "EDUCATIONAL_UNREVIEWED",
+      "details": {
+        "identifiers": [
+          {
+            "vocabulary": "RXNORM",
+            "identifier": "6809",
+            "sourceId": "src-rxnorm-nlm"
+          }
+        ]
+      }
     },
     {
       "id": "ing-dapagliflozin",
@@ -3593,9 +3663,19 @@
       "safetyNote": "معلومات تعليمية فقط — يُصرف ويُتابع بإشراف الطبيب المختص.",
       "citationIds": [
         "src-medlineplus-nlm",
-        "src-nice-guidelines"
+        "src-nice-guidelines",
+        "src-rxnorm-nlm"
       ],
-      "reviewStatus": "verified"
+      "reviewStatus": "EDUCATIONAL_UNREVIEWED",
+      "details": {
+        "identifiers": [
+          {
+            "vocabulary": "RXNORM",
+            "identifier": "1488564",
+            "sourceId": "src-rxnorm-nlm"
+          }
+        ]
+      }
     }
   ],
   "sources": [
@@ -3668,6 +3748,16 @@
       "accessedAt": "2026-10-22",
       "license": "CC-BY-SA-4.0 / CC-BY-SA-2.1-JP",
       "attribution": "Z-Anatomy (G.ael Kerchenbaum) derived from BodyParts3D (Database Center for Life Science, Japan)."
+    },
+    {
+      "id": "src-rxnorm-nlm",
+      "title": "NLM RxNorm — active ingredient identifiers",
+      "url": "https://lhncbc.nlm.nih.gov/RxNav/APIs/RxNormAPIs.html",
+      "publisher": "U.S. National Library of Medicine",
+      "publicationDate": null,
+      "accessedAt": "2026-10-24",
+      "license": "RxNorm non-proprietary identifiers; RxNav Terms of Service apply",
+      "attribution": "NLM RxNav exact name lookup and IN concept properties, retrieved 2026-10-24."
     }
   ]
 }
