@@ -22,8 +22,19 @@ export async function academyAdmin(request,query,identity=academyIdentity) {
   try {
     const user=await identity(request);
     const members=await query('SELECT role FROM academy.memberships WHERE user_id=$1',[user]);
-    if(!members.length)return reply({error:'Forbidden'},403);
     const path=new URL(request.url).pathname;
+    if(request.method==='GET'&&path==='/v1/admin/me')return reply({userId:user,role:members[0]?.role??null});
+    if(!members.length)return reply({error:'Forbidden'},403);
+    if(request.method==='GET'&&path==='/v1/admin/audit'){
+      if(members[0].role!=='OWNER')return reply({error:'Forbidden'},403);
+      return reply(await query('SELECT id,actor_id,action,entity_id,revision,occurred_at FROM academy.audit_logs ORDER BY id DESC LIMIT 200'));
+    }
+    if(request.method==='POST'&&path==='/v1/admin/membership'){
+      if(members[0].role!=='OWNER')return reply({error:'Forbidden'},403);
+      const b=await bodyJson(request);
+      if(typeof b.userId!=='string'||!b.userId.trim()||b.userId.length>256||!['OWNER','REVIEWER','EDITOR','READ_ONLY','NONE'].includes(b.role))return reply({error:'Invalid membership'},400);
+      const rows=await query('SELECT academy.set_membership($1,$2,$3) AS result',[user,b.userId,b.role]);return reply(rows[0].result);
+    }
     if(request.method==='GET' && path==='/v1/admin/lessons')return reply(await query('SELECT id,revision,draft,reviewed_revision,published_revision FROM academy.lessons ORDER BY id LIMIT 1000'));
     if(request.method!=='POST' || path!=='/v1/admin/transition')return reply({error:'Route unavailable'},404);
     const b=await bodyJson(request);

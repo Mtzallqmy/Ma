@@ -37,3 +37,11 @@ test('public catalog uses only published payloads and referenced sources',async(
  assert.equal(b.lessons.length,1);assert.equal(b.courses.length,1);assert.deepEqual(b.sources,bundle.sources.filter(s=>bundle.lessons[0].sourceIds.includes(s.id)));
  assert.match(queries[0],/published_body IS NOT NULL/);assert.doesNotMatch(queries[0],/draft/);
 });
+test('role assignment is owner-only and uses the verified actor',async()=>{
+ const req=()=>new Request('https://api.example/v1/admin/membership',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({userId:'existing-target',role:'REVIEWER',actor:'spoofed'})});
+ let calls=0;
+ const denied=await academyAdmin(req(),async()=>{calls++;return[{role:'EDITOR'}]},async()=>'editor');assert.equal(denied.status,403);assert.equal(calls,1);
+ let args;
+ const allowed=await academyAdmin(req(),async(sql,values)=>{if(sql.includes('memberships'))return[{role:'OWNER'}];args=values;return[{result:{userId:'existing-target',role:'REVIEWER'}}]},async()=>'verified-owner');
+ assert.equal(allowed.status,200);assert.deepEqual(args,['verified-owner','existing-target','REVIEWER']);
+});
