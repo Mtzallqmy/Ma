@@ -342,7 +342,7 @@ fun AnatomyScenesScreen(
         }
 
         // Registered 3D Asset Contracts & Provenance
-        items(state.anatomy3DContracts, key = { it.assetId }) { contract ->
+        items(state.anatomy3DContracts.filter { it.isAvailableInStage01 }, key = { it.assetId }) { contract ->
             Card(
                 shape = RoundedCornerShape(16.dp),
                 colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),

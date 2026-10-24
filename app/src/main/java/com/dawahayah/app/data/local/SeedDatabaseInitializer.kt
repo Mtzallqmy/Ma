@@ -387,44 +387,6 @@ class SeedDatabaseInitializer(
                 isBundledOfflineDemoAvailable = true,
                 companionDependencyNotice = null,
                 lastErrorMessage = null
-            ),
-            PackRecordEntity(
-                id = "heart-model-high-v1",
-                version = "1.0.0",
-                titleAr = "حزمة أطلس القلب ثلاثي الأبعاد عالي الدقة (Cor 3D GLB High LOD)",
-                titleEn = "Heart High-Detail 3D Atlas Pack (Cor GLB High LOD)",
-                installState = PackInstallState.NOT_DOWNLOADED.name,
-                installedAt = null,
-                sizeBytes = 6_420_000L,
-                downloadedBytes = 0L,
-                locale = "ar",
-                scopeType = "model3d",
-                scopeId = "organ-heart",
-                assetQuality = "high_atlas",
-                license = "CC-BY-SA-4.0 (Z-Anatomy / BodyParts3D Cloud Pack)",
-                attribution = "Z-Anatomy / BodyParts3D — يتطلب اتصال Neon Cloud Object Storage",
-                isBundledOfflineDemoAvailable = false,
-                companionDependencyNotice = "حزمة اختيارية عالية الدقة (6.4 ميجابايت)؛ تعمل النسخة القياسية المنخفضة (heart-model-low-v1) محلياً دون الحاجة إليها.",
-                lastErrorMessage = null
-            ),
-            PackRecordEntity(
-                id = "pack-renal-pharmacokinetics-ar-v1",
-                version = "1.0.0",
-                titleAr = "حزمة الحرائك الدوائية والتصفية الكلوية (Renal Clearance)",
-                titleEn = "Renal Clearance & Glomerular Pharmacokinetics Pack",
-                installState = PackInstallState.NOT_DOWNLOADED.name,
-                installedAt = null,
-                sizeBytes = 148_400L,
-                downloadedBytes = 0L,
-                locale = "ar",
-                scopeType = "system",
-                scopeId = "sys-renal",
-                assetQuality = "standard",
-                license = "CC-BY-4.0 (Scheduled Cloud Pack on Neon Object Storage)",
-                attribution = "دواء وحياة — يتطلب اتصال Neon Cloud API",
-                isBundledOfflineDemoAvailable = false,
-                companionDependencyNotice = "تحتاج حزمة مصاحبة للرسوم التوضيحية بحجم 64 كيلوبايت عند توفر السحابة.",
-                lastErrorMessage = null
             )
         )
 

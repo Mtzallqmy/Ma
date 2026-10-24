@@ -250,6 +250,7 @@ abstract class DawaHayahDatabase : RoomDatabase() {
         val MIGRATION_3_4 = object : Migration(3, 4) {
             override fun migrate(db: SupportSQLiteDatabase) {
                 db.execSQL("CREATE TABLE IF NOT EXISTS `sync_state` (`key` TEXT NOT NULL, `value` TEXT NOT NULL, PRIMARY KEY(`key`))")
+                db.execSQL("DELETE FROM pack_records WHERE id IN ('heart-model-high-v1','pack-renal-pharmacokinetics-ar-v1') AND installedAt IS NULL")
             }
         }
 
