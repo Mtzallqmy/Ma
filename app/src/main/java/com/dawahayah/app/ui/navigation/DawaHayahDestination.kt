@@ -22,6 +22,7 @@ enum class PrimaryBottomTab(
 }
 
 object AuxiliaryRoutes {
+    const val ACADEMY = "academy"
     const val GLOBAL_SEARCH = "global_search"
     const val PACK_DOWNLOADS = "pack_downloads"
     const val ANATOMY_SCENES = "anatomy_scenes"

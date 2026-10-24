@@ -9,6 +9,9 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 
 @Database(
     entities = [
+        AcademyContentEntity::class,
+        AcademyAttemptEntity::class,
+        AcademyDraftEntity::class,
         SyncStateEntity::class,
         BodySystemEntity::class,
         OrganEntity::class,
@@ -31,12 +34,13 @@ import androidx.sqlite.db.SupportSQLiteDatabase
         DownloadTaskEntity::class,
         LocalAssetEntity::class
     ],
-    version = 5,
+    version = 6,
     exportSchema = true
 )
 abstract class DawaHayahDatabase : RoomDatabase() {
 
     abstract fun knowledgeDao(): KnowledgeDao
+    abstract fun academyDao(): AcademyDao
 
     companion object {
         private const val DATABASE_NAME = "dawa_hayah_knowledge.db"
@@ -260,6 +264,15 @@ abstract class DawaHayahDatabase : RoomDatabase() {
             }
         }
 
+        val MIGRATION_5_6 = object : Migration(5, 6) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("CREATE TABLE IF NOT EXISTS academy_content (id TEXT NOT NULL PRIMARY KEY, payload TEXT NOT NULL)")
+                db.execSQL("CREATE TABLE IF NOT EXISTS academy_attempts (id TEXT NOT NULL PRIMARY KEY, lessonId TEXT NOT NULL, lessonRevision INTEGER NOT NULL, answersJson TEXT NOT NULL, correct INTEGER NOT NULL, total INTEGER NOT NULL, completedAt INTEGER NOT NULL)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_academy_attempts_lessonId ON academy_attempts(lessonId)")
+                db.execSQL("CREATE TABLE IF NOT EXISTS academy_drafts (lessonId TEXT NOT NULL PRIMARY KEY, lessonRevision INTEGER NOT NULL, answersJson TEXT NOT NULL)")
+            }
+        }
+
         @Volatile
         private var INSTANCE: DawaHayahDatabase? = null
 
@@ -270,7 +283,7 @@ abstract class DawaHayahDatabase : RoomDatabase() {
                     DawaHayahDatabase::class.java,
                     DATABASE_NAME
                 )
-                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5)
+                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6)
                     .build()
                     .also { INSTANCE = it }
             }

@@ -1,5 +1,6 @@
 import postgres from "postgres";
 import { publishedSnapshot } from "./published-snapshot.js";
+import { academySnapshot } from "./academy-snapshot.js";
 
 // Dawa & Hayah: public, read-only API. Neon injects DATABASE_URL into Functions.
 // This function never exposes PostgreSQL credentials or internal clinical drafts.
@@ -73,6 +74,9 @@ async function handler(request) {
   if (path === "/health") {
     await get("SELECT 1 AS healthy");
     return json({status:"ok", region:"aws-eu-central-1", postgresConnected:true, storageBucketReady:false, apiVersion:"v1"});
+  }
+  if (path === "/v1/academy/snapshot") {
+    return json(await sql.begin('isolation level repeatable read read only', tx => academySnapshot(statement => tx.unsafe(statement))));
   }
   if (path === "/v1/snapshot") {
     const snapshot = await sql.begin('isolation level repeatable read read only',

@@ -4,6 +4,7 @@
   "type": "module",
   "version": "0.1.0",
   "dependencies": {
+    "jose": "6.1.3",
     "postgres": "3.4.7"
   },
   "devDependencies": {
