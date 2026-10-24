@@ -12,6 +12,8 @@ import com.dawahayah.app.domain.model.ContentPackManifest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
+import retrofit2.converter.kotlinx.serialization.asConverterFactory
+import okhttp3.MediaType.Companion.toMediaType
 import org.junit.Assert.*
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -33,5 +35,23 @@ class BundledPackContractsTest {
    val record=db.knowledgeDao().getPackRecordById("respiratory-diseases-ar-v1")!!;assertEquals("1.0.1",record.version)
    val lesson=db.knowledgeDao().observeLocalContents().first().single{it.origin=="respiratory-diseases-ar-v1"};assertEquals("EDUCATIONAL_UNREVIEWED",lesson.reviewStatus)
   }finally{db.close();sandbox.deleteRecursively()}
+ }
+ @Test fun repairedCloudPacksDownloadVerifiedBytesAndRemainReadableOffline()=runBlocking {
+  val base=ApplicationProvider.getApplicationContext<Context>();val sandbox=java.io.File(base.cacheDir,"cloud-pack-test-${System.nanoTime()}").apply{mkdirs()};val context=object:ContextWrapper(base){override fun getFilesDir()=sandbox}
+  val db=Room.inMemoryDatabaseBuilder(context,DawaHayahDatabase::class.java).build()
+  val client=okhttp3.OkHttpClient.Builder().connectTimeout(20,java.util.concurrent.TimeUnit.SECONDS).readTimeout(40,java.util.concurrent.TimeUnit.SECONDS).build()
+  try {
+   SeedDatabaseInitializer(context,db.knowledgeDao()).ensureSeededIfEmpty()
+   val api=retrofit2.Retrofit.Builder().baseUrl(BuildConfig.NEON_PUBLIC_API_BASE_URL).client(client)
+    .addConverterFactory(Json{ignoreUnknownKeys=true}.asConverterFactory("application/json".toMediaType())).build().create(com.dawahayah.app.data.remote.NeonApiService::class.java)
+   val remote=com.dawahayah.app.data.remote.RetrofitNeonDataSource(BuildConfig.NEON_PUBLIC_API_BASE_URL,api)
+   for(id in listOf("respiratory-diseases-ar-v1","heart-model-low-v1")){
+    db.knowledgeDao().upsertPackRecord(db.knowledgeDao().getPackRecordById(id)!!.copy(isBundledOfflineDemoAvailable=false))
+    val result=ContentPackManager(context,db.knowledgeDao(),remote).installPack(id);assertTrue("Cloud $id: $result",result is AppResult.Success)
+   }
+   client.connectionPool.evictAll();client.dispatcher.executorService.shutdown()
+   val assets=db.knowledgeDao().observeAssetsForPack("respiratory-diseases-ar-v1").first();assertTrue(assets.isNotEmpty());assertTrue(assets.all{java.io.File(it.absolutePersistentPath).isFile})
+   assertEquals("1.0.1",db.knowledgeDao().getPackRecordById("heart-model-low-v1")!!.version)
+  }finally{client.connectionPool.evictAll();client.dispatcher.executorService.shutdown();db.close();sandbox.deleteRecursively()}
  }
 }
