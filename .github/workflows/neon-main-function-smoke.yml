@@ -1,12 +1,14 @@
 name: Neon Main appdb Function API Smoke
 on:
   push:
-    branches: [backend/neon-public-read-api, main]
+    branches: [backend/neon-public-read-api, main, work/stage-04-academy-admin]
     paths:
       - .github/workflows/neon-main-function-smoke.yml
       - neon/functions/public-api/index.js
       - neon/functions/public-api/dist/index.mjs
       - neon/functions/public-api/package.json
+      - neon/functions/public-api/academy-*.js
+      - neon/functions/public-api/dist/academy-admin.mjs
   workflow_dispatch:
 permissions:
   contents: read
@@ -41,3 +43,20 @@ jobs:
           set -euo pipefail
           test "$(curl -sS --max-time 25 -o /dev/null -w '%{http_code}' "$API/v1/clinical-dosing")" = 404
           test "$(curl -sS --max-time 25 -o /dev/null -w '%{http_code}' -X POST "$API/v1/catalog")" = 405
+
+      - name: Verify live academy catalog and anonymous admin rejection
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --retry 2 --fail-with-body --max-time 40 -sS "$API/v1/academy/snapshot" > /tmp/academy.json
+          python3 - <<'PYTHON'
+          import json
+          b=json.load(open('/tmp/academy.json'))
+          assert b['schemaVersion']==1 and len(b['lessons'])==3 and len(b['courses'])==3
+          assert all(x['reviewStatus']=='EDUCATIONAL_UNREVIEWED' for x in b['lessons'])
+          assert all(len(x['questions'])==2 for x in b['lessons'])
+          print('Live academy: 3 courses, 3 lessons, 6 questions; scientific review pending')
+          PYTHON
+          ADMIN=https://br-steep-moon-b9kxm3uf-academy.compute.c-7.eu-central-1.aws.neon.tech
+          test "$(curl -sS --retry 2 --max-time 30 -o /dev/null -w '%{http_code}' "$ADMIN/v1/admin/lessons")" = 401
+          test "$(curl -sS --max-time 30 -H 'Authorization: Bearer unsigned.forged.token' -o /dev/null -w '%{http_code}' "$ADMIN/v1/admin/lessons")" = 401

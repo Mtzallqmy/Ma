@@ -106,6 +106,10 @@ class AppContainer(context: Context) {
         )
     }
 
+    val academyRepository by lazy {
+        com.dawahayah.app.data.repository.AcademyRepository(appContext, database.academyDao(), BuildConfig.NEON_PUBLIC_API_BASE_URL, json)
+    }
+
     val anatomyAssetPlayer: Stage01AnatomyAssetPlayer by lazy {
         Stage01AnatomyAssetPlayer()
     }

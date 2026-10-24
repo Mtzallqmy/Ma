@@ -1,0 +1,309 @@
+{
+  "schemaVersion": 1,
+  "courses": [
+    {
+      "id": "course-foundations",
+      "title": {
+        "ar": "أساسيات الصيدلة: الحساب والوحدات",
+        "en": "Pharmacy foundations: quantities"
+      },
+      "description": {
+        "ar": "بداية عملية للتحليل البُعدي.",
+        "en": "A practical start to dimensional analysis."
+      }
+    },
+    {
+      "id": "course-pharmaceutics",
+      "title": {
+        "ar": "الصيدلانيات: نموذج التخفيف",
+        "en": "Pharmaceutics: dilution model"
+      },
+      "description": {
+        "ar": "تطبيق حفظ كمية المذاب.",
+        "en": "Apply conservation of solute."
+      }
+    },
+    {
+      "id": "course-kinetics",
+      "title": {
+        "ar": "الحرائك: نماذج رياضية",
+        "en": "Kinetics: mathematical models"
+      },
+      "description": {
+        "ar": "فهم الافتراضات قبل التطبيق.",
+        "en": "Understand assumptions before applying models."
+      }
+    }
+  ],
+  "lessons": [
+    {
+      "id": "academy-units",
+      "courseId": "course-foundations",
+      "moduleId": "module-units",
+      "title": {
+        "ar": "الوحدات والتحليل البُعدي",
+        "en": "Units and dimensional analysis"
+      },
+      "outcomes": [
+        {
+          "ar": "تحويل الكتلة والحجم مع كتابة الوحدة.",
+          "en": "Convert mass and volume with explicit units."
+        },
+        {
+          "ar": "كشف خطأ خلط وحدة الكتلة بوحدة الحجم.",
+          "en": "Detect mixing mass and volume dimensions."
+        }
+      ],
+      "body": {
+        "ar": "العدد وحده لا يحدد كمية: 5 mg تختلف عن 5 g. البادئة milli تعني جزءًا من ألف؛ لذلك 1 g = 1000 mg و1 L = 1000 mL. اكتب الوحدة في كل خطوة، وألغِ الوحدات المتماثلة عند الضرب والقسمة. لا تحول كتلة إلى حجم دون معلومة إضافية مثل التركيز أو الكثافة. العلاقة المفاهيمية: كمية مع وحدة، ثم عامل تحويل من البعد نفسه، ثم كمية مكافئة بوحدة جديدة.",
+        "en": "A number alone does not specify a quantity: 5 mg differs from 5 g. The prefix milli represents one thousandth, so 1 g = 1000 mg and 1 L = 1000 mL. Carry units at every step and cancel matching units in multiplication and division. Do not convert mass to volume without additional information such as concentration or density. Concept relationship: a quantity with a unit, a conversion factor of the same dimension, then an equivalent quantity in a new unit."
+      },
+      "example": {
+        "ar": "مثال رياضي: 0.25 g × 1000 mg/g = 250 mg. التحويل لا يغيّر كمية المادة.",
+        "en": "Arithmetic example: 0.25 g × 1000 mg/g = 250 mg. Conversion does not change the amount."
+      },
+      "questions": [
+        {
+          "id": "units-1",
+          "prompt": {
+            "ar": "كم mg في 0.25 g؟",
+            "en": "How many mg are in 0.25 g?"
+          },
+          "options": [
+            {
+              "ar": "25",
+              "en": "25"
+            },
+            {
+              "ar": "250",
+              "en": "250"
+            },
+            {
+              "ar": "2500",
+              "en": "2500"
+            }
+          ],
+          "correctIndex": 1,
+          "explanation": {
+            "ar": "نضرب 0.25 في 1000؛ الناتج 250 mg.",
+            "en": "Multiply 0.25 by 1000 to obtain 250 mg."
+          }
+        },
+        {
+          "id": "units-2",
+          "prompt": {
+            "ar": "أي تحويل يحتاج معلومة إضافية؟",
+            "en": "Which conversion needs additional information?"
+          },
+          "options": [
+            {
+              "ar": "g إلى mg",
+              "en": "g to mg"
+            },
+            {
+              "ar": "L إلى mL",
+              "en": "L to mL"
+            },
+            {
+              "ar": "mg إلى mL",
+              "en": "mg to mL"
+            }
+          ],
+          "correctIndex": 2,
+          "explanation": {
+            "ar": "الكتلة والحجم بُعدان مختلفان؛ نحتاج التركيز أو الكثافة بحسب السياق.",
+            "en": "Mass and volume are different dimensions; concentration or density is needed according to context."
+          }
+        }
+      ],
+      "revision": 1,
+      "reviewStatus": "EDUCATIONAL_UNREVIEWED",
+      "sourceIds": [
+        "src-bipm-si"
+      ],
+      "license": "CC BY 4.0",
+      "attribution": "Original educational text and fictional arithmetic examples — Dawa & Hayah, 2026. Scientific review pending."
+    },
+    {
+      "id": "academy-dilution",
+      "courseId": "course-pharmaceutics",
+      "moduleId": "module-concentration",
+      "title": {
+        "ar": "التخفيف وحفظ كمية المذاب",
+        "en": "Dilution and conservation of solute"
+      },
+      "outcomes": [
+        {
+          "ar": "اشتقاق C1×V1 = C2×V2 من حفظ الكمية.",
+          "en": "Derive C1×V1 = C2×V2 from conservation."
+        },
+        {
+          "ar": "تمييز الحجم النهائي عن حجم المذيب المضاف.",
+          "en": "Distinguish final volume from added diluent."
+        }
+      ],
+      "body": {
+        "ar": "في نموذج تخفيف مثالي يحفظ المذاب ولا توجد فيه خسائر أو تفاعل، كمية المذاب قبل التخفيف تساوي كميته بعده. عند استخدام وحدات تركيز متطابقة ووحدات حجم متطابقة تصبح C1×V1 = C2×V2. لا تجمع قيم تركيز بوحدات مختلفة مباشرة. هذا نموذج تعليمي؛ تحضير المستحضرات الحقيقية يحتاج تعليمات وثباتًا وتوافقًا وتقنية مناسبة.",
+        "en": "In an ideal dilution that conserves solute without loss or reaction, the initial and final solute amounts are equal. With matching concentration units and matching volume units, C1×V1 = C2×V2. Do not combine concentrations expressed in different units directly. This is an educational model; real formulation requires appropriate instructions, stability, compatibility and technique."
+      },
+      "example": {
+        "ar": "لمادة تدريبية افتراضية: C1=10 mg/mL وC2=2 mg/mL وV2=50 mL. إذن V1=10 mL من المحلول الأول، ثم يُستكمل إلى حجم نهائي 50 mL.",
+        "en": "For a fictional training solute: C1=10 mg/mL, C2=2 mg/mL, V2=50 mL. V1=10 mL of stock, then make up to a final volume of 50 mL."
+      },
+      "questions": [
+        {
+          "id": "dilution-1",
+          "prompt": {
+            "ar": "ما حجم المحلول الأول في المثال؟",
+            "en": "What stock volume does the example require?"
+          },
+          "options": [
+            {
+              "ar": "10 mL",
+              "en": "10 mL"
+            },
+            {
+              "ar": "25 mL",
+              "en": "25 mL"
+            },
+            {
+              "ar": "50 mL",
+              "en": "50 mL"
+            }
+          ],
+          "correctIndex": 0,
+          "explanation": {
+            "ar": "V1 = C2×V2/C1 = 2×50/10 = 10 mL.",
+            "en": "V1 = C2×V2/C1 = 2×50/10 = 10 mL."
+          }
+        },
+        {
+          "id": "dilution-2",
+          "prompt": {
+            "ar": "ماذا يعني الحجم النهائي 50 mL؟",
+            "en": "What does a final volume of 50 mL mean?"
+          },
+          "options": [
+            {
+              "ar": "إضافة 50 mL دائمًا",
+              "en": "Always add 50 mL"
+            },
+            {
+              "ar": "استكمال المزيج إلى 50 mL",
+              "en": "Make the mixture up to 50 mL"
+            },
+            {
+              "ar": "إضافة 10 mL دائمًا",
+              "en": "Always add 10 mL"
+            }
+          ],
+          "correctIndex": 1,
+          "explanation": {
+            "ar": "الحجم النهائي يشمل المحلول الأول والمذيب، ولا يساوي تلقائيًا الحجم المضاف.",
+            "en": "Final volume includes stock and diluent; it is not automatically the added volume."
+          }
+        }
+      ],
+      "revision": 1,
+      "reviewStatus": "EDUCATIONAL_UNREVIEWED",
+      "sourceIds": [
+        "src-bipm-si"
+      ],
+      "license": "CC BY 4.0",
+      "attribution": "Original educational text and fictional arithmetic examples — Dawa & Hayah, 2026. Scientific review pending."
+    },
+    {
+      "id": "academy-half-life",
+      "courseId": "course-kinetics",
+      "moduleId": "module-models",
+      "title": {
+        "ar": "نموذج الانخفاض الأُسّي ونصف العمر",
+        "en": "Exponential decline and half-life model"
+      },
+      "outcomes": [
+        {
+          "ar": "حساب الكسر المتبقي بعد عدد من أنصاف الأعمار.",
+          "en": "Calculate the fraction remaining after half-lives."
+        },
+        {
+          "ar": "تمييز نموذج رياضي عن تنبؤ فردي لمريض.",
+          "en": "Distinguish a model from an individual patient prediction."
+        }
+      ],
+      "body": {
+        "ar": "نعرّف نموذجًا رياضيًا افتراضيًا ينخفض فيه مقدار إلى نصف قيمته كل فترة ثابتة T. بعد زمن t يكون الكسر المتبقي (1/2)^(t/T). يفترض هذا ثبات T وعدم إضافة كمية جديدة. هذا تعريف رياضي، وليس وصفًا لكل دواء أو لكل مريض؛ تغيّر التصفية أو الامتصاص أو طريقة الإعطاء قد يجعل النموذج غير ملائم.",
+        "en": "Define a fictional mathematical model in which a quantity halves every fixed interval T. After time t, the fraction remaining is (1/2)^(t/T). This assumes constant T and no new input. It is a mathematical definition, not a description of every drug or patient; changes in clearance, absorption or input can make it inappropriate."
+      },
+      "example": {
+        "ar": "إذا كان T=4 ساعات وt=12 ساعة، فقد مرّت ثلاثة أنصاف أعمار؛ المتبقي 1/8 = 12.5%. لا يُستخدم هذا المثال لتحديد جرعة أو موعد إعطاء.",
+        "en": "For T=4 hours and t=12 hours, three half-lives have passed; 1/8 = 12.5% remains. This example does not determine a dose or administration schedule."
+      },
+      "questions": [
+        {
+          "id": "half-1",
+          "prompt": {
+            "ar": "ما الكسر المتبقي بعد ثلاثة أنصاف أعمار؟",
+            "en": "What fraction remains after three half-lives?"
+          },
+          "options": [
+            {
+              "ar": "50%",
+              "en": "50%"
+            },
+            {
+              "ar": "25%",
+              "en": "25%"
+            },
+            {
+              "ar": "12.5%",
+              "en": "12.5%"
+            }
+          ],
+          "correctIndex": 2,
+          "explanation": {
+            "ar": "نضرب النصف في نفسه ثلاث مرات: 1/8.",
+            "en": "Multiply one half by itself three times: 1/8."
+          }
+        },
+        {
+          "id": "half-2",
+          "prompt": {
+            "ar": "هل يحدد هذا النموذج وحده وصفة فردية؟",
+            "en": "Does this model alone determine an individual prescription?"
+          },
+          "options": [
+            {
+              "ar": "نعم",
+              "en": "Yes"
+            },
+            {
+              "ar": "لا",
+              "en": "No"
+            }
+          ],
+          "correctIndex": 1,
+          "explanation": {
+            "ar": "لا؛ النموذج لا يصف جميع عوامل المريض والدواء.",
+            "en": "No; the model does not describe all patient and medicine factors."
+          }
+        }
+      ],
+      "revision": 1,
+      "reviewStatus": "EDUCATIONAL_UNREVIEWED",
+      "sourceIds": [
+        "src-bipm-si"
+      ],
+      "license": "CC BY 4.0",
+      "attribution": "Original educational text and fictional arithmetic examples — Dawa & Hayah, 2026. Scientific review pending."
+    }
+  ],
+  "sources": [
+    {
+      "id": "src-bipm-si",
+      "title": "BIPM — SI Brochure, 9th edition (2026 update)",
+      "url": "https://www.bipm.org/en/publications/si-brochure",
+      "license": "CC BY 4.0",
+      "attribution": "Bureau International des Poids et Mesures; original worked examples by Dawa & Hayah; not a BIPM endorsement."
+    }
+  ]
+}

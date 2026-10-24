@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.CloudDownload
+import androidx.compose.material.icons.outlined.School
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -104,6 +105,9 @@ fun DawaHayahMainScaffold(
                     )
                 },
                 actions = {
+                    IconButton(onClick = { navController.navigate(AuxiliaryRoutes.ACADEMY) }) {
+                        Icon(Icons.Outlined.School, contentDescription = if (isAr) "أكاديمية الصيدلة" else "Pharmacy Academy")
+                    }
                     IconButton(onClick = { navController.navigate(AuxiliaryRoutes.GLOBAL_SEARCH) }) {
                         Icon(
                             imageVector = Icons.Outlined.Search,
@@ -164,6 +168,10 @@ fun DawaHayahMainScaffold(
                 navController = navController,
                 startDestination = PrimaryBottomTab.HOME.route
             ) {
+                composable(AuxiliaryRoutes.ACADEMY) {
+                    val app = androidx.compose.ui.platform.LocalContext.current.applicationContext as DawaHayahApplication
+                    com.dawahayah.app.features.academy.AcademyScreen(app.container.academyRepository, isAr)
+                }
                 composable(PrimaryBottomTab.HOME.route) {
                     HomeScreen(
                         state = state,

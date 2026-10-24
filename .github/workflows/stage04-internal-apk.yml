@@ -1,0 +1,98 @@
+name: Dawa & Hayah Stage 04 Internal ARM64 Test APK
+
+on:
+  push:
+    branches: ["release/stage04-academy-arm64"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: dawa-hayah-stage04-internal-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  beta:
+    name: Android 8+ ARM64 signed internal test APK
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - name: Setup Gradle 8.9
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: "8.9"
+      - name: Scan production source for embedded credentials
+        shell: bash
+        run: |
+          set -euo pipefail
+          if grep -RInE '(postgresql://[^ ]+:[^ ]+@|npg_[A-Za-z0-9_-]{12,}|AWS_SECRET_ACCESS_KEY[[:space:]]*=[[:space:]]*"[^"]+"|NEON_API_KEY[[:space:]]*=[[:space:]]*"[^"]+")' app/src/main/; then
+            echo "::error::Production source contains possible database credentials."
+            exit 1
+          fi
+      - name: Android JVM unit tests
+        run: ./gradlew :app:testDebugUnitTest --stacktrace
+      - name: Android lint
+        run: ./gradlew :app:lintDebug --stacktrace
+      - name: Generate temporary beta-only test certificate
+        shell: bash
+        run: |
+          set -euo pipefail
+          CI_BETA_STORE_PASSWORD=$(openssl rand -hex 24)
+          echo "::add-mask::$CI_BETA_STORE_PASSWORD"
+          echo "CI_BETA_STORE_PASSWORD=$CI_BETA_STORE_PASSWORD" >> "$GITHUB_ENV"
+          echo "CI_BETA_KEYSTORE=$RUNNER_TEMP/dawa-beta-test.jks" >> "$GITHUB_ENV"
+          keytool -genkeypair -keystore "$RUNNER_TEMP/dawa-beta-test.jks" -alias beta-test \
+            -storepass "$CI_BETA_STORE_PASSWORD" -keypass "$CI_BETA_STORE_PASSWORD" \
+            -keyalg RSA -keysize 2048 -validity 365 \
+            -dname "CN=Dawa Hayah Temporary Beta Test, O=Dawa Hayah, C=YE"
+      - name: Assemble Android ARM64 beta Release
+        run: ./gradlew :app:assembleRelease --stacktrace
+      - name: Sign beta with the explicitly temporary certificate
+        shell: bash
+        run: |
+          set -euo pipefail
+          BETA_UNSIGNED=$(find app/build/outputs/apk/release -maxdepth 1 -name '*unsigned.apk' | head -1)
+          test -s "$BETA_UNSIGNED"
+          BETA_TOOLS="$ANDROID_HOME/build-tools/35.0.0"
+          "$BETA_TOOLS/zipalign" -f -p 4 "$BETA_UNSIGNED" "$RUNNER_TEMP/aligned-beta.apk"
+          mkdir -p dist
+          "$BETA_TOOLS/apksigner" sign --ks "$CI_BETA_KEYSTORE" --ks-key-alias beta-test \
+            --ks-pass env:CI_BETA_STORE_PASSWORD --key-pass env:CI_BETA_STORE_PASSWORD \
+            --out dist/Dawa-Hayah-v0.5.0-beta.3-android8-arm64.apk "$RUNNER_TEMP/aligned-beta.apk"
+      - name: Verify ARM64-only native libraries, package signing, and version
+        shell: bash
+        run: |
+          set -euo pipefail
+          APK=dist/Dawa-Hayah-v0.5.0-beta.3-android8-arm64.apk
+          test -n "$APK"
+          test -s "$APK"
+          python3 - "$APK" <<'PY'
+          import sys,zipfile
+          path=sys.argv[1]
+          with zipfile.ZipFile(path) as z:
+              names=z.namelist()
+              native=[x for x in names if x.startswith('lib/') and x.endswith('.so')]
+              wrong=[x for x in native if not x.startswith('lib/arm64-v8a/')]
+              assert not wrong, 'non-arm64 native libs: '+str(wrong)
+              assert any(x.startswith('lib/arm64-v8a/') for x in native), 'no arm64 shared libraries'
+              print('ARM64 ABI verification passed', len(native), 'native libs')
+          PY
+          BUILD_TOOLS="$ANDROID_HOME/build-tools/35.0.0"
+          "$BUILD_TOOLS/apksigner" verify --verbose --print-certs "$APK"
+          "$BUILD_TOOLS/aapt" dump badging "$APK" | grep -E "^(package:|sdkVersion:|native-code:)"
+          cd dist
+          sha256sum Dawa-Hayah-v0.5.0-beta.3-android8-arm64.apk > SHA256SUMS.txt
+      - name: Upload ready-to-install beta APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Dawa-Hayah-v0.5.0-beta.3-ARM64-APK
+          path: dist/
+          retention-days: 30
+          if-no-files-found: error
