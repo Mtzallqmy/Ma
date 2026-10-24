@@ -193,6 +193,13 @@ interface KnowledgeDao {
     @Query("SELECT * FROM bookmarks")
     suspend fun allBookmarks(): List<BookmarkEntity>
 
+    @Query("UPDATE diseases SET reviewStatus='EDUCATIONAL_UNREVIEWED',humanReviewedAt=NULL WHERE id IN (:ids) AND reviewStatus='verified' AND humanReviewedAt='2026-10-22'")
+    suspend fun clearLegacySeedDiseaseReview(ids: List<String>)
+    @Query("UPDATE source_attributions SET reviewStatus='EDUCATIONAL_UNREVIEWED',humanReviewedAt=NULL WHERE entityId IN (:ids) AND reviewStatus='verified' AND humanReviewedAt='2026-10-22'")
+    suspend fun clearLegacySeedAttributionReview(ids: List<String>)
+    @Query("UPDATE body_systems SET lastReviewedAt=NULL WHERE id IN (:ids) AND lastReviewedAt='2026-10-22'")
+    suspend fun clearLegacySeedSystemReview(ids: List<String>)
+
     @Query("SELECT * FROM reading_progress")
     suspend fun allReadingProgress(): List<ReadingProgressEntity>
 
