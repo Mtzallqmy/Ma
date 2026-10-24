@@ -1,7 +1,7 @@
 name: Neon Main appdb Function API Smoke
 on:
   push:
-    branches: [backend/neon-public-read-api, main]
+    branches: [backend/neon-public-read-api, main, work/stage-04-academy-admin]
     paths:
       - .github/workflows/neon-main-function-smoke.yml
       - neon/functions/public-api/index.js

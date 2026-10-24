@@ -50,6 +50,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
+      - name: Install pinned API dependencies for contract tests
+        run: npm ci --ignore-scripts --prefix neon/functions/public-api
       - name: Published API snapshot contract tests
         run: node --test neon/functions/public-api/*.test.js
 
