@@ -11,6 +11,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.dawahayah.app.core.security.IntegrityVerifier
 import com.dawahayah.app.data.repository.AcademyRepository
@@ -23,6 +24,11 @@ fun AcademyScreen(repository: AcademyRepository, isAr: Boolean) {
     val bundle by repository.catalog.collectAsState(initial = null)
     val attempts by repository.attempts.collectAsState(initial = emptyList())
     val scope = rememberCoroutineScope()
+    val context=LocalContext.current
+    val learner=(context.applicationContext as com.dawahayah.app.DawaHayahApplication).container.learnerSyncRepository
+    val browser=LocalUriHandler.current
+    var link by remember {mutableStateOf<com.dawahayah.app.data.repository.DeviceLink?>(null)}
+    var accountOpen by rememberSaveable {mutableStateOf(false)}
     var selected by rememberSaveable { mutableStateOf<String?>(null) }
     var calculators by rememberSaveable { mutableStateOf(false) }
     var message by remember { mutableStateOf("") }
@@ -35,6 +41,14 @@ fun AcademyScreen(repository: AcademyRepository, isAr: Boolean) {
             TextButton(onClick={ selected=null; calculators=false }) { Text(if(isAr) "الدروس" else "Lessons") }
             TextButton(onClick={ selected=null; calculators=true }) { Text(if(isAr) "الحاسبات" else "Calculators") }
             TextButton(enabled=!busy, onClick={ scope.launch { busy=true; try { repository.refresh(); message=if(isAr) "حُفظت الدروس للعمل دون إنترنت" else "Lessons saved for offline use" } catch (_: Exception) { message=if(isAr) "تعذر التحديث؛ النسخة المحلية محفوظة" else "Update failed; local content retained" } finally { busy=false } } }) { Text(if(isAr) "تحديث" else "Update") }
+        }
+        TextButton(onClick={accountOpen=!accountOpen}) {Text(if(isAr) "الحساب ومزامنة النتائج" else "Account and score sync")}
+        if(accountOpen) {
+            Text(if(isAr) "تُنقل محاولات التعلم لهذا الحساب عند طلب المزامنة فقط. لا تدخل معلومات مرضى." else "Learning attempts are transferred to this account only when you request sync. Do not enter patient data.")
+            TextButton(enabled=!busy,onClick={scope.launch{busy=true;try{link=learner.start();browser.openUri(learner.approvalUrl(link!!))}catch(_:Exception){message=if(isAr) "تعذر بدء تسجيل الدخول" else "Cannot start sign-in"}finally{busy=false}}}){Text(if(isAr) "تسجيل الدخول في المتصفح" else "Sign in using browser")}
+            if(link!=null)TextButton(enabled=!busy,onClick={scope.launch{busy=true;try{val done=learner.finish(link!!);message=if(done){link=null;if(isAr) "تم ربط الحساب" else "Account connected"}else{if(isAr) "أكمل الموافقة في المتصفح أولًا" else "Approve in the browser first"}}catch(_:Exception){link=null;message=if(isAr) "انتهى طلب الربط؛ ابدأ مجددًا" else "Link expired; start again"}finally{busy=false}}}){Text(if(isAr) "أكملت الموافقة" else "I approved the connection")}
+            TextButton(enabled=!busy,onClick={scope.launch{busy=true;try{val count=learner.sync();message=if(isAr) "تمت المزامنة: $count محاولة" else "Synced: $count attempts"}catch(_:Exception){message=if(isAr) "تعذرت المزامنة؛ النتائج المحلية محفوظة. تحقق من الحساب أو تعارض المحاولات." else "Sync failed; local attempts retained. Check sign-in or attempt conflicts."}finally{busy=false}}}){Text(if(isAr) "مزامنة محاولات هذا الهاتف" else "Sync this device’s attempts")}
+            TextButton(enabled=!busy,onClick={scope.launch{busy=true;try{learner.signOut()}catch(_:Exception){}finally{busy=false;link=null;message=if(isAr) "حُذفت جلسة هذا الهاتف" else "Device session removed"}}}){Text(if(isAr) "تسجيل الخروج" else "Sign out")}
         }
         if(busy) LinearProgressIndicator(Modifier.fillMaxWidth())
         if(message.isNotEmpty()) Text(message, style=MaterialTheme.typography.labelMedium)
@@ -79,6 +93,7 @@ private fun LessonPanel(lesson: AcademyLesson, bundle: AcademyBundle, repository
     LaunchedEffect(lesson.id,lesson.revision) { answers=repository.draft(lesson);ready=true }
     Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()),verticalArrangement=Arrangement.spacedBy(12.dp)) {
         Text(lesson.title.get(isAr),style=MaterialTheme.typography.headlineSmall)
+        if(lesson.isSimulation) Text(if(isAr) "محاكاة تعليمية — لا تخص مريضًا حقيقيًا" else "Educational simulation — not a real patient")
         Text(if(isAr) "أهداف التعلم" else "Learning outcomes",style=MaterialTheme.typography.titleMedium)
         lesson.outcomes.forEach { Text("• "+it.get(isAr)) }
         Text(lesson.body.get(isAr));Text(lesson.example.get(isAr),style=MaterialTheme.typography.bodyLarge)

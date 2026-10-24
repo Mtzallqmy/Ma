@@ -12,7 +12,7 @@ import kotlinx.serialization.Serializable
     val id: String, val courseId: String, val moduleId: String, val revision: Int,
     val title: BilingualText, val outcomes: List<BilingualText>, val body: BilingualText,
     val example: BilingualText, val questions: List<AcademyQuestion>, val sourceIds: List<String>,
-    val reviewStatus: String, val license: String, val attribution: String
+    val reviewStatus: String, val license: String, val attribution: String, val isSimulation: Boolean = false
 )
 @Serializable data class AcademyBundle(val schemaVersion: Int, val courses: List<AcademyCourse>, val lessons: List<AcademyLesson>, val sources: List<AcademySource>)
 

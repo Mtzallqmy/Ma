@@ -26,3 +26,5 @@ keystore.properties
 node_modules/
 dist/
 .vite/
+
+neon/functions/public-api/panel/panel.js
