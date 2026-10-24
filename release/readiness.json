@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "stableReleaseApproved": false,
+  "qualifiedHumanClinicalReviewComplete": false,
+  "productionSigningKeyConfigured": false,
+  "realOwnerAndReviewerFlowVerified": false,
+  "physicalArm64DeviceVerified": false,
+  "distribution": "testing-only",
+  "reason": "Scientific review is deferred; production signing and real-user/physical-device verification are outstanding.",
+  "licenseAuditComplete": false
+}

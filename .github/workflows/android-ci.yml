@@ -39,6 +39,9 @@ jobs:
         with:
           gradle-version: "8.9"
 
+      - name: Verify release gates and APK inventory tooling
+        run: python3 scripts/test-release-gates.py
+
       - name: Security Scan — Verify No Exposed Neon or S3 Secrets
         run: |
           if grep -RInE "(postgresql://.*:.*@|AWS_SECRET_ACCESS_KEY\s*=\s*\"[^\"]+\"|NEON_API_KEY\s*=\s*\"[^\"]+\")" app/src/main/; then
@@ -52,6 +55,9 @@ jobs:
           node-version: '24'
       - name: Install pinned API dependencies for contract tests
         run: npm ci --ignore-scripts --prefix neon/functions/public-api
+      - name: Audit production API dependencies
+        run: npm audit --omit=dev --audit-level=high
+        working-directory: neon/functions/public-api
       - name: Build browser and server bundles
         run: node build.mjs
         working-directory: neon/functions/public-api
@@ -83,7 +89,11 @@ jobs:
           retention-days: 7
 
   offline-device-tests:
-    name: Offline SQLite and pack installation (API 26)
+    name: Offline SQLite and pack installation (API ${{ matrix.api }})
+    strategy:
+      fail-fast: false
+      matrix:
+        api: [26, 35]
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
@@ -102,7 +112,7 @@ jobs:
           sudo udevadm trigger --name-match=kvm
       - uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 26
+          api-level: ${{ matrix.api }}
           target: google_apis
           arch: x86_64
           disable-animations: true
@@ -110,5 +120,5 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: offline-api26-test-reports
+          name: offline-api${{ matrix.api }}-test-reports
           path: app/build/reports/androidTests/connected/

@@ -190,6 +190,12 @@ interface KnowledgeDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsertBookmark(bookmark: BookmarkEntity)
 
+    @Query("SELECT * FROM bookmarks")
+    suspend fun allBookmarks(): List<BookmarkEntity>
+
+    @Query("SELECT * FROM reading_progress")
+    suspend fun allReadingProgress(): List<ReadingProgressEntity>
+
     @Query("DELETE FROM bookmarks WHERE itemId = :itemId")
     suspend fun removeBookmark(itemId: String)
 
