@@ -38,6 +38,7 @@ class SeedDatabaseInitializer(
 ) {
 
     suspend fun ensureSeededIfEmpty() = withContext(Dispatchers.IO) {
+        clearUnsupportedLegacyReviewLabels()
         if (dao.getSyncValue("seed_revision") != null) {
             ensureMedicineMetadata()
             return@withContext
@@ -52,6 +53,15 @@ class SeedDatabaseInitializer(
         }
         persistBundle(seedBundle)
         ensureMedicineMetadata()
+    }
+
+    private suspend fun clearUnsupportedLegacyReviewLabels() {
+        if (dao.getSyncValue("legacy_seed_review_cleanup") != null) return
+        val bundle=json.decodeFromString<SeedBundleDto>(context.assets.open("seed/base_seed_v1.json").bufferedReader().use {it.readText()})
+        dao.clearLegacySeedDiseaseReview(bundle.diseases.map {it.id})
+        dao.clearLegacySeedAttributionReview(bundle.diseases.map {it.id})
+        dao.clearLegacySeedSystemReview(bundle.systems.map {it.id})
+        dao.putSyncValue(SyncStateEntity("legacy_seed_review_cleanup","1"))
     }
 
     private suspend fun ensureMedicineMetadata() {

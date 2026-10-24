@@ -164,7 +164,7 @@ data class DiseaseEntity(
     val affectedOrganIdsCsv: String = "",
     val relatedDrugClassesCsv: String = "",
     val importedAt: String = "2026-10-22",
-    val humanReviewedAt: String? = "2026-10-22"
+    val humanReviewedAt: String? = null
 )
 
 @Entity(

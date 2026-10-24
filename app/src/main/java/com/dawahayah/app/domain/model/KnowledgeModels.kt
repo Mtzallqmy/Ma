@@ -137,7 +137,7 @@ data class Disease(
     val affectedOrganIds: List<String> = emptyList(),
     val relatedDrugClasses: List<String> = emptyList(),
     val importedAt: String = "2026-10-22",
-    val humanReviewedAt: String? = "2026-10-22",
+    val humanReviewedAt: String? = null,
     val sections: List<DiseaseSection> = emptyList()
 )
 

@@ -14,8 +14,8 @@ android {
         applicationId = "com.dawahayah.app"
         minSdk = 26
         targetSdk = 35
-        versionCode = providers.gradleProperty("APP_VERSION_CODE").orElse("9").get().toInt()
-        versionName = providers.gradleProperty("APP_VERSION_NAME").orElse("0.9.0-rc.1").get()
+        versionCode = providers.gradleProperty("APP_VERSION_CODE").orElse("10").get().toInt()
+        versionName = providers.gradleProperty("APP_VERSION_NAME").orElse("0.9.0-rc.2").get()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {

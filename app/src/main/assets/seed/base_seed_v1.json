@@ -14,7 +14,7 @@
         "src-openstax-anatomy-v2",
         "src-ncbi-bookshelf-statpearls"
       ],
-      "lastReviewedAt": "2026-10-22",
+      "lastReviewedAt": null,
       "hasDetailedPathway": true,
       "interSystemRelationsAr": "يرتبط وثيقاً بالجهاز التنفسي عبر الدورة الرئوية لتبادل الغازات، وبالجهاز الكلوي عبر محور الرينين-أنجيوتنسين-ألدوستيرون (RAAS) لتنظيم حجم الدم وضغطه، وبالجهاز العصبي الذاتي لتعديل سرعة القلب ونتاجه.",
       "interSystemRelationsEn": "Tightly coupled with the respiratory system via pulmonary circulation, with the renal system via the RAAS axis for volume/pressure regulation, and with the autonomic nervous system for chronotropic/inotropic modulation.",
@@ -38,7 +38,7 @@
         "src-openstax-anatomy-v2",
         "src-who-icd11"
       ],
-      "lastReviewedAt": "2026-10-22",
+      "lastReviewedAt": null,
       "hasDetailedPathway": true,
       "interSystemRelationsAr": "يتكامل مع البطين الأيمن والأذين الأيسر عبر الشريان والأوردة الرئوية، ويتشارك مع الكليتين في ضبط باهاء الدم (pH) عبر معادلة البيكربونات وحمض الكربونيك.",
       "interSystemRelationsEn": "Integrates with the right ventricle and left atrium via pulmonary vasculature and collaborates with the kidneys to regulate arterial blood pH via bicarbonate buffering.",
@@ -61,7 +61,7 @@
         "src-openstax-anatomy-v2",
         "src-medlineplus-nlm"
       ],
-      "lastReviewedAt": "2026-10-22",
+      "lastReviewedAt": null,
       "hasDetailedPathway": true,
       "interSystemRelationsAr": "ينقل الدم الوريدي من الأمعاء عبر الوريد البابي الكبدي (Vena portae hepatis) إلى الكبد لمعالجة المغذيات والأدوية قبل وصولها إلى الدورة الجهازية، ويخضع لتنظيم العصب المبهم (Nervus vagus).",
       "interSystemRelationsEn": "Delivers splanchnic venous blood via the hepatic portal vein to the liver before systemic circulation and is regulated by the enteric nervous system and vagus nerve.",
@@ -84,7 +84,7 @@
         "src-ncbi-bookshelf-statpearls",
         "src-nice-guidelines"
       ],
-      "lastReviewedAt": "2026-10-22",
+      "lastReviewedAt": null,
       "hasDetailedPathway": true,
       "interSystemRelationsAr": "يتحكم في ضغط الدم الشرياني عبر إفراز الرينين من الجهاز المجاور للكبيبات، ويحفز نخاع العظم على تصنيع كريات الدم الحمراء عبر هرمون الإريثروبويتين (EPO).",
       "interSystemRelationsEn": "Regulates arterial blood pressure via juxtaglomerular renin secretion and stimulates bone marrow erythropoiesis via erythropoietin (EPO).",
@@ -107,7 +107,7 @@
         "src-openstax-anatomy-v2",
         "src-ncbi-bookshelf-statpearls"
       ],
-      "lastReviewedAt": "2026-10-22",
+      "lastReviewedAt": null,
       "hasDetailedPathway": true,
       "interSystemRelationsAr": "يتصل بجهاز الغدد الصماء عبر المحور الوطائي-النخامي (Hypothalamic-Pituitary Axis)، وينظم ضربات القلب وحركة الأمعاء والقصبات عبر الفرعين الودي ونظير الودي.",
       "interSystemRelationsEn": "Interfaces with the endocrine system via the hypothalamic-pituitary axis and modulates cardiac, bronchial, and gastrointestinal tone via sympathetic and parasympathetic divisions.",
@@ -130,7 +130,7 @@
         "src-openstax-anatomy-v2",
         "src-who-icd11"
       ],
-      "lastReviewedAt": "2026-10-22",
+      "lastReviewedAt": null,
       "hasDetailedPathway": false,
       "interSystemRelationsAr": "يتكامل مع الجهاز العصبي المركزي في منطقة تحت المهاد، ومع الكبد والعضلات والنسيج الدهني في تنظيم حساسية الأنسولين.",
       "interSystemRelationsEn": "Integrates with the CNS at the hypothalamus and coordinates glucose homeostasis across liver, skeletal muscle, and adipose tissue.",
@@ -152,7 +152,7 @@
         "src-ta2-fipat",
         "src-openstax-anatomy-v2"
       ],
-      "lastReviewedAt": "2026-10-22",
+      "lastReviewedAt": null,
       "hasDetailedPathway": false,
       "interSystemRelationsAr": "يعتمد على فيتامين D النشط القادم من الكلية وهرمون جار الدرقية (PTH) للحفاظ على كثافة المعدن العظمي.",
       "interSystemRelationsEn": "Depends on renal calcitriol activation and parathyroid hormone (PTH) to maintain bone mineral density.",
@@ -173,7 +173,7 @@
         "src-ta2-fipat",
         "src-openstax-anatomy-v2"
       ],
-      "lastReviewedAt": "2026-10-22",
+      "lastReviewedAt": null,
       "hasDetailedPathway": false,
       "interSystemRelationsAr": "يستجيب للأستيل كولين عند الموصل العصبي العضلي (Neuromuscular Junction) ويستهلك الجزء الأكبر من الجلوكوز بتحفيز الأنسولين.",
       "interSystemRelationsEn": "Responds to acetylcholine at the neuromuscular junction and serves as the primary site of insulin-stimulated glucose disposal.",
@@ -193,7 +193,7 @@
         "src-ta2-fipat",
         "src-openstax-anatomy-v2"
       ],
-      "lastReviewedAt": "2026-10-22",
+      "lastReviewedAt": null,
       "hasDetailedPathway": false,
       "interSystemRelationsAr": "يعيد السائل اللمفاوي إلى الدورة الوريدية الجهازية عبر القناة الصدرية وينسق الاستجابة الالتهابية في جميع الأعضاء.",
       "interSystemRelationsEn": "Returns lymph to systemic venous circulation via the thoracic duct and coordinates inflammatory responses across all organs.",
@@ -215,7 +215,7 @@
         "src-ta2-fipat",
         "src-openstax-anatomy-v2"
       ],
-      "lastReviewedAt": "2026-10-22",
+      "lastReviewedAt": null,
       "hasDetailedPathway": false,
       "interSystemRelationsAr": "يمثل خط الدفاع الأول للجهاز المناعي، ويوفر مساراً دوائياً عبر الجلد (Transdermal Delivery) لتجاوز الاستقلاب الكبدي الأولي.",
       "interSystemRelationsEn": "Serves as the frontline physical barrier for immunity and provides a transdermal drug delivery route bypassing first-pass hepatic metabolism.",
@@ -236,7 +236,7 @@
         "src-ta2-fipat",
         "src-openstax-anatomy-v2"
       ],
-      "lastReviewedAt": "2026-10-22",
+      "lastReviewedAt": null,
       "hasDetailedPathway": false,
       "interSystemRelationsAr": "يخضع لتنظيم موجهات الغدد التناسلية (FSH/LH) من الفص الأمامي للغدة النخامية ويشترك تشريحياً وجنينياً مع الجهاز البولي.",
       "interSystemRelationsEn": "Regulated by anterior pituitary gonadotropins (FSH/LH) and shares embryological urogenital ridge origins with the urinary system.",
@@ -256,7 +256,7 @@
         "src-ta2-fipat",
         "src-openstax-anatomy-v2"
       ],
-      "lastReviewedAt": "2026-10-22",
+      "lastReviewedAt": null,
       "hasDetailedPathway": false,
       "interSystemRelationsAr": "ترتبط مباشرة بالأعصاب القحفية (Cranial Nerves I, II, III, IV, VI, VII, VIII, IX) لنقل الإشارات الحسية إلى القشرة المخية.",
       "interSystemRelationsEn": "Directly wired to cranial nerves I, II, III, IV, VI, VII, VIII, and IX to relay sensory transduction to cerebral cortices.",
@@ -278,7 +278,7 @@
         "src-openstax-anatomy-v2",
         "src-who-icd11"
       ],
-      "lastReviewedAt": "2026-10-22",
+      "lastReviewedAt": null,
       "hasDetailedPathway": false,
       "interSystemRelationsAr": "يعتمد على الحديد الممتص في الاثني عشر، وفيتامين B12 بمساعدة العامل الداخلي المعدي، وإريثروبويتين الكلية لتصنيع الهيموغلوبين.",
       "interSystemRelationsEn": "Relies on duodenal iron absorption, gastric intrinsic factor-mediated vitamin B12 uptake, and renal erythropoietin for hemoglobin synthesis.",
@@ -928,7 +928,7 @@
         "src-nice-guidelines",
         "src-medlineplus-nlm"
       ],
-      "reviewStatus": "verified",
+      "reviewStatus": "EDUCATIONAL_UNREVIEWED",
       "icd11Code": "BA00",
       "secondarySystemIds": [
         "sys-renal",
@@ -945,7 +945,7 @@
         "Thiazide-like Diuretics"
       ],
       "importedAt": "2026-10-22",
-      "humanReviewedAt": "2026-10-22",
+      "humanReviewedAt": null,
       "sections": [
         {
           "id": "dis-hypertension-a_overview",
@@ -1072,7 +1072,7 @@
         "src-nice-guidelines",
         "src-medlineplus-nlm"
       ],
-      "reviewStatus": "verified",
+      "reviewStatus": "EDUCATIONAL_UNREVIEWED",
       "icd11Code": "BD10",
       "secondarySystemIds": [
         "sys-renal",
@@ -1091,7 +1091,7 @@
         "Loop Diuretics"
       ],
       "importedAt": "2026-10-22",
-      "humanReviewedAt": "2026-10-22",
+      "humanReviewedAt": null,
       "sections": [
         {
           "id": "dis-heart-failure-a_overview",
@@ -1218,7 +1218,7 @@
         "src-nice-guidelines",
         "src-medlineplus-nlm"
       ],
-      "reviewStatus": "verified",
+      "reviewStatus": "EDUCATIONAL_UNREVIEWED",
       "icd11Code": "BA80",
       "secondarySystemIds": [
         "sys-hematologic"
@@ -1234,7 +1234,7 @@
         "Organic Nitrates"
       ],
       "importedAt": "2026-10-22",
-      "humanReviewedAt": "2026-10-22",
+      "humanReviewedAt": null,
       "sections": [
         {
           "id": "dis-coronary-artery-disease-a_overview",
@@ -1361,7 +1361,7 @@
         "src-nice-guidelines",
         "src-medlineplus-nlm"
       ],
-      "reviewStatus": "verified",
+      "reviewStatus": "EDUCATIONAL_UNREVIEWED",
       "icd11Code": "BC81.3",
       "secondarySystemIds": [
         "sys-nervous",
@@ -1377,7 +1377,7 @@
         "Class IC / III Antiarrhythmics"
       ],
       "importedAt": "2026-10-22",
-      "humanReviewedAt": "2026-10-22",
+      "humanReviewedAt": null,
       "sections": [
         {
           "id": "dis-atrial-fibrillation-a_overview",
@@ -1504,7 +1504,7 @@
         "src-nice-guidelines",
         "src-medlineplus-nlm"
       ],
-      "reviewStatus": "verified",
+      "reviewStatus": "EDUCATIONAL_UNREVIEWED",
       "icd11Code": "CA23",
       "secondarySystemIds": [
         "sys-immune-lymphatic"
@@ -1518,7 +1518,7 @@
         "Leukotriene Receptor Antagonists"
       ],
       "importedAt": "2026-10-22",
-      "humanReviewedAt": "2026-10-22",
+      "humanReviewedAt": null,
       "sections": [
         {
           "id": "dis-bronchial-asthma-a_overview",
@@ -1645,7 +1645,7 @@
         "src-nice-guidelines",
         "src-medlineplus-nlm"
       ],
-      "reviewStatus": "verified",
+      "reviewStatus": "EDUCATIONAL_UNREVIEWED",
       "icd11Code": "CA22",
       "secondarySystemIds": [
         "sys-cardiovascular"
@@ -1660,7 +1660,7 @@
         "Inhaled Corticosteroids (Selected Phenotypes)"
       ],
       "importedAt": "2026-10-22",
-      "humanReviewedAt": "2026-10-22",
+      "humanReviewedAt": null,
       "sections": [
         {
           "id": "dis-copd-a_overview",
@@ -1787,7 +1787,7 @@
         "src-nice-guidelines",
         "src-medlineplus-nlm"
       ],
-      "reviewStatus": "verified",
+      "reviewStatus": "EDUCATIONAL_UNREVIEWED",
       "icd11Code": "CA40",
       "secondarySystemIds": [
         "sys-immune-lymphatic"
@@ -1801,7 +1801,7 @@
         "Respiratory Fluoroquinolones"
       ],
       "importedAt": "2026-10-22",
-      "humanReviewedAt": "2026-10-22",
+      "humanReviewedAt": null,
       "sections": [
         {
           "id": "dis-pneumonia-a_overview",
@@ -1928,7 +1928,7 @@
         "src-nice-guidelines",
         "src-medlineplus-nlm"
       ],
-      "reviewStatus": "verified",
+      "reviewStatus": "EDUCATIONAL_UNREVIEWED",
       "icd11Code": "DA22",
       "secondarySystemIds": [],
       "affectedOrganIds": [
@@ -1940,7 +1940,7 @@
         "Alginates & Antacids"
       ],
       "importedAt": "2026-10-22",
-      "humanReviewedAt": "2026-10-22",
+      "humanReviewedAt": null,
       "sections": [
         {
           "id": "dis-gerd-a_overview",
@@ -2067,7 +2067,7 @@
         "src-nice-guidelines",
         "src-medlineplus-nlm"
       ],
-      "reviewStatus": "verified",
+      "reviewStatus": "EDUCATIONAL_UNREVIEWED",
       "icd11Code": "DA60",
       "secondarySystemIds": [
         "sys-hematologic"
@@ -2081,7 +2081,7 @@
         "Mucosal Cytoprotective Agents"
       ],
       "importedAt": "2026-10-22",
-      "humanReviewedAt": "2026-10-22",
+      "humanReviewedAt": null,
       "sections": [
         {
           "id": "dis-peptic-ulcer-a_overview",
@@ -2208,7 +2208,7 @@
         "src-nice-guidelines",
         "src-medlineplus-nlm"
       ],
-      "reviewStatus": "verified",
+      "reviewStatus": "EDUCATIONAL_UNREVIEWED",
       "icd11Code": "DB92",
       "secondarySystemIds": [
         "sys-endocrine",
@@ -2224,7 +2224,7 @@
         "Statins (Cardiovascular Risk Reduction)"
       ],
       "importedAt": "2026-10-22",
-      "humanReviewedAt": "2026-10-22",
+      "humanReviewedAt": null,
       "sections": [
         {
           "id": "dis-nafld-masld-a_overview",
@@ -2351,7 +2351,7 @@
         "src-nice-guidelines",
         "src-medlineplus-nlm"
       ],
-      "reviewStatus": "verified",
+      "reviewStatus": "EDUCATIONAL_UNREVIEWED",
       "icd11Code": "GB61",
       "secondarySystemIds": [
         "sys-cardiovascular",
@@ -2370,7 +2370,7 @@
         "Erythropoiesis-Stimulating Agents"
       ],
       "importedAt": "2026-10-22",
-      "humanReviewedAt": "2026-10-22",
+      "humanReviewedAt": null,
       "sections": [
         {
           "id": "dis-ckd-a_overview",
@@ -2497,7 +2497,7 @@
         "src-nice-guidelines",
         "src-medlineplus-nlm"
       ],
-      "reviewStatus": "verified",
+      "reviewStatus": "EDUCATIONAL_UNREVIEWED",
       "icd11Code": "GB60",
       "secondarySystemIds": [
         "sys-cardiovascular"
@@ -2510,7 +2510,7 @@
         "Nephrotoxin Stewardship"
       ],
       "importedAt": "2026-10-22",
-      "humanReviewedAt": "2026-10-22",
+      "humanReviewedAt": null,
       "sections": [
         {
           "id": "dis-aki-a_overview",
@@ -2637,7 +2637,7 @@
         "src-nice-guidelines",
         "src-medlineplus-nlm"
       ],
-      "reviewStatus": "verified",
+      "reviewStatus": "EDUCATIONAL_UNREVIEWED",
       "icd11Code": "GB70",
       "secondarySystemIds": [],
       "affectedOrganIds": [
@@ -2649,7 +2649,7 @@
         "Thiazides / Potassium Citrate (Prevention)"
       ],
       "importedAt": "2026-10-22",
-      "humanReviewedAt": "2026-10-22",
+      "humanReviewedAt": null,
       "sections": [
         {
           "id": "dis-nephrolithiasis-a_overview",
@@ -2776,7 +2776,7 @@
         "src-nice-guidelines",
         "src-medlineplus-nlm"
       ],
-      "reviewStatus": "verified",
+      "reviewStatus": "EDUCATIONAL_UNREVIEWED",
       "icd11Code": "8B11",
       "secondarySystemIds": [
         "sys-cardiovascular",
@@ -2794,7 +2794,7 @@
         "Statins"
       ],
       "importedAt": "2026-10-22",
-      "humanReviewedAt": "2026-10-22",
+      "humanReviewedAt": null,
       "sections": [
         {
           "id": "dis-ischemic-stroke-a_overview",
@@ -2921,7 +2921,7 @@
         "src-nice-guidelines",
         "src-medlineplus-nlm"
       ],
-      "reviewStatus": "verified",
+      "reviewStatus": "EDUCATIONAL_UNREVIEWED",
       "icd11Code": "5A11",
       "secondarySystemIds": [
         "sys-cardiovascular",
@@ -2943,7 +2943,7 @@
         "Basal/Prandial Insulins"
       ],
       "importedAt": "2026-10-22",
-      "humanReviewedAt": "2026-10-22",
+      "humanReviewedAt": null,
       "sections": [
         {
           "id": "dis-type2-diabetes-a_overview",
@@ -3070,7 +3070,7 @@
         "src-nice-guidelines",
         "src-medlineplus-nlm"
       ],
-      "reviewStatus": "verified",
+      "reviewStatus": "EDUCATIONAL_UNREVIEWED",
       "icd11Code": "5A00",
       "secondarySystemIds": [
         "sys-cardiovascular",
@@ -3084,7 +3084,7 @@
         "Synthetic Thyroid Hormone Replacement (Levothyroxine / L-T4)"
       ],
       "importedAt": "2026-10-22",
-      "humanReviewedAt": "2026-10-22",
+      "humanReviewedAt": null,
       "sections": [
         {
           "id": "dis-hypothyroidism-a_overview",
@@ -3211,7 +3211,7 @@
         "src-nice-guidelines",
         "src-medlineplus-nlm"
       ],
-      "reviewStatus": "verified",
+      "reviewStatus": "EDUCATIONAL_UNREVIEWED",
       "icd11Code": "3A00",
       "secondarySystemIds": [
         "sys-digestive",
@@ -3226,7 +3226,7 @@
         "Intravenous Iron Preparations"
       ],
       "importedAt": "2026-10-22",
-      "humanReviewedAt": "2026-10-22",
+      "humanReviewedAt": null,
       "sections": [
         {
           "id": "dis-iron-deficiency-anemia-a_overview",
@@ -3353,7 +3353,7 @@
         "src-nice-guidelines",
         "src-medlineplus-nlm"
       ],
-      "reviewStatus": "verified",
+      "reviewStatus": "EDUCATIONAL_UNREVIEWED",
       "icd11Code": "BD71",
       "secondarySystemIds": [
         "sys-cardiovascular",
@@ -3369,7 +3369,7 @@
         "Vitamin K Antagonists"
       ],
       "importedAt": "2026-10-22",
-      "humanReviewedAt": "2026-10-22",
+      "humanReviewedAt": null,
       "sections": [
         {
           "id": "dis-dvt-a_overview",
