@@ -38,18 +38,19 @@ class SeedDatabaseInitializer(
 ) {
 
     suspend fun ensureSeededIfEmpty() = withContext(Dispatchers.IO) {
-        val currentSystemCount = dao.getBodySystemsCount()
-        val currentStructureCount = dao.getAnatomicalStructuresCount()
-        if (currentSystemCount >= 13 && currentStructureCount > 0) {
+        if (dao.getSyncValue("seed_revision") != null) return@withContext
+        val rawJson = context.assets.open("seed/base_seed_v1.json")
+            .bufferedReader(Charsets.UTF_8).use { it.readText() }
+        val seedBundle = json.decodeFromString<SeedBundleDto>(rawJson)
+        if (dao.getBodySystemsCount() >= 13 && dao.getAnatomicalStructuresCount() > 0) {
+            dao.putSyncValue(SyncStateEntity("seed_revision", seedBundle.seedRevision))
             return@withContext
         }
+        persistBundle(seedBundle)
+    }
 
-        val rawJson = context.assets.open("seed/base_seed_v1.json")
-            .bufferedReader(Charsets.UTF_8)
-            .use { it.readText() }
-
-        val seedBundle = json.decodeFromString<SeedBundleDto>(rawJson)
-
+    // Same entity mapping for first launch and an atomic, authoritative cloud snapshot.
+    suspend fun persistBundle(seedBundle: SeedBundleDto, fromCloud: Boolean = false) {
         val systemEntities = seedBundle.systems.map { sys ->
             BodySystemEntity(
                 id = sys.id,
@@ -442,7 +443,8 @@ class SeedDatabaseInitializer(
             attributions = sourceAttributions,
             ingredients = ingredientEntities,
             sources = sourceEntities,
-            initialPacks = initialPacks
+            initialPacks = if (fromCloud) emptyList() else initialPacks,
+            seedRevision = if (fromCloud) null else seedBundle.seedRevision
         )
     }
 }

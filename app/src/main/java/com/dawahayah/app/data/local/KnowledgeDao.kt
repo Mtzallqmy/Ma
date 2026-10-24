@@ -10,6 +10,37 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface KnowledgeDao {
 
+    @Query("SELECT value FROM sync_state WHERE `key` = :key")
+    suspend fun getSyncValue(key: String): String?
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun putSyncValue(state: SyncStateEntity)
+
+    @Query("DELETE FROM body_systems WHERE id IN (:ids)")
+    suspend fun deleteCloudSystems(ids: List<String>)
+    @Query("DELETE FROM organs WHERE id IN (:ids)")
+    suspend fun deleteCloudOrgans(ids: List<String>)
+    @Query("DELETE FROM anatomical_structures WHERE organId IN (:ids)")
+    suspend fun deleteCloudStructures(ids: List<String>)
+    @Query("DELETE FROM anatomy_labels WHERE organId IN (:ids)")
+    suspend fun deleteCloudLabels(ids: List<String>)
+    @Query("DELETE FROM organ_sections WHERE organId IN (:ids)")
+    suspend fun deleteCloudOrganSections(ids: List<String>)
+    @Query("DELETE FROM science_figures WHERE organId IN (:ids)")
+    suspend fun deleteCloudFigures(ids: List<String>)
+    @Query("DELETE FROM diseases WHERE id IN (:ids)")
+    suspend fun deleteCloudDiseases(ids: List<String>)
+    @Query("DELETE FROM disease_sections WHERE diseaseId IN (:ids)")
+    suspend fun deleteCloudDiseaseSections(ids: List<String>)
+    @Query("DELETE FROM disease_system_links WHERE diseaseId IN (:ids)")
+    suspend fun deleteCloudDiseaseSystemLinks(ids: List<String>)
+    @Query("DELETE FROM disease_organ_links WHERE diseaseId IN (:ids)")
+    suspend fun deleteCloudDiseaseOrganLinks(ids: List<String>)
+    @Query("DELETE FROM source_attributions WHERE entityId IN (:ids)")
+    suspend fun deleteCloudAttributions(ids: List<String>)
+    @Query("DELETE FROM active_ingredients WHERE id IN (:ids)")
+    suspend fun deleteCloudIngredients(ids: List<String>)
+
     @Query("SELECT COUNT(*) FROM body_systems")
     suspend fun getBodySystemsCount(): Int
 
@@ -178,7 +209,8 @@ interface KnowledgeDao {
         attributions: List<SourceAttributionEntity>,
         ingredients: List<ActiveIngredientEntity>,
         sources: List<MedicalSourceEntity>,
-        initialPacks: List<PackRecordEntity>
+        initialPacks: List<PackRecordEntity>,
+        seedRevision: String? = null
     ) {
         insertBodySystems(systems)
         insertOrgans(organs)
@@ -194,6 +226,7 @@ interface KnowledgeDao {
         insertSourceAttributions(attributions)
         insertActiveIngredients(ingredients)
         insertMedicalSources(sources)
+        if (seedRevision != null) putSyncValue(SyncStateEntity("seed_revision", seedRevision))
         initialPacks.forEach { existing ->
             val current = getPackRecordById(existing.id)
             if (current == null) {

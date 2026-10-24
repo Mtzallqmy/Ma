@@ -1,4 +1,5 @@
 import postgres from "postgres";
+import { publishedSnapshot } from "./published-snapshot.js";
 
 // Dawa & Hayah: public, read-only API. Neon injects DATABASE_URL into Functions.
 // This function never exposes PostgreSQL credentials or internal clinical drafts.
@@ -40,7 +41,9 @@ async function packManifest(packId) {
       path: f.relative_path, assetId: f.asset_id, contentType: f.content_type,
       sizeBytes: Number(f.size_bytes), sha256: f.sha256_checksum
     })),
-    dependencies: deps.map(d => d.required_pack_id), sources: [],
+    dependencies: deps.map(d => d.required_pack_id),
+    sources: (await get("SELECT source_id FROM citations WHERE entity_id=$1 ORDER BY source_id",[packId])).map(c=>c.source_id),
+    reviewStatus: "EDUCATIONAL_UNREVIEWED",
     license: p.license, attribution: p.attribution,
     publishedAt: p.published_at instanceof Date ? p.published_at.toISOString() : String(p.published_at)
   };
@@ -70,6 +73,11 @@ async function handler(request) {
   if (path === "/health") {
     await get("SELECT 1 AS healthy");
     return json({status:"ok", region:"aws-eu-central-1", postgresConnected:true, storageBucketReady:false, apiVersion:"v1"});
+  }
+  if (path === "/v1/snapshot") {
+    const snapshot = await sql.begin('isolation level repeatable read read only',
+      tx => publishedSnapshot((statement) => tx.unsafe(statement)));
+    return json(snapshot);
   }
   if (path === "/v1/catalog") return json(await catalogue(locale));
   if (path === "/v1/systems" || path === "/v1/body-systems") {
@@ -144,7 +152,13 @@ async function handler(request) {
   }
   if(path === "/v1/updates") {
     const revision=Math.max(0,Math.min(1000000,Number.parseInt(url.searchParams.get("fromRevision")??"0",10)||0));
-    return json({fromRevision:revision, latestRevision:1,updatedContentIds:[],updatedPackIds:[]});
+    const snapshot = await sql.begin('isolation level repeatable read read only',
+      tx => publishedSnapshot(statement => tx.unsafe(statement)));
+    const token = Number.parseInt(snapshot.revision.slice(0,7),16);
+    return json({fromRevision:revision,latestRevision:token,snapshotRevision:snapshot.revision,
+      completeSnapshotRequired:revision!==token,
+      updatedContentIds:revision===token ? [] : [...snapshot.bundle.systems,...snapshot.bundle.organs,...snapshot.bundle.diseases,...snapshot.bundle.activeIngredients].map(item=>item.id),
+      updatedPackIds:[]});
   }
   return json({error:"Not found"},404);
 }

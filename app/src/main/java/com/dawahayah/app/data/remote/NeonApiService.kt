@@ -57,6 +57,8 @@ data class NeonUpdatesResponse(
  * Android NEVER connects directly to PostgreSQL or S3 with secret credentials.
  */
 interface NeonApiService {
+    @GET("v1/snapshot")
+    suspend fun getPublishedSnapshot(): PublishedSnapshot
 
     @GET("health")
     suspend fun getHealth(): NeonHealthResponse
@@ -132,6 +134,8 @@ sealed interface CloudBackendState {
 
 interface RemoteContentDataSource {
     val backendState: CloudBackendState
+    suspend fun fetchPublishedSnapshot(): AppResult<PublishedSnapshot> =
+        AppResult.Error(AppError.CloudBackendNotConfigured)
     suspend fun checkHealth(): AppResult<NeonHealthResponse>
     suspend fun fetchCatalog(locale: String): AppResult<NeonCatalogResponse>
     suspend fun fetchPackManifest(packId: String): AppResult<ContentPackManifest>
@@ -167,6 +171,10 @@ class RetrofitNeonDataSource(
 ) : RemoteContentDataSource {
 
     override val backendState: CloudBackendState = CloudBackendState.Configured(baseUrl)
+
+    override suspend fun fetchPublishedSnapshot(): AppResult<PublishedSnapshot> = safeCall {
+        apiService.getPublishedSnapshot()
+    }
 
     override suspend fun checkHealth(): AppResult<NeonHealthResponse> = safeCall {
         apiService.getHealth()

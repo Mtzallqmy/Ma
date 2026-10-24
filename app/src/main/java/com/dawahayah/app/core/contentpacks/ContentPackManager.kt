@@ -295,7 +295,7 @@ class ContentPackManager(
                 sourceId = lessonDto.sourceIds.firstOrNull() ?: "src-ta2-fipat",
                 origin = manifest.packId,
                 publishedAt = manifest.publishedAt,
-                reviewStatus = lessonDto.reviewStatus,
+                reviewStatus = manifest.reviewStatus,
                 titleAr = lessonDto.titleAr,
                 titleEn = lessonDto.titleEn,
                 bodyAr = fullBodyAr,

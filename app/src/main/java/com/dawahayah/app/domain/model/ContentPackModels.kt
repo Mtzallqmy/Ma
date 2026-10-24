@@ -41,7 +41,8 @@ data class ContentPackManifest(
     val sources: List<String> = emptyList(),
     val license: String,
     val attribution: String,
-    val publishedAt: String
+    val publishedAt: String,
+    val reviewStatus: String = "EDUCATIONAL_UNREVIEWED"
 )
 
 data class PackRecord(

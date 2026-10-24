@@ -9,6 +9,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 
 @Database(
     entities = [
+        SyncStateEntity::class,
         BodySystemEntity::class,
         OrganEntity::class,
         AnatomicalStructureEntity::class,
@@ -30,7 +31,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
         DownloadTaskEntity::class,
         LocalAssetEntity::class
     ],
-    version = 3,
+    version = 4,
     exportSchema = true
 )
 abstract class DawaHayahDatabase : RoomDatabase() {
@@ -246,6 +247,12 @@ abstract class DawaHayahDatabase : RoomDatabase() {
             }
         }
 
+        val MIGRATION_3_4 = object : Migration(3, 4) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("CREATE TABLE IF NOT EXISTS `sync_state` (`key` TEXT NOT NULL, `value` TEXT NOT NULL, PRIMARY KEY(`key`))")
+            }
+        }
+
         @Volatile
         private var INSTANCE: DawaHayahDatabase? = null
 
@@ -256,7 +263,7 @@ abstract class DawaHayahDatabase : RoomDatabase() {
                     DawaHayahDatabase::class.java,
                     DATABASE_NAME
                 )
-                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
+                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4)
                     .build()
                     .also { INSTANCE = it }
             }

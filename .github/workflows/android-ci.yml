@@ -47,6 +47,12 @@ jobs:
           fi
           echo "Security check passed: zero hardcoded secrets in app/src/main/ (test fixtures excluded)."
 
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Published API snapshot contract tests
+        run: node --test neon/functions/public-api/*.test.js
+
       - name: Run Kotlin Unit Tests (Search Normalizer, SHA-256 Verifier, Pack Manager)
         run: ./gradlew :app:testDebugUnitTest --stacktrace --info
 

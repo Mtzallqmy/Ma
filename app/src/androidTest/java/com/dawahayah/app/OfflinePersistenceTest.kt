@@ -37,7 +37,7 @@ class OfflinePersistenceTest {
 
     private fun openDatabase() {
         db = Room.databaseBuilder(context, DawaHayahDatabase::class.java, databaseName)
-            .addMigrations(DawaHayahDatabase.MIGRATION_1_2, DawaHayahDatabase.MIGRATION_2_3).build()
+            .addMigrations(DawaHayahDatabase.MIGRATION_1_2, DawaHayahDatabase.MIGRATION_2_3, DawaHayahDatabase.MIGRATION_3_4).build()
     }
 
     @After fun tearDown() { db.close(); context.deleteDatabase(databaseName); context.filesDir.deleteRecursively() }
