@@ -1,4 +1,5 @@
 import { createHash } from 'node:crypto';
+import { medicineDetails } from './medicine-details.js';
 
 const text = value => value == null ? '' : String(value);
 const date = value => value == null ? null : new Date(value).toISOString().slice(0, 10);
@@ -17,6 +18,7 @@ export async function publishedSnapshot(query) {
   const organs = await rows(`SELECT o.* FROM organs o ${visible('o')} JOIN body_systems b ON b.id=o.system_id JOIN publication_status bs ON bs.code=b.status_code AND bs.is_publicly_visible=TRUE ORDER BY o.id`);
   const diseases = await rows(`SELECT d.* FROM diseases d ${visible('d')} ORDER BY d.id`);
   const ingredients = await rows(`SELECT i.* FROM active_ingredients i ${visible('i')} ORDER BY i.id`);
+  const drugDetails = await medicineDetails(query,ingredients.map(i=>i.id));
   const sourceRows = await rows('SELECT id,title,url,publisher,publication_date,retrieved_at,reuse_license,attribution FROM sources ORDER BY id');
   const citations = await rows('SELECT entity_id,source_id FROM citations ORDER BY entity_id,source_id');
   const structures = await rows(`SELECT s.* FROM anatomical_structures s JOIN organs o ON o.id=s.organ_id ${visible('o')} ORDER BY s.id`);
@@ -63,13 +65,13 @@ export async function publishedSnapshot(query) {
     })),
     activeIngredients:ingredients.map(i => ({id:i.id,nameAr:i.name_ar,nameEn:i.name_en,className:i.class_name,
       generalDescriptionAr:i.general_description_ar,generalDescriptionEn:i.general_description_en,safetyNote:i.safety_note,
-      citationIds:sourceIds(i.id),reviewStatus:i.status_code})),
+      citationIds:sourceIds(i.id),reviewStatus:i.status_code,details:drugDetails.get(i.id)})),
     sources:[]
   };
   const used = new Set([
     ...bundle.systems.flatMap(s => s.sourceIds),...bundle.organs.flatMap(o => o.sourceIds),
     ...bundle.organs.flatMap(o => o.structures.map(s => s.sourceId)),
-    ...bundle.diseases.flatMap(d => d.citationIds),...bundle.activeIngredients.flatMap(i => i.citationIds)
+    ...bundle.diseases.flatMap(d => d.citationIds),...bundle.activeIngredients.flatMap(i => [...i.citationIds,...Object.values(i.details).flat().map(x=>x.sourceId)])
   ]);
   bundle.sources = sourceRows.filter(s => used.has(s.id)).map(s => ({id:s.id,title:s.title,url:s.url,publisher:s.publisher,
     publicationDate:s.publication_date ?? null,accessedAt:date(s.retrieved_at),license:s.reuse_license,attribution:s.attribution}));

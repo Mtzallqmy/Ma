@@ -1,0 +1,66 @@
+[
+  {
+    "query": "amlodipine",
+    "rxcui": "17767",
+    "name": "amlodipine",
+    "tty": "IN",
+    "url": "https://rxnav.nlm.nih.gov/REST/rxcui.json?name=amlodipine&search=0&allsrc=0",
+    "propertiesUrl": "https://rxnav.nlm.nih.gov/REST/rxcui/17767/properties.json"
+  },
+  {
+    "query": "bisoprolol",
+    "rxcui": "19484",
+    "name": "bisoprolol",
+    "tty": "IN",
+    "url": "https://rxnav.nlm.nih.gov/REST/rxcui.json?name=bisoprolol&search=0&allsrc=0",
+    "propertiesUrl": "https://rxnav.nlm.nih.gov/REST/rxcui/19484/properties.json"
+  },
+  {
+    "query": "dapagliflozin",
+    "rxcui": "1488564",
+    "name": "dapagliflozin",
+    "tty": "IN",
+    "url": "https://rxnav.nlm.nih.gov/REST/rxcui.json?name=dapagliflozin&search=0&allsrc=0",
+    "propertiesUrl": "https://rxnav.nlm.nih.gov/REST/rxcui/1488564/properties.json"
+  },
+  {
+    "query": "furosemide",
+    "rxcui": "4603",
+    "name": "furosemide",
+    "tty": "IN",
+    "url": "https://rxnav.nlm.nih.gov/REST/rxcui.json?name=furosemide&search=0&allsrc=0",
+    "propertiesUrl": "https://rxnav.nlm.nih.gov/REST/rxcui/4603/properties.json"
+  },
+  {
+    "query": "lisinopril",
+    "rxcui": "29046",
+    "name": "lisinopril",
+    "tty": "IN",
+    "url": "https://rxnav.nlm.nih.gov/REST/rxcui.json?name=lisinopril&search=0&allsrc=0",
+    "propertiesUrl": "https://rxnav.nlm.nih.gov/REST/rxcui/29046/properties.json"
+  },
+  {
+    "query": "metformin",
+    "rxcui": "6809",
+    "name": "metformin",
+    "tty": "IN",
+    "url": "https://rxnav.nlm.nih.gov/REST/rxcui.json?name=metformin&search=0&allsrc=0",
+    "propertiesUrl": "https://rxnav.nlm.nih.gov/REST/rxcui/6809/properties.json"
+  },
+  {
+    "query": "omeprazole",
+    "rxcui": "7646",
+    "name": "omeprazole",
+    "tty": "IN",
+    "url": "https://rxnav.nlm.nih.gov/REST/rxcui.json?name=omeprazole&search=0&allsrc=0",
+    "propertiesUrl": "https://rxnav.nlm.nih.gov/REST/rxcui/7646/properties.json"
+  },
+  {
+    "query": "albuterol",
+    "rxcui": "435",
+    "name": "albuterol",
+    "tty": "IN",
+    "url": "https://rxnav.nlm.nih.gov/REST/rxcui.json?name=albuterol&search=0&allsrc=0",
+    "propertiesUrl": "https://rxnav.nlm.nih.gov/REST/rxcui/435/properties.json"
+  }
+]

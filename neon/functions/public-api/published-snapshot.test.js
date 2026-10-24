@@ -10,7 +10,7 @@ function fixture(overrides={}) {
   return async statement => {
     const table=statement.match(/FROM (\w+)/)[1];
     if(['body_systems','organs','diseases','active_ingredients'].includes(table)) assert.match(statement,/is_publicly_visible=TRUE/);
-    return data[table];
+    return data[table] ?? [];
   };
 }
 

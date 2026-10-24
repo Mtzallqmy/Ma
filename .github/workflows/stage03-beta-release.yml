@@ -1,4 +1,4 @@
-name: Dawa & Hayah Stage 03 Beta ARM64 APK
+name: Dawa & Hayah Stage 03 Internal ARM64 Test APK
 
 on:
   push:
@@ -14,7 +14,7 @@ concurrency:
 
 jobs:
   beta:
-    name: Android 8+ ARM64 signed beta APK
+    name: Android 8+ ARM64 signed internal test APK
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
@@ -37,16 +37,40 @@ jobs:
             exit 1
           fi
       - name: Android JVM unit tests
-        run: gradle :app:testDebugUnitTest --stacktrace
+        run: ./gradlew :app:testDebugUnitTest --stacktrace
       - name: Android lint
-        run: gradle :app:lintDebug --stacktrace
+        run: ./gradlew :app:lintDebug --stacktrace
+      - name: Generate temporary beta-only test certificate
+        shell: bash
+        run: |
+          set -euo pipefail
+          CI_BETA_STORE_PASSWORD=$(openssl rand -hex 24)
+          echo "::add-mask::$CI_BETA_STORE_PASSWORD"
+          echo "CI_BETA_STORE_PASSWORD=$CI_BETA_STORE_PASSWORD" >> "$GITHUB_ENV"
+          echo "CI_BETA_KEYSTORE=$RUNNER_TEMP/dawa-beta-test.jks" >> "$GITHUB_ENV"
+          keytool -genkeypair -keystore "$RUNNER_TEMP/dawa-beta-test.jks" -alias beta-test \
+            -storepass "$CI_BETA_STORE_PASSWORD" -keypass "$CI_BETA_STORE_PASSWORD" \
+            -keyalg RSA -keysize 2048 -validity 365 \
+            -dname "CN=Dawa Hayah Temporary Beta Test, O=Dawa Hayah, C=YE"
       - name: Assemble Android ARM64 beta Release
-        run: gradle :app:assembleRelease --stacktrace
+        run: ./gradlew :app:assembleRelease --stacktrace
+      - name: Sign beta with the explicitly temporary certificate
+        shell: bash
+        run: |
+          set -euo pipefail
+          BETA_UNSIGNED=$(find app/build/outputs/apk/release -maxdepth 1 -name '*unsigned.apk' | head -1)
+          test -s "$BETA_UNSIGNED"
+          BETA_TOOLS="$ANDROID_HOME/build-tools/35.0.0"
+          "$BETA_TOOLS/zipalign" -f -p 4 "$BETA_UNSIGNED" "$RUNNER_TEMP/aligned-beta.apk"
+          mkdir -p dist
+          "$BETA_TOOLS/apksigner" sign --ks "$CI_BETA_KEYSTORE" --ks-key-alias beta-test \
+            --ks-pass env:CI_BETA_STORE_PASSWORD --key-pass env:CI_BETA_STORE_PASSWORD \
+            --out dist/Dawa-Hayah-v0.5.0-beta.2-android8-arm64.apk "$RUNNER_TEMP/aligned-beta.apk"
       - name: Verify ARM64-only native libraries, package signing, and version
         shell: bash
         run: |
           set -euo pipefail
-          APK=$(find app/build/outputs/apk/release -maxdepth 1 -name '*.apk' | head -1)
+          APK=dist/Dawa-Hayah-v0.5.0-beta.2-android8-arm64.apk
           test -n "$APK"
           test -s "$APK"
           python3 - "$APK" <<'PY'
@@ -63,26 +87,12 @@ jobs:
           BUILD_TOOLS="$ANDROID_HOME/build-tools/35.0.0"
           "$BUILD_TOOLS/apksigner" verify --verbose --print-certs "$APK"
           "$BUILD_TOOLS/aapt" dump badging "$APK" | grep -E "^(package:|sdkVersion:|native-code:)"
-          mkdir -p dist
-          cp "$APK" dist/Dawa-Hayah-v0.5.0-beta.1-android8-arm64.apk
           cd dist
-          sha256sum Dawa-Hayah-v0.5.0-beta.1-android8-arm64.apk > SHA256SUMS.txt
+          sha256sum Dawa-Hayah-v0.5.0-beta.2-android8-arm64.apk > SHA256SUMS.txt
       - name: Upload ready-to-install beta APK
         uses: actions/upload-artifact@v4
         with:
-          name: Dawa-Hayah-v0.5.0-beta.1-ARM64-APK
+          name: Dawa-Hayah-v0.5.0-beta.2-ARM64-APK
           path: dist/
           retention-days: 30
           if-no-files-found: error
-      - name: Publish prerelease asset after quality gates pass
-        if: success()
-        env:
-          GH_TOKEN: ${{ github.token }}
-        shell: bash
-        run: |
-          set -euo pipefail
-          TAG=v0.5.0-beta.1-ci-${GITHUB_RUN_NUMBER}
-          gh release create "$TAG" dist/*.apk dist/SHA256SUMS.txt \
-            --title "Dawa & Hayah 0.5.0 Beta 1 — Android 8+ ARM64 (testing only)" \
-            --notes "Test-signed Android ARM64 release APK built after successful JVM tests, lint and APK signature verification. Educational content under review; not a stable medical reference. The temporary CI test certificate is not a production signing key and later upgrades may require uninstalling this beta. Neon API public read enabled; optional cloud content packs need separate end-to-end verification." \
-            --prerelease --target "$GITHUB_SHA"

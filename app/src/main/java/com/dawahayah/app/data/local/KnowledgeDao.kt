@@ -41,6 +41,9 @@ interface KnowledgeDao {
     @Query("DELETE FROM active_ingredients WHERE id IN (:ids)")
     suspend fun deleteCloudIngredients(ids: List<String>)
 
+    @Query("UPDATE active_ingredients SET detailsJson=:details, normalizedSearchText=normalizedSearchText || ' ' || :tokens WHERE id=:id AND detailsJson='{}'")
+    suspend fun backfillMedicineDetails(id: String, details: String, tokens: String)
+
     @Query("SELECT COUNT(*) FROM body_systems")
     suspend fun getBodySystemsCount(): Int
 

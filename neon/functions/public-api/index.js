@@ -76,8 +76,15 @@ async function handler(request) {
   }
   if (path === "/v1/snapshot") {
     const snapshot = await sql.begin('isolation level repeatable read read only',
-      tx => publishedSnapshot((statement) => tx.unsafe(statement)));
+      tx => publishedSnapshot((statement,args=[]) => tx.unsafe(statement,args)));
     return json(snapshot);
+  }
+  const monograph = path.match(/^\/v1\/medications\/([a-zA-Z0-9_-]{1,128})$/);
+  if (monograph) {
+    const snapshot = await sql.begin('isolation level repeatable read read only',
+      tx => publishedSnapshot((statement,args=[]) => tx.unsafe(statement,args)));
+    const item = snapshot.bundle.activeIngredients.find(item=>item.id===monograph[1]);
+    return item ? json(item) : json({error:"Published medication unavailable"},404);
   }
   if (path === "/v1/catalog") return json(await catalogue(locale));
   if (path === "/v1/systems" || path === "/v1/body-systems") {
@@ -153,7 +160,7 @@ async function handler(request) {
   if(path === "/v1/updates") {
     const revision=Math.max(0,Math.min(1000000,Number.parseInt(url.searchParams.get("fromRevision")??"0",10)||0));
     const snapshot = await sql.begin('isolation level repeatable read read only',
-      tx => publishedSnapshot(statement => tx.unsafe(statement)));
+      tx => publishedSnapshot((statement,args=[]) => tx.unsafe(statement,args)));
     const token = Number.parseInt(snapshot.revision.slice(0,7),16);
     return json({fromRevision:revision,latestRevision:token,snapshotRevision:snapshot.revision,
       completeSnapshotRequired:revision!==token,

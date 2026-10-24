@@ -151,7 +151,8 @@ data class ActiveIngredient(
     val generalDescriptionEn: String,
     val safetyNote: String,
     val citationIds: List<String>,
-    val reviewStatus: String
+    val reviewStatus: String,
+    val details: MedicineDetails = MedicineDetails()
 )
 
 @Serializable

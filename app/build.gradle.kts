@@ -14,8 +14,8 @@ android {
         applicationId = "com.dawahayah.app"
         minSdk = 26
         targetSdk = 35
-        versionCode = 5
-        versionName = "0.5.0-beta.1"
+        versionCode = 6
+        versionName = "0.5.0-beta.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -28,7 +28,7 @@ android {
             .orElse("https://br-steep-moon-b9kxm3uf-api.compute.c-7.eu-central-1.aws.neon.tech/")
             .get()
         buildConfigField("String", "NEON_PUBLIC_API_BASE_URL", "\"${neonDataApiUrl}\"")
-        buildConfigField("String", "STAGE_TAG", "\"STAGE_03_MEDICINES_DEVELOPMENT\"")
+        buildConfigField("String", "STAGE_TAG", "\"STAGE_03_MEDICINES_BETA\"")
     }
 
     buildTypes {

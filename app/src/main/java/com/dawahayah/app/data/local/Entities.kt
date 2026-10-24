@@ -232,7 +232,8 @@ data class ActiveIngredientEntity(
     val safetyNote: String,
     val citationIdsCsv: String,
     val reviewStatus: String,
-    val normalizedSearchText: String
+    val normalizedSearchText: String,
+    @androidx.room.ColumnInfo(defaultValue = "'{}'") val detailsJson: String = "{}"
 )
 
 @Entity(tableName = "medical_sources")

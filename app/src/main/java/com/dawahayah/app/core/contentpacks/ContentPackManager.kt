@@ -156,8 +156,8 @@ class ContentPackManager(
             )
         }
 
-        val packStagingDir = File(stagingRootDir, "${manifest.packId}_${manifest.version}")
-        if (packStagingDir.exists()) {
+        val packStagingDir = File(stagingRootDir, "${manifest.packId}/${manifest.version}")
+        if (remoteManifest == null && packStagingDir.exists()) {
             packStagingDir.deleteRecursively()
         }
         packStagingDir.mkdirs()
@@ -198,44 +198,24 @@ class ContentPackManager(
                         !IntegrityVerifier.isSecureHttpsEndpoint(access.downloadUrl)
                     ) throw IllegalArgumentException("Asset metadata mismatch or URL is not HTTPS")
 
-                    val connection = URL(access.downloadUrl).openConnection() as HttpsURLConnection
-                    connection.connectTimeout = 15_000
-                    connection.readTimeout = 60_000
-                    connection.instanceFollowRedirects = false
-                    try {
-                        if (connection.responseCode != HttpsURLConnection.HTTP_OK) {
-                            throw IOException("Asset response HTTP ${connection.responseCode}")
+                    var lastProgress = 0L
+                    ResumableAssetDownloader().download(access.downloadUrl, stagedFile, fileEntry.sizeBytes) { received ->
+                        val nowProgress = System.nanoTime()
+                        if (received == fileEntry.sizeBytes || nowProgress - lastProgress >= 250_000_000L) {
+                            dao.upsertPackRecord(runningRecord.copy(downloadedBytes = cumulativeBytes + received))
+                            lastProgress = nowProgress
                         }
-                        var received = 0L
-                        connection.inputStream.use { input ->
-                            stagedFile.outputStream().buffered().use { output ->
-                                val buffer = ByteArray(32 * 1024)
-                                while (true) {
-                                    coroutineContext.ensureActive()
-                                    val n = input.read(buffer)
-                                    if (n < 0) break
-                                    if (n == 0) continue
-                                    received += n
-                                    if (received > fileEntry.sizeBytes) {
-                                        throw IllegalArgumentException("Asset exceeds declared byte length")
-                                    }
-                                    output.write(buffer, 0, n)
-                                }
-                            }
-                        }
-                    } finally {
-                        connection.disconnect()
                     }
                 }
                 if (simulateCorruptedHash) stagedFile.appendBytes(byteArrayOf(0x00))
             } catch (e: CancellationException) {
-                packStagingDir.deleteRecursively()
+                if (remoteManifest == null) packStagingDir.deleteRecursively()
                 throw e
             } catch (e: Exception) {
-                packStagingDir.deleteRecursively()
                 if (e is IOException && remoteManifest != null) {
                     return@withContext failPack(currentRecord, AppError.DownloadInterrupted(fileEntry.path))
                 }
+                packStagingDir.deleteRecursively()
                 return@withContext failPack(currentRecord, AppError.GeneralFailure(
                     reasonAr = "تعذر تنزيل ملف الحزمة أو التحقق منه: ${fileEntry.path}",
                     reasonEn = "Failed to stream or verify content pack asset: ${fileEntry.path}"
@@ -422,6 +402,7 @@ class ContentPackManager(
             dao.removeInstalledPackTransaction(resetRecord)
             // An interrupted cleanup leaves unreferenced files, never dangling Room assets.
             persistentDir.deleteRecursively()
+            File(stagingRootDir, packId).deleteRecursively()
             AppResult.Success(resetRecord)
         } }
 
