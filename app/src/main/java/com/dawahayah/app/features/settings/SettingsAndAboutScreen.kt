@@ -54,6 +54,8 @@ fun SettingsAndAboutScreen(
             )
         }
 
+        item { PrivacyNotice(isAr) }
+
         // Language, Theme & Accessibility Settings
         item {
             Card(
@@ -64,7 +66,7 @@ fun SettingsAndAboutScreen(
             ) {
                 Column(modifier = Modifier.padding(18.dp)) {
                     Text(
-                        text = if (isAr) "اللغة والاتجاه والوصول (DataStore Persistence)" else "Language, Direction & Accessibility",
+                        text = if (isAr) "اللغة والاتجاه وحجم الخط" else "Language, Direction & Accessibility",
                         style = MaterialTheme.typography.titleLarge
                     )
                     Spacer(modifier = Modifier.height(10.dp))

@@ -16,3 +16,5 @@ $('logout').onclick=()=>run(async()=>{await auth.signOut();rows=[];selected=null
 $('language').onclick=()=>{ar=!ar;translate();show();};translate();run(async()=>{const r=await auth.getSession();if(r.data?.user)await reload();});
 
 $('approve-link').onclick=()=>run(async()=>{await request('/v1/link/approve',{userCode:new URL(location.href).searchParams.get('connect')});$('connect').hidden=true;history.replaceState(null,'',location.pathname);status(t('تم ربط الهاتف؛ عد إلى التطبيق','Device linked; return to the app'));});
+
+$('register').onclick=()=>run(async()=>{if(!$('email').value||!$('password').value||!$('new-name').value)throw new Error(t('اكتب البريد وكلمة المرور والاسم','Enter email, password and name'));const r=await auth.signUp.email({email:$('email').value,password:$('password').value,name:$('new-name').value});$('password').value='';if(r.error)throw new Error(t('تعذر إنشاء الحساب؛ تحقق من المدخلات','Cannot create account; check your entries'));await reload();});
