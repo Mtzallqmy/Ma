@@ -65,12 +65,12 @@ jobs:
           mkdir -p dist
           "$BETA_TOOLS/apksigner" sign --ks "$CI_BETA_KEYSTORE" --ks-key-alias beta-test \
             --ks-pass env:CI_BETA_STORE_PASSWORD --key-pass env:CI_BETA_STORE_PASSWORD \
-            --out dist/Dawa-Hayah-v0.9.0-rc.1-android8-arm64.apk "$RUNNER_TEMP/aligned-beta.apk"
+            --out dist/Dawa-Hayah-v0.9.0-rc.2-android8-arm64.apk "$RUNNER_TEMP/aligned-beta.apk"
       - name: Verify ARM64-only native libraries, package signing, and version
         shell: bash
         run: |
           set -euo pipefail
-          APK=dist/Dawa-Hayah-v0.9.0-rc.1-android8-arm64.apk
+          APK=dist/Dawa-Hayah-v0.9.0-rc.2-android8-arm64.apk
           test -n "$APK"
           test -s "$APK"
           python3 - "$APK" <<'PY'
@@ -88,11 +88,11 @@ jobs:
           "$BUILD_TOOLS/apksigner" verify --verbose --print-certs "$APK"
           "$BUILD_TOOLS/aapt" dump badging "$APK" | grep -E "^(package:|sdkVersion:|native-code:)"
           cd dist
-          sha256sum Dawa-Hayah-v0.9.0-rc.1-android8-arm64.apk > SHA256SUMS.txt
+          sha256sum Dawa-Hayah-v0.9.0-rc.2-android8-arm64.apk > SHA256SUMS.txt
       - name: Upload ready-to-install beta APK
         uses: actions/upload-artifact@v4
         with:
-          name: Dawa-Hayah-v0.9.0-rc.1-ARM64-APK
+          name: Dawa-Hayah-v0.9.0-rc.2-ARM64-APK
           path: dist/
           retention-days: 30
           if-no-files-found: error
@@ -102,9 +102,17 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          python3 scripts/verify-release-apk.py dist/Dawa-Hayah-v0.9.0-rc.1-android8-arm64.apk 0.9.0-rc.1
+          python3 scripts/verify-release-apk.py dist/Dawa-Hayah-v0.9.0-rc.2-android8-arm64.apk 0.9.0-rc.2
           cp release/CHANGELOG.md dist/CHANGELOG.md
           cp release/readiness.json dist/READINESS.json
           ./gradlew :app:dependencies --configuration releaseRuntimeClasspath > dist/DEPENDENCIES.txt
-          python3 scripts/apk-sbom.py dist/Dawa-Hayah-v0.9.0-rc.1-android8-arm64.apk > dist/SBOM.spdx.json
-          gh release create "v0.9.0-rc.1-ci-${GITHUB_RUN_NUMBER}" dist/* --target "$GITHUB_SHA" --title "Dawa & Hayah 0.9.0 RC1 — TESTING ONLY" --notes-file release/CHANGELOG.md --prerelease
+          python3 scripts/apk-sbom.py dist/Dawa-Hayah-v0.9.0-rc.2-android8-arm64.apk > dist/SBOM.spdx.json
+          gh release create "v0.9.0-rc.2-ci-${GITHUB_RUN_NUMBER}" dist/* --target "$GITHUB_SHA" --title "Dawa & Hayah 0.9.0 RC2 — TESTING ONLY" --notes-file release/CHANGELOG.md --prerelease
+      - name: Mark earlier RC1 test builds superseded
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh api "repos/$GITHUB_REPOSITORY/releases?per_page=100" --jq '.[] | select(.tag_name | startswith("v0.9.0-rc.1-ci-")) | .tag_name' | while read -r OLD_TEST_TAG; do
+            gh release edit "$OLD_TEST_TAG" --notes "Superseded by the RC2 testing build. RC1 contains historical seed review labels that are not evidence of human clinical review. Use RC2 for further testing. This is not a stable medical release."
+          done
