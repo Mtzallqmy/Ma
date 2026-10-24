@@ -62,8 +62,10 @@ fun DownloadsScreen(
         }
 
         item {
-            OutlinedButton(onClick = onRefreshCloudCatalog) {
-                Text(if (isAr) "استعراض حزم Neon عبر الإنترنت (دون تنزيل)" else "Browse Neon packs online (no download)")
+            OutlinedButton(onClick = onRefreshCloudCatalog, enabled = !state.isRefreshingCloud) {
+                Text(if (state.isRefreshingCloud) {
+                    if (isAr) "جارٍ تحديث المحتوى…" else "Updating content…"
+                } else if (isAr) "تحديث الصفحات والحزم المتاحة" else "Update pages and available packs")
             }
         }
 

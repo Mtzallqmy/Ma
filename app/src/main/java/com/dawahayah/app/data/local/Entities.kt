@@ -335,3 +335,6 @@ data class LocalAssetEntity(
     val sha256: String,
     val verifiedAtEpochMillis: Long
 )
+
+@Entity(tableName = "sync_state")
+data class SyncStateEntity(@PrimaryKey val key: String, val value: String)

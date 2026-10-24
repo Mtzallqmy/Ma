@@ -27,12 +27,14 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 data class MainUiState(
     val isSeedInitializing: Boolean = true,
+    val isRefreshingCloud: Boolean = false,
     val settings: UserSettings = UserSettings(),
     val networkStatus: NetworkStatus = NetworkStatus(isConnected = false, isUnmeteredWifi = false),
     val cloudBackendState: CloudBackendState = CloudBackendState.DisabledInStage01,
@@ -55,6 +57,7 @@ class MainViewModel(
     private val container: AppContainer
 ) : ViewModel() {
 
+    private val _isRefreshingCloud = MutableStateFlow(false)
     private val _isSeedInitializing = MutableStateFlow(true)
     private val _searchQuery = MutableStateFlow("")
     private val _searchResults = MutableStateFlow<List<SearchHit>>(emptyList())
@@ -121,7 +124,7 @@ class MainViewModel(
             searchResults = q2.fourth,
             transientBannerMessage = q2.fifth
         )
-    }.stateIn(
+    }.combine(_isRefreshingCloud) { state, refreshing -> state.copy(isRefreshingCloud = refreshing) }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5_000),
         initialValue = MainUiState()
@@ -225,13 +228,26 @@ class MainViewModel(
     }
 
     fun browseCloudCatalog() {
+        if (_isRefreshingCloud.value) return
+        _isRefreshingCloud.value = true
         viewModelScope.launch {
-            val language = if (container.preferencesDataStore.settingsFlow.first().language == AppLanguage.ENGLISH) "en" else "ar"
-            when (val result = container.knowledgeRepository.discoverCloudPacks(language)) {
-                is AppResult.Success -> _transientBannerMessage.value =
-                    "تم تحديث قائمة الحزم المتاحة من Neon. حزم جديدة: " + result.data
-                is AppResult.Error -> _transientBannerMessage.value = result.error.messageAr
-            }
+            try {
+                _isSeedInitializing.filter { !it }.first()
+                val isAr = container.preferencesDataStore.settingsFlow.first().language == AppLanguage.ARABIC
+                when (val snapshot = container.publishedSynchronizer.refresh()) {
+                    is AppResult.Error -> { _transientBannerMessage.value = if (isAr) snapshot.error.messageAr else snapshot.error.messageEn }
+                    is AppResult.Success -> {
+                        when (val packs = container.knowledgeRepository.discoverCloudPacks(if (isAr) "ar" else "en")) {
+                            is AppResult.Success -> _transientBannerMessage.value = if (isAr)
+                                "تم حفظ ${snapshot.data} صفحة منشورة للاستخدام دون إنترنت وتحديث قائمة الحزم."
+                                else "Saved ${snapshot.data} published pages for offline use and refreshed available packs."
+                            is AppResult.Error -> _transientBannerMessage.value = if (isAr)
+                                "تم تحديث الصفحات؛ تعذر تحديث قائمة الحزم."
+                                else "Pages updated; pack listing could not be refreshed."
+                        }
+                    }
+                }
+            } finally { _isRefreshingCloud.value = false }
         }
     }
 

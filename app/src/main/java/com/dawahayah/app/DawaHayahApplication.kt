@@ -75,6 +75,10 @@ class AppContainer(context: Context) {
         }
     }
 
+    val publishedSynchronizer by lazy {
+        com.dawahayah.app.data.sync.PublishedKnowledgeSynchronizer(appContext, database, remoteDataSource, json)
+    }
+
     val contentPackManager: ContentPackManager by lazy {
         ContentPackManager(
             context = appContext,
