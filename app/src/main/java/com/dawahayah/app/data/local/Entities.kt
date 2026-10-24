@@ -291,6 +291,7 @@ data class PackRecordEntity(
 )
 
 @Entity(tableName = "bookmarks")
+@kotlinx.serialization.Serializable
 data class BookmarkEntity(
     @PrimaryKey val itemId: String,
     val itemType: String,
@@ -301,6 +302,7 @@ data class BookmarkEntity(
 )
 
 @Entity(tableName = "reading_progress")
+@kotlinx.serialization.Serializable
 data class ReadingProgressEntity(
     @PrimaryKey val itemId: String,
     val itemType: String,

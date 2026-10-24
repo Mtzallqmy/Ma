@@ -54,7 +54,7 @@ fun SettingsAndAboutScreen(
             )
         }
 
-        item { PrivacyNotice(isAr) }
+        item { PrivacyNotice(isAr); BackupControls(isAr) }
 
         // Language, Theme & Accessibility Settings
         item {

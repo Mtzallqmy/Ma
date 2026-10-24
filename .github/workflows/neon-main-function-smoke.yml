@@ -1,7 +1,7 @@
 name: Neon Main appdb Function API Smoke
 on:
   push:
-    branches: [backend/neon-public-read-api, main, work/stage-04-academy-admin]
+    branches: [backend/neon-public-read-api, main, work/stage-04-academy-admin, work/stage-04-completion, work/stage-05-release-readiness]
     paths:
       - .github/workflows/neon-main-function-smoke.yml
       - neon/functions/public-api/index.js
@@ -60,3 +60,21 @@ jobs:
           ADMIN=https://br-steep-moon-b9kxm3uf-academy.compute.c-7.eu-central-1.aws.neon.tech
           test "$(curl -sS --retry 2 --max-time 30 -o /dev/null -w '%{http_code}' "$ADMIN/v1/admin/lessons")" = 401
           test "$(curl -sS --max-time 30 -H 'Authorization: Bearer unsigned.forged.token' -o /dev/null -w '%{http_code}' "$ADMIN/v1/admin/lessons")" = 401
+      - name: Verify panel assets and pending device approval protocol
+        shell: bash
+        run: |
+          set -euo pipefail
+          ADMIN=https://br-steep-moon-b9kxm3uf-academy.compute.c-7.eu-central-1.aws.neon.tech
+          curl --retry 2 --fail-with-body --max-time 40 -sS "$ADMIN/" > /tmp/editor.html
+          test "$(curl --max-time 30 -sS -o /dev/null -w '%{http_code}' "$ADMIN/panel.js")" = 200
+          grep -q 'login-form' /tmp/editor.html
+          curl --retry 2 --fail-with-body --max-time 40 -sS -H 'Content-Type: application/json' -d '{}' "$ADMIN/v1/link/start" > /tmp/device-link.json
+          python3 - <<'PY'
+          import json
+          b=json.load(open('/tmp/device-link.json'))
+          assert len(b['deviceCode'])==64 and len(b['userCode'])==32 and b['expiresIn']==300
+          json.dump({'deviceCode':b['deviceCode']},open('/tmp/device-poll.json','w'))
+          PY
+          test "$(curl --max-time 30 -sS -H 'Content-Type: application/json' --data-binary @/tmp/device-poll.json -o /tmp/device-pending.json -w '%{http_code}' "$ADMIN/v1/link/poll")" = 202
+          python3 -c "import json;assert json.load(open('/tmp/device-pending.json'))['pending'] is True"
+          test "$(curl --max-time 30 -sS -H 'Content-Type: application/json' -H 'Authorization: Device invalid' -d '{\"attempts\":[]}' -o /dev/null -w '%{http_code}' "$ADMIN/v1/learner/sync")" = 401
