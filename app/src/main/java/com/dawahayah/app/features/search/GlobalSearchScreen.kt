@@ -20,6 +20,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import com.dawahayah.app.core.storage.AppLanguage
 import com.dawahayah.app.features.settings.MainUiState
@@ -36,7 +37,7 @@ fun GlobalSearchScreen(
 
     LazyColumn(
         modifier = modifier
-            .fillMaxSize()
+            .fillMaxSize().testTag("search_results")
             .padding(horizontal = 16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
@@ -69,6 +70,7 @@ fun GlobalSearchScreen(
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth()
             )
+            if(state.searchResults.isNotEmpty())Text(if(isAr) "${state.searchResults.size} نتيجة" else "${state.searchResults.size} results",modifier=Modifier.testTag("search_has_results"))
             Spacer(modifier = Modifier.height(8.dp))
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 OutlinedButton(onClick = { onQueryChange("القلب") }) {
@@ -108,7 +110,7 @@ fun GlobalSearchScreen(
                 shape = RoundedCornerShape(14.dp),
                 colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
                 border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth().testTag("hit_${hit.itemId}")
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     Text(

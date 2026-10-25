@@ -22,22 +22,27 @@ class OverhaulJourneyTest {
         compose.waitUntil(20000) {compose.onAllNodesWithTag("home_search").fetchSemanticsNodes().isNotEmpty()}
         screenshot("home-ar")
         val before=runBlocking{container.database.knowledgeDao().getSyncValue("last_sync_at")}
-        compose.onNodeWithText("تحديث المحتوى").performScrollTo().performClick()
+        compose.onNodeWithTag("home_feed").performScrollToNode(hasText("تحديث المحتوى"))
+        compose.onNodeWithText("تحديث المحتوى").performClick()
         compose.waitUntil(60000) {runBlocking{container.database.knowledgeDao().getSyncValue("last_sync_at")}?.let{it!=before}==true}
         val persisted=runBlocking{container.database.knowledgeDao().getSyncValue("snapshot")}
         assertNotNull("HTTPS response persisted in Room",persisted)
         assertTrue(persisted!!.contains("organ-heart"))
         compose.onNodeWithContentDescription("البحث العام").performClick()
         compose.onNode(hasSetTextAction()).performTextInput("Cor")
-        compose.waitUntil(15000){compose.onAllNodesWithText("القلب",substring=false).fetchSemanticsNodes().isNotEmpty()}
-        compose.onNodeWithText("القلب",substring=false).performScrollTo().performClick()
+        compose.waitUntil(15000){compose.onAllNodesWithTag("search_has_results").fetchSemanticsNodes().isNotEmpty()}
+        compose.onNodeWithTag("search_results").performScrollToNode(hasTestTag("hit_organ-heart"))
+        compose.onNodeWithTag("hit_organ-heart").performClick()
         compose.onNodeWithTag("knowledge_reader").assertExists()
-        compose.onNodeWithTag("reader_note").performScrollTo().performTextInput("ملاحظة اختبار القراءة")
-        compose.onNodeWithTag("save_note").performScrollTo().performClick()
+        compose.onNodeWithTag("knowledge_reader").performScrollToNode(hasTestTag("reader_note"))
+        compose.onNodeWithTag("reader_note").performTextInput("ملاحظة اختبار القراءة")
+        compose.onNodeWithTag("knowledge_reader").performScrollToNode(hasTestTag("save_note"))
+        compose.onNodeWithTag("save_note").performClick()
         compose.waitUntil(15000){runBlocking{container.database.knowledgeDao().allNotes()}.any{it.itemId=="organ-heart"&&it.text.contains("ملاحظة اختبار القراءة")}}
         compose.activityRule.scenario.recreate()
         compose.waitUntil(20000){compose.onAllNodesWithTag("knowledge_reader").fetchSemanticsNodes().isNotEmpty()}
-        compose.onNodeWithTag("reader_note").performScrollTo().assertTextContains("ملاحظة اختبار القراءة",substring=true)
+        compose.onNodeWithTag("knowledge_reader").performScrollToNode(hasTestTag("reader_note"))
+        compose.onNodeWithTag("reader_note").assertTextContains("ملاحظة اختبار القراءة",substring=true)
         screenshot("reader-ar")
     }
     private fun screenshot(name:String) {

@@ -113,7 +113,8 @@ fun DawaHayahMainScaffold(
                 title = {
                     Text(
                         text = if (isAr) "دواء وحياة" else "Dawa & Hayah",
-                        style = MaterialTheme.typography.titleLarge
+                        style = MaterialTheme.typography.titleLarge,
+                        maxLines = 1, overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
                     )
                 },
                 actions = {

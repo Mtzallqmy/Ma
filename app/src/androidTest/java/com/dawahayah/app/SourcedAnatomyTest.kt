@@ -24,7 +24,7 @@ import java.util.concurrent.atomic.AtomicReference
 
 @RunWith(AndroidJUnit4::class)
 class SourcedAnatomyTest {
-    @Test fun realNeonPackDownloadsAndActualFiveMeshGlbRendersOffline()=runBlocking {
+    @Test fun realNeonPackDownloadsAndActualFiveMeshGlbRendersOffline(): Unit = runBlocking {
         val app=ApplicationProvider.getApplicationContext<DawaHayahApplication>()
         val sandbox=File(app.filesDir,"sourced-anatomy-test-${System.nanoTime()}").apply{mkdirs()}
         val context=object:ContextWrapper(app){override fun getFilesDir()=sandbox}
