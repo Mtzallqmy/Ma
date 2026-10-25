@@ -285,11 +285,12 @@ class LocalFirstKnowledgeRepository(
 
     suspend fun searchLocalKnowledge(rawQuery: String): List<SearchHit> =
         withContext(Dispatchers.IO) {
-            val normalized = ArabicSearchNormalizer.normalize(rawQuery)
-            if (normalized.isBlank()) return@withContext emptyList()
+            val variants = ArabicSearchNormalizer.queryVariants(rawQuery)
+            if (variants.isEmpty()) return@withContext emptyList()
 
             val hits = mutableListOf<SearchHit>()
 
+            for (normalized in variants) {
             dao.searchBodySystems(normalized).forEach { sys ->
                 hits.add(
                     SearchHit(
@@ -374,7 +375,8 @@ class LocalFirstKnowledgeRepository(
                 )
             }
 
-            hits
+            }
+            hits.distinctBy { it.category to it.itemId }.take(200)
         }
 
     suspend fun toggleBookmark(

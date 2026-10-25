@@ -39,7 +39,8 @@ fun DiseasesScreen(
     state: MainUiState,
     onBookmarkToggle: (String, String, String, String, String, Boolean) -> Unit,
     onRecordReading: (String, String, String, String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onOpenContent: ((String,String)->Unit)? = null
 ) {
     val isAr = state.settings.language == AppLanguage.ARABIC
     var selectedSystemFilter by rememberSaveable { mutableStateOf<String?>(null) }
@@ -137,6 +138,7 @@ fun DiseasesScreen(
                     onCardClick = {
                         expandedDiseaseId = if (expandedDiseaseId == disease.id) null else disease.id
                         onRecordReading(disease.id, "DISEASE", disease.nameAr, disease.nameEn)
+                        onOpenContent?.invoke("DISEASE",disease.id)
                     }
                 )
 

@@ -131,7 +131,7 @@ private fun number(value: String): Double = value.map { c -> when(c) {
 } }.joinToString("").trim().toDoubleOrNull() ?: throw IllegalArgumentException("Invalid number")
 
 @Composable
-private fun CalculatorPanel(isAr: Boolean) {
+fun CalculatorPanel(isAr: Boolean) {
     var mode by rememberSaveable { mutableStateOf(0) }
     var first by rememberSaveable { mutableStateOf("") };var second by rememberSaveable { mutableStateOf("") };var third by rememberSaveable { mutableStateOf("") }
     var from by rememberSaveable { mutableStateOf("G") };var to by rememberSaveable { mutableStateOf("MG") }

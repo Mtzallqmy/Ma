@@ -7,6 +7,18 @@ import org.junit.Test
 
 class ArabicSearchNormalizerTest {
 
+    @Test fun `typos are suggested without changing the input`() {
+        assertEquals(listOf("Omeprazole"),ArabicSearchNormalizer.suggestions("omeprazol",listOf("Omeprazole","Metformin")))
+        assertTrue(ArabicSearchNormalizer.suggestions("cor",listOf("cork")).isEmpty())
+        assertTrue(ArabicSearchNormalizer.suggestions("omeprazole",listOf("Omeprazole")).isEmpty())
+    }
+    @Test fun `aliases map equivalent names but not unrelated substrings`() {
+        assertTrue(ArabicSearchNormalizer.queryVariants("albuterol").contains("salbutamol"))
+        org.junit.Assert.assertFalse(ArabicSearchNormalizer.buildIndexableTokens("corticosteroid").contains("cardiac"))
+        org.junit.Assert.assertFalse(ArabicSearchNormalizer.buildIndexableTokens("adrenaline").contains("renal "))
+        assertEquals("\\%\\_",ArabicSearchNormalizer.literalLikeQuery("%_"))
+    }
+
     @Test
     fun `normalize unifies hamzas, taa marbuta, and alef maqsura`() {
         val raw = "الأَوعِيَةُ الدَّمَوِيَّةُ وَالإِطْرَاحُ الكُلَوِيُّ فِي المَعِدَةِ"

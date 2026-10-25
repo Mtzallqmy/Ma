@@ -184,6 +184,15 @@ fun DawaHayahMainScaffold(
                     KnowledgeReaderScreen(state, entry.arguments?.getString("type").orEmpty(), entry.arguments?.getString("id").orEmpty(),
                         ::openContent, viewModel::recordReading, viewModel::toggleBookmark, viewModel::saveNote)
                 }
+                composable(AuxiliaryRoutes.DRUG_CLASSES) {
+                    com.dawahayah.app.features.tools.DrugClassesScreen(state,::openContent)
+                }
+                composable(AuxiliaryRoutes.INTERACTIONS) {
+                    com.dawahayah.app.features.tools.InteractionsScreen(state)
+                }
+                composable(AuxiliaryRoutes.CALCULATORS) {
+                    com.dawahayah.app.features.academy.CalculatorPanel(isAr)
+                }
                 composable(AuxiliaryRoutes.ACADEMY) {
                     val app = androidx.compose.ui.platform.LocalContext.current.applicationContext as DawaHayahApplication
                     com.dawahayah.app.features.academy.AcademyScreen(app.container.academyRepository, isAr)
@@ -203,21 +212,24 @@ fun DawaHayahMainScaffold(
                         onBookmarkToggle = viewModel::toggleBookmark,
                         onRecordReading = viewModel::recordReading,
                         onInstallPack = { packId -> viewModel.installContentPack(packId) },
-                        onOpenAnatomyScenes = { navController.navigate(AuxiliaryRoutes.ANATOMY_SCENES) }
+                        onOpenAnatomyScenes = { navController.navigate(AuxiliaryRoutes.ANATOMY_SCENES) },
+                        onOpenContent = ::openContent
                     )
                 }
                 composable(PrimaryBottomTab.DISEASES.route) {
                     DiseasesScreen(
                         state = state,
                         onBookmarkToggle = viewModel::toggleBookmark,
-                        onRecordReading = viewModel::recordReading
+                        onRecordReading = viewModel::recordReading,
+                        onOpenContent = ::openContent
                     )
                 }
                 composable(PrimaryBottomTab.MEDICINES.route) {
                     MedicinesScreen(
                         state = state,
                         onBookmarkToggle = viewModel::toggleBookmark,
-                        onRecordReading = viewModel::recordReading
+                        onRecordReading = viewModel::recordReading,
+                        onOpenContent = ::openContent
                     )
                 }
                 composable(PrimaryBottomTab.MY_LIBRARY.route) {
@@ -250,13 +262,7 @@ fun DawaHayahMainScaffold(
                     AnatomyScenesScreen(state = state)
                 }
                 composable(AuxiliaryRoutes.SOURCES_AND_LICENSES) {
-                    SettingsAndAboutScreen(
-                        state = state,
-                        onLanguageChange = viewModel::setLanguage,
-                        onThemeModeChange = viewModel::setThemeMode,
-                        onFontScaleChange = viewModel::setFontScale,
-                        onWifiOnlyChange = viewModel::setWifiOnlyDownloads
-                    )
+                    com.dawahayah.app.features.tools.SourcesScreen(state)
                 }
                 composable(AuxiliaryRoutes.SETTINGS_AND_ABOUT) {
                     SettingsAndAboutScreen(

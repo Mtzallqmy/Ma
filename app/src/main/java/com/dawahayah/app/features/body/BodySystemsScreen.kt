@@ -48,7 +48,8 @@ fun BodySystemsScreen(
     onRecordReading: (String, String, String, String) -> Unit,
     onInstallPack: (String) -> Unit,
     onOpenAnatomyScenes: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onOpenContent: ((String,String)->Unit)? = null
 ) {
     val isAr = state.settings.language == AppLanguage.ARABIC
     var selectedSystemId by rememberSaveable { mutableStateOf<String?>(null) }
@@ -206,7 +207,7 @@ fun BodySystemsScreen(
                 },
                 metadataItems = listOf(
                     if (system.hasDetailedPathway) {
-                        if (isAr) "مسار تفصيلي كامل (المرحلة 02)" else "Full Detailed Pathway (Stage 02)"
+                        if (isAr) "استكشف التفاصيل المتاحة" else "Explore available detail"
                     } else {
                         if (isAr) "مفهرس موسوعياً" else "Indexed System"
                     },
@@ -230,6 +231,7 @@ fun BodySystemsScreen(
                 onCardClick = {
                     selectedSystemId = if (selectedSystemId == system.id) null else system.id
                     onRecordReading(system.id, "BODY_SYSTEM", system.nameAr, system.nameEn)
+                    onOpenContent?.invoke("BODY_SYSTEM",system.id)
                 }
             )
         }
@@ -287,6 +289,7 @@ fun BodySystemsScreen(
                     onCardClick = {
                         selectedOrganId = if (selectedOrganId == organ.id) null else organ.id
                         onRecordReading(organ.id, "ORGAN", organ.nameAr, organ.nameEn)
+                    onOpenContent?.invoke("ORGAN",organ.id)
                     }
                 )
 

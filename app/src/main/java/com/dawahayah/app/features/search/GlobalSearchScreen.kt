@@ -93,6 +93,15 @@ fun GlobalSearchScreen(
             }
         }
 
+        if(state.searchResults.isEmpty()) {
+            val choices=com.dawahayah.app.core.locale.ArabicSearchNormalizer.suggestions(state.searchQuery,
+                state.activeIngredients.flatMap{listOf(it.nameAr,it.nameEn)}+state.organs.flatMap{listOf(it.nameAr,it.nameEn,it.latinName)}+state.diseases.flatMap{listOf(it.nameAr,it.nameEn)})
+            if(choices.isNotEmpty())item {
+                Text(if(isAr) "هل تقصد؟" else "Did you mean?")
+                choices.forEach { choice -> OutlinedButton(onClick={onQueryChange(choice)}) {Text(choice)} }
+            }
+        }
+
         items(state.searchResults, key = { "${it.category}_${it.itemId}" }) { hit ->
             Card(
                 onClick = { onOpenContent(hit.category, hit.itemId) },

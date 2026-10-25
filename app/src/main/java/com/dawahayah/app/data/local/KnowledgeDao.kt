@@ -117,22 +117,22 @@ interface KnowledgeDao {
     fun observeReadingProgress(): Flow<List<ReadingProgressEntity>>
 
     // Normalized Local Search Queries (Arabic, English, and Latin TA2)
-    @Query("SELECT * FROM body_systems WHERE normalizedSearchText LIKE '%' || :normalizedQuery || '%'")
+    @Query("SELECT * FROM body_systems WHERE normalizedSearchText LIKE '%' || :normalizedQuery || '%' ESCAPE '\\' LIMIT 100")
     suspend fun searchBodySystems(normalizedQuery: String): List<BodySystemEntity>
 
-    @Query("SELECT * FROM organs WHERE normalizedSearchText LIKE '%' || :normalizedQuery || '%'")
+    @Query("SELECT * FROM organs WHERE normalizedSearchText LIKE '%' || :normalizedQuery || '%' ESCAPE '\\' LIMIT 100")
     suspend fun searchOrgans(normalizedQuery: String): List<OrganEntity>
 
-    @Query("SELECT * FROM anatomical_structures WHERE normalizedSearchText LIKE '%' || :normalizedQuery || '%'")
+    @Query("SELECT * FROM anatomical_structures WHERE normalizedSearchText LIKE '%' || :normalizedQuery || '%' ESCAPE '\\' LIMIT 100")
     suspend fun searchAnatomicalStructures(normalizedQuery: String): List<AnatomicalStructureEntity>
 
-    @Query("SELECT * FROM diseases WHERE normalizedSearchText LIKE '%' || :normalizedQuery || '%'")
+    @Query("SELECT * FROM diseases WHERE normalizedSearchText LIKE '%' || :normalizedQuery || '%' ESCAPE '\\' LIMIT 100")
     suspend fun searchDiseases(normalizedQuery: String): List<DiseaseEntity>
 
-    @Query("SELECT * FROM active_ingredients WHERE normalizedSearchText LIKE '%' || :normalizedQuery || '%'")
+    @Query("SELECT * FROM active_ingredients WHERE normalizedSearchText LIKE '%' || :normalizedQuery || '%' ESCAPE '\\' LIMIT 100")
     suspend fun searchActiveIngredients(normalizedQuery: String): List<ActiveIngredientEntity>
 
-    @Query("SELECT * FROM local_contents WHERE normalizedSearchText LIKE '%' || :normalizedQuery || '%'")
+    @Query("SELECT * FROM local_contents WHERE normalizedSearchText LIKE '%' || :normalizedQuery || '%' ESCAPE '\\' LIMIT 100")
     suspend fun searchLocalContents(normalizedQuery: String): List<LocalContentEntity>
 
     // Inserts & Updates

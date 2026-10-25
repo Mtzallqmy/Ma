@@ -31,6 +31,40 @@ object ArabicSearchNormalizer {
             .trim()
     }
 
+    /** Literal SQL LIKE search: user % and _ must not expand into all records. */
+    fun literalLikeQuery(raw:String):String = normalize(raw).replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")
+
+    /** Suggestions are explicit choices; never silently replace a scientific query. */
+    fun suggestions(raw:String, candidates:List<String>):List<String> {
+        val query=normalize(raw)
+        if(query.length !in 5..80)return emptyList()
+        fun oneEdit(a:String,b:String):Boolean {
+            if(kotlin.math.abs(a.length-b.length)>1 || a==b)return false
+            var i=0;var j=0;var edits=0
+            while(i<a.length && j<b.length) {
+                if(a[i]==b[j]){i++;j++;continue}
+                if(++edits>1)return false
+                if(a.length>=b.length)i++
+                if(b.length>=a.length)j++
+            }
+            return edits+(a.length-i)+(b.length-j)==1
+        }
+        return candidates.take(2000).distinct().filter{oneEdit(query,normalize(it))}.take(3)
+    }
+
+    private val aliases = listOf(
+        listOf("القلب", "heart", "cor", "فؤاد"),
+        listOf("الكليتان", "kidneys", "renes", "كلى"),
+        listOf("الرئتان", "lungs", "pulmones", "رئة"),
+        listOf("ارتفاع ضغط الدم", "فرط ضغط الدم", "hypertension"),
+        listOf("سالبيوتامول", "سالبوتامول", "salbutamol", "albuterol")
+    )
+    fun queryVariants(raw:String):List<String> {
+        val query=normalize(raw).take(160)
+        if(query.isBlank())return emptyList()
+        return (listOf(query)+aliases.firstOrNull{group->group.any{normalize(it)==query}}.orEmpty()).map(::literalLikeQuery).distinct()
+    }
+
     /**
      * Expands common medical/anatomical search synonyms in Arabic so searching
      * for colloquial or alternative academic terms matches canonical entries.
@@ -39,18 +73,18 @@ object ArabicSearchNormalizer {
         val joined = fields.filterNotNull().joinToString(" ")
         val normalizedBase = normalize(joined)
         val synonyms = buildList {
-            if (normalizedBase.contains("القلب") || normalizedBase.contains("cor")) {
+            if (normalizedBase.contains("القلب") || Regex("\\bcor\\b").containsMatchIn(normalizedBase)) {
                 add("فؤاد")
                 add("قلبيه")
                 add("cardiac")
             }
-            if (normalizedBase.contains("الكليتان") || normalizedBase.contains("ren")) {
+            if (normalizedBase.contains("الكليتان") || Regex("\\bren(es)?\\b").containsMatchIn(normalizedBase)) {
                 add("كليه")
                 add("كلوي")
                 add("كلى")
                 add("renal")
             }
-            if (normalizedBase.contains("الرئتان") || normalizedBase.contains("pulmo")) {
+            if (normalizedBase.contains("الرئتان") || Regex("\\bpulmo(nes)?\\b").containsMatchIn(normalizedBase)) {
                 add("رئه")
                 add("تنفس")
                 add("pulmonary")

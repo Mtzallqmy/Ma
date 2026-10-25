@@ -80,6 +80,14 @@ fun HomeScreen(state: MainUiState, onNavigateTab: (PrimaryBottomTab) -> Unit,
                 }
             }
         }
+        item {
+            Text(if(ar) "أدوات الدراسة" else "Study tools",style=MaterialTheme.typography.titleLarge)
+            FlowRow(horizontalArrangement=Arrangement.spacedBy(8.dp)) {
+                OutlinedButton(onClick={onNavigateAuxiliary(AuxiliaryRoutes.DRUG_CLASSES)}) {Text(if(ar) "الفئات الدوائية" else "Drug classes")}
+                OutlinedButton(onClick={onNavigateAuxiliary(AuxiliaryRoutes.CALCULATORS)}) {Text(if(ar) "الحاسبات التعليمية" else "Educational calculators")}
+                OutlinedButton(onClick={onNavigateAuxiliary(AuxiliaryRoutes.INTERACTIONS)}) {Text(if(ar) "سجل التداخلات" else "Interaction records")}
+            }
+        }
         state.readingProgress.firstOrNull()?.let { latest -> item {
             ElevatedCard(onClick={onOpenContent(latest.itemType,latest.itemId)},modifier=Modifier.fillMaxWidth().testTag("continue_reading")) {
                 Column(Modifier.padding(20.dp),verticalArrangement=Arrangement.spacedBy(8.dp)) {
