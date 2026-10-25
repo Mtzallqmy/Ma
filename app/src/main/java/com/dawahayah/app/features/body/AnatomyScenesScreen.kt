@@ -59,7 +59,8 @@ import com.dawahayah.app.ui.components.UnboxedMetadataLine
 @Composable
 fun AnatomyScenesScreen(
     state: MainUiState,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onOpenSourced: () -> Unit = {}
 ) {
     val isAr = state.settings.language == AppLanguage.ARABIC
     var selectedMeshNode by rememberSaveable { mutableStateOf("Ventriculus_Sinister") }
@@ -101,6 +102,7 @@ fun AnatomyScenesScreen(
             )
         }
 
+        item { Button(onClick=onOpenSourced) {Text(if(isAr) "مجسمات BodyParts3D الأصلية" else "Sourced BodyParts3D models")} }
         item { AnatomyPlate(isAr) }
 
         // Mode & Terminology Controls

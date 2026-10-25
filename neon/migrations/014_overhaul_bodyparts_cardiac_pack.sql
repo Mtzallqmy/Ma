@@ -1,0 +1,15 @@
+-- Five source-traceable BodyParts3D parts, packaged as optional licensed geometry.
+-- No clinical approval or completeness of the heart is asserted.
+DO $migration$
+BEGIN
+ INSERT INTO sources(id,title,url,publisher,publication_date,reuse_license,attribution)
+ VALUES('src-bodyparts3d-cardiac','BodyParts3D cardiac structures — pinned STL mirror','https://github.com/Kevin-Mattheus-Moerman/BodyParts3D/tree/f0eeb6e843380cfe6b83797cf8c3e1af74de5e61','The Database Center for Life Science / Kevin Mattheus Moerman',NULL,'CC BY-SA 2.1 Japan — https://creativecommons.org/licenses/by-sa/2.1/jp/deed.en','BodyParts3D, (c) The Database Center for Life Science licensed under CC Attribution-Share Alike 2.1 Japan; STL mirror conversion by Kevin Mattheus Moerman; GLB conversion by Dawa & Hayah. Shared rotation, centering, scale, vertex welding, normals and study colours. No geometry simplification.') ON CONFLICT(id) DO NOTHING;
+ INSERT INTO media_assets(id,bucket_name,object_key,content_type,size_bytes,sha256_checksum,access_policy,quality_level,license,attribution,source_id,status_code,public_url)
+ VALUES('asset-bodyparts-cardiac-v1','github-public-assets','anatomy/bodyparts-cardiac-v1.glb','model/gltf-binary',1623364,'b50c7a983e53f6e517b3174a81677bd6e2a68cef5d6253598563e5f64badc470','public_read','standard','CC BY-SA 2.1 Japan','BodyParts3D, (c) The Database Center for Life Science; STL mirror by Kevin Mattheus Moerman; GLB conversion by Dawa & Hayah.','src-bodyparts3d-cardiac','EDUCATIONAL_FOUNDATION_PUBLISHED','https://raw.githubusercontent.com/Mtzallqmy/Ma/c819eee6fae9f3a47fe9e1e85c0b8d028eb14142/public/anatomy/bodyparts-cardiac-v1.glb') ON CONFLICT(id) DO NOTHING;
+ INSERT INTO content_packs(pack_id,version,scope_type,scope_id,title_ar,title_en,language,content_kind,quality,schema_version,min_app_version,total_size_bytes,license,attribution,status_code)
+ VALUES('bodyparts-cardiac-v1','1.0.0','organ','organ-heart','تراكيب قلبية أصلية — BodyParts3D (خمسة أجزاء)','Sourced cardiac structures — BodyParts3D (five parts)','ar','model_3d_glb','standard',1,'0.9.0',1623364,'CC BY-SA 2.1 Japan','BodyParts3D, (c) The Database Center for Life Science; STL mirror by Kevin Mattheus Moerman; GLB conversion by Dawa & Hayah.','EDUCATIONAL_FOUNDATION_PUBLISHED') ON CONFLICT(pack_id) DO NOTHING;
+ INSERT INTO content_pack_files(pack_id,relative_path,asset_id,content_type,size_bytes,sha256_checksum)
+ VALUES('bodyparts-cardiac-v1','models/bodyparts-cardiac-v1.glb','asset-bodyparts-cardiac-v1','model/gltf-binary',1623364,'b50c7a983e53f6e517b3174a81677bd6e2a68cef5d6253598563e5f64badc470') ON CONFLICT DO NOTHING;
+ INSERT INTO citations(entity_type,entity_id,source_id,relationship_type,citation_note)
+ VALUES('CONTENT_PACK','bodyparts-cardiac-v1','src-bodyparts3d-cardiac','GEOMETRY_PROVENANCE','Five source meshes; not a complete heart or independent clinical review.'),('ORGAN','organ-heart','src-bodyparts3d-cardiac','GEOMETRY_PROVENANCE','FMA3736, FMA3768, FMA7234, FMA7235, FMA7246.') ON CONFLICT DO NOTHING;
+END $migration$;

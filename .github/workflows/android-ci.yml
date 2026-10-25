@@ -65,6 +65,9 @@ jobs:
       - name: Published API snapshot contract tests
         run: node --test neon/functions/public-api/*.test.js
 
+      - name: Verify actual anatomy ray picking geometry
+        run: node --test scripts/anatomy-math.test.cjs
+
       - name: Run Kotlin Unit Tests (Search Normalizer, SHA-256 Verifier, Pack Manager)
         run: ./gradlew :app:testDebugUnitTest --stacktrace --info
 

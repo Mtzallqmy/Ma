@@ -184,6 +184,9 @@ fun DawaHayahMainScaffold(
                     KnowledgeReaderScreen(state, entry.arguments?.getString("type").orEmpty(), entry.arguments?.getString("id").orEmpty(),
                         ::openContent, viewModel::recordReading, viewModel::toggleBookmark, viewModel::saveNote)
                 }
+                composable(AuxiliaryRoutes.SOURCED_ANATOMY) {
+                    com.dawahayah.app.features.body.SourcedAnatomyScreen(state,{viewModel.installContentPack(it)},viewModel::browseCloudCatalog,::openContent)
+                }
                 composable(AuxiliaryRoutes.DRUG_CLASSES) {
                     com.dawahayah.app.features.tools.DrugClassesScreen(state,::openContent)
                 }
@@ -259,7 +262,7 @@ fun DawaHayahMainScaffold(
                     )
                 }
                 composable(AuxiliaryRoutes.ANATOMY_SCENES) {
-                    AnatomyScenesScreen(state = state)
+                    AnatomyScenesScreen(state = state, onOpenSourced={navController.navigate(AuxiliaryRoutes.SOURCED_ANATOMY)})
                 }
                 composable(AuxiliaryRoutes.SOURCES_AND_LICENSES) {
                     com.dawahayah.app.features.tools.SourcesScreen(state)
