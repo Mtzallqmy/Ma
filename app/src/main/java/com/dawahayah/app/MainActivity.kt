@@ -182,7 +182,7 @@ fun DawaHayahMainScaffold(
             ) {
                 composable("reader/{type}/{id}") { entry ->
                     KnowledgeReaderScreen(state, entry.arguments?.getString("type").orEmpty(), entry.arguments?.getString("id").orEmpty(),
-                        ::openContent, viewModel::recordReading, viewModel::toggleBookmark)
+                        ::openContent, viewModel::recordReading, viewModel::toggleBookmark, viewModel::saveNote)
                 }
                 composable(AuxiliaryRoutes.ACADEMY) {
                     val app = androidx.compose.ui.platform.LocalContext.current.applicationContext as DawaHayahApplication
@@ -226,7 +226,8 @@ fun DawaHayahMainScaffold(
                         onRemoveBookmark = { id, type, ar, en, sub ->
                             viewModel.toggleBookmark(id, type, ar, en, sub, true)
                         },
-                        onNavigateAuxiliary = { route -> navController.navigate(route) }
+                        onNavigateAuxiliary = { route -> navController.navigate(route) },
+                        onOpenContent = ::openContent
                     )
                 }
                 composable(AuxiliaryRoutes.GLOBAL_SEARCH) {

@@ -31,7 +31,8 @@ fun MyLibraryScreen(
     state: MainUiState,
     onRemoveBookmark: (String, String, String, String, String) -> Unit,
     onNavigateAuxiliary: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onOpenContent: (String,String)->Unit = {_,_->}
 ) {
     val isAr = state.settings.language == AppLanguage.ARABIC
 
@@ -141,6 +142,7 @@ fun MyLibraryScreen(
         } else {
             items(state.bookmarks, key = { it.itemId }) { b ->
                 Card(
+                    onClick = {onOpenContent(b.itemType,b.itemId)},
                     shape = RoundedCornerShape(14.dp),
                     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
                     border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
@@ -166,6 +168,18 @@ fun MyLibraryScreen(
             }
         }
 
+        item { Text(if(isAr) "سجل القراءة" else "Reading history",style=MaterialTheme.typography.titleLarge) }
+        items(state.readingProgress,key={"history_${it.itemId}"}) { progress ->
+            Card(onClick={onOpenContent(progress.itemType,progress.itemId)},modifier=Modifier.fillMaxWidth()) {
+                Column(Modifier.padding(16.dp)) { Text(if(isAr)progress.titleAr else progress.titleEn) }
+            }
+        }
+        item { Text(if(isAr) "ملاحظاتي" else "My notes",style=MaterialTheme.typography.titleLarge) }
+        items(state.notes.filter{it.text.isNotBlank()},key={"note_${it.itemId}"}) { note ->
+            Card(onClick={onOpenContent(note.itemType,note.itemId)},modifier=Modifier.fillMaxWidth()) {
+                Column(Modifier.padding(16.dp)) { Text(note.text,maxLines=3) }
+            }
+        }
         item { Spacer(modifier = Modifier.height(24.dp)) }
     }
 }

@@ -9,6 +9,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 
 @Database(
     entities = [
+        UserNoteEntity::class,
         AcademyContentEntity::class,
         AcademyAttemptEntity::class,
         AcademyDraftEntity::class,
@@ -34,7 +35,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
         DownloadTaskEntity::class,
         LocalAssetEntity::class
     ],
-    version = 6,
+    version = 7,
     exportSchema = true
 )
 abstract class DawaHayahDatabase : RoomDatabase() {
@@ -273,6 +274,12 @@ abstract class DawaHayahDatabase : RoomDatabase() {
             }
         }
 
+        val MIGRATION_6_7 = object : Migration(6, 7) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("CREATE TABLE IF NOT EXISTS user_notes (itemId TEXT NOT NULL PRIMARY KEY, itemType TEXT NOT NULL, text TEXT NOT NULL, updatedAt INTEGER NOT NULL)")
+            }
+        }
+
         @Volatile
         private var INSTANCE: DawaHayahDatabase? = null
 
@@ -283,7 +290,7 @@ abstract class DawaHayahDatabase : RoomDatabase() {
                     DawaHayahDatabase::class.java,
                     DATABASE_NAME
                 )
-                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6)
+                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7)
                     .build()
                     .also { INSTANCE = it }
             }

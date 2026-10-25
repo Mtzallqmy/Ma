@@ -92,6 +92,9 @@ fun HomeScreen(state: MainUiState, onNavigateTab: (PrimaryBottomTab) -> Unit,
             OutlinedCard(Modifier.fillMaxWidth()) {
                 Column(Modifier.padding(20.dp),verticalArrangement=Arrangement.spacedBy(8.dp)) {
                     Text(if(ar) "المحتوى على جهازك" else "Your offline library",style=MaterialTheme.typography.titleMedium)
+                    state.lastSyncAt?.let { time ->
+                        Text((if(ar) "آخر تحديث ناجح: " else "Last successful sync: ")+java.text.DateFormat.getDateTimeInstance(java.text.DateFormat.SHORT,java.text.DateFormat.SHORT).format(java.util.Date(time)),style=MaterialTheme.typography.labelMedium)
+                    }
                     val count=state.packs.count{it.installState==PackInstallState.COMPLETED}
                     Text(if(ar) "$count حزم مثبتة · المحتوى المحفوظ متاح دون اتصال" else "$count installed packs · Saved content works offline")
                     Text(if(ar) "المحتوى الطبي تعليمي وغير مراجع علميًا. المراجع متاحة داخل كل موضوع." else "Medical content is educational and not clinically reviewed. References are available for each topic.",style=MaterialTheme.typography.bodySmall)

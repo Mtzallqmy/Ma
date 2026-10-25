@@ -20,8 +20,11 @@ class UserBackupTest {
    val bookmark=BookmarkEntity("organ-heart","ORGAN","القلب","Heart","",1)
    first.knowledgeDao().upsertBookmark(bookmark);first.knowledgeDao().upsertReadingProgress(ReadingProgressEntity("organ-heart","ORGAN","القلب","Heart",50,1))
    first.academyDao().insertAttempt(AcademyAttemptEntity("backup-fixture","academy-units",1,"{\"q\":0}",1,2,1))
+   first.knowledgeDao().upsertNote(UserNoteEntity("organ-heart","ORGAN","Personal learning note",1))
    val bytes=UserBackupRepository(first).export();assertFalse(String(bytes).contains("deviceToken"))
-   val repository=UserBackupRepository(second);assertEquals(3,repository.restore(bytes));assertEquals(3,repository.restore(bytes))
+   val repository=UserBackupRepository(second);assertEquals(4,repository.restore(bytes));assertEquals(4,repository.restore(bytes))
+   assertEquals("Personal learning note",second.knowledgeDao().allNotes().single().text)
+   second.knowledgeDao().upsertNote(UserNoteEntity("organ-heart","ORGAN","",2));repository.restore(bytes);assertEquals("",second.knowledgeDao().allNotes().single().text)
    assertEquals(1,second.academyDao().allAttempts().size);assertEquals(50,second.knowledgeDao().allReadingProgress().single().progressPercent)
    second.knowledgeDao().upsertBookmark(bookmark.copy(titleEn="Newer",savedAtEpochMillis=2));repository.restore(bytes);assertEquals("Newer",second.knowledgeDao().allBookmarks().single().titleEn)
   }finally{first.close();second.close()}

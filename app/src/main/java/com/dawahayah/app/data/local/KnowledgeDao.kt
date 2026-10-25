@@ -9,6 +9,15 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface KnowledgeDao {
+    @Query("SELECT * FROM user_notes ORDER BY updatedAt DESC")
+    fun observeNotes(): Flow<List<UserNoteEntity>>
+    @Query("SELECT * FROM user_notes")
+    suspend fun allNotes(): List<UserNoteEntity>
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsertNote(note: UserNoteEntity)
+    @Query("SELECT value FROM sync_state WHERE `key` = :key")
+    fun observeSyncValue(key: String): Flow<String?>
+
 
     @Query("SELECT value FROM sync_state WHERE `key` = :key")
     suspend fun getSyncValue(key: String): String?

@@ -10,6 +10,7 @@ import androidx.compose.material.icons.outlined.BookmarkBorder
 import androidx.compose.material.icons.outlined.Share
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
@@ -25,7 +26,8 @@ private data class ReaderLink(val id:String,val type:String,val label:String)
 @Composable
 fun KnowledgeReaderScreen(state:MainUiState,type:String,id:String,
     onOpen:(String,String)->Unit,onRead:(String,String,String,String)->Unit,
-    onBookmark:(String,String,String,String,String,Boolean)->Unit) {
+    onBookmark:(String,String,String,String,String,Boolean)->Unit,
+    onSaveNote:(String,String,String)->Unit) {
     val ar=state.settings.language==AppLanguage.ARABIC
     val context=LocalContext.current
     val uri=LocalUriHandler.current
@@ -55,6 +57,8 @@ fun KnowledgeReaderScreen(state:MainUiState,type:String,id:String,
         structure!=null->text(structure.functionAr,structure.functionEn)
         else->""
     }
+    val savedNote=state.notes.firstOrNull{it.itemId==id}
+    var draftNote by rememberSaveable(id,savedNote?.updatedAt) {mutableStateOf(savedNote?.text.orEmpty())}
     val sections=buildList {
         organ?.sections?.sortedBy{it.orderIndex}?.forEach{add(ReaderSection(text(it.titleAr,it.titleEn),text(it.bodyAr,it.bodyEn)))}
         disease?.sections?.sortedBy{it.orderIndex}?.forEach{add(ReaderSection(text(it.titleAr,it.titleEn),text(it.contentAr,it.contentEn)))}
@@ -111,6 +115,12 @@ fun KnowledgeReaderScreen(state:MainUiState,type:String,id:String,
         if(links.isNotEmpty()) item {
             Text(text("مواضيع مرتبطة","Related topics"),style=MaterialTheme.typography.titleLarge)
             links.forEach{link->TextButton(onClick={onOpen(link.type,link.id)},modifier=Modifier.testTag("related_${link.id}")) {Text(link.label)}}
+        }
+        item {
+            Text(text("ملاحظاتي الخاصة","My private notes"),style=MaterialTheme.typography.titleLarge)
+            Text(text("تُحفظ على جهازك وتُضمّن في النسخة الاحتياطية التي تصدّرها. لا تدخل معلومات مرضى.","Stored on this device and included in your exported backup. Do not enter patient data."),style=MaterialTheme.typography.bodySmall)
+            OutlinedTextField(value=draftNote,onValueChange={if(it.length<=20000)draftNote=it},modifier=Modifier.fillMaxWidth().testTag("reader_note"),minLines=3,label={Text(text("ملاحظة شخصية","Personal note"))})
+            Button(onClick={onSaveNote(id,type,draftNote)},modifier=Modifier.testTag("save_note")) {Text(text("حفظ الملاحظة","Save note"))}
         }
         item {Text(text("المصادر والحقوق","Sources & rights"),style=MaterialTheme.typography.titleLarge)}
         items(sources,key={it.id}) {source->

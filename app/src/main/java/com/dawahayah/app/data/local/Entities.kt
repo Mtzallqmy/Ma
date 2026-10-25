@@ -341,3 +341,12 @@ data class LocalAssetEntity(
 
 @Entity(tableName = "sync_state")
 data class SyncStateEntity(@PrimaryKey val key: String, val value: String)
+
+@kotlinx.serialization.Serializable
+@androidx.room.Entity(tableName = "user_notes")
+data class UserNoteEntity(
+    @androidx.room.PrimaryKey val itemId: String,
+    val itemType: String,
+    val text: String,
+    val updatedAt: Long
+)
