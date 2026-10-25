@@ -92,14 +92,16 @@ fun AnatomyScenesScreen(
             Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = if (isAr) {
-                    "عارض محلي كامل يعمل دون إنترنت (Offline-First) بصيغة Binary glTF 2.0 (.glb) مع تحديد الأجزاء التشريحية (Mesh Picking) وإخفاء الطبقات والشفافية والبديل ثنائي الأبعاد."
+                    "مجسم القلب الحالي تخطيطي تعليمي، وليس مسحًا تشريحيًا أو أطلسًا مدققًا مستقلًا. يدعم التدوير وتحديد الأجزاء وإخفاءها دون اتصال."
                 } else {
-                    "100% offline binary glTF 2.0 (.glb) anatomical viewer with sub-mesh raycast picking, layer visibility, X-ray transparency, and 2D GPU fallback."
+                    "The current heart model is an educational schematic, not a scanned or independently reviewed anatomical atlas. Rotate, select and hide parts offline."
                 },
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
+
+        item { AnatomyPlate(isAr) }
 
         // Mode & Terminology Controls
         item {

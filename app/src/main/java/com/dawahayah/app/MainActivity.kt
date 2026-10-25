@@ -242,7 +242,8 @@ fun DawaHayahMainScaffold(
                         state = state,
                         onInstallPack = viewModel::installContentPack,
                         onDeletePack = viewModel::deleteContentPack,
-                        onRefreshCloudCatalog = viewModel::browseCloudCatalog
+                        onRefreshCloudCatalog = viewModel::browseCloudCatalog,
+                        onPausePack = viewModel::pauseContentPack
                     )
                 }
                 composable(AuxiliaryRoutes.ANATOMY_SCENES) {

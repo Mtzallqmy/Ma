@@ -271,6 +271,8 @@ class MainViewModel(
         }
     }
 
+    fun pauseContentPack(packId:String) { container.cancelPackDownload(packId) }
+
     fun deleteContentPack(packId: String) {
         container.cancelPackDownload(packId)
         viewModelScope.launch {

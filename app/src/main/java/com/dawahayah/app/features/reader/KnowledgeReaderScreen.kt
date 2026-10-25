@@ -106,6 +106,7 @@ fun KnowledgeReaderScreen(state:MainUiState,type:String,id:String,
             }
         }
         item {SelectionContainer {Text(intro,style=MaterialTheme.typography.bodyLarge)}}
+        if(organ?.id=="organ-heart") item {com.dawahayah.app.features.body.AnatomyPlate(ar)}
         items(sections.filter{it.body.isNotBlank()}) { section ->
             Column(verticalArrangement=Arrangement.spacedBy(8.dp)) {
                 Text(section.title,style=MaterialTheme.typography.titleLarge)

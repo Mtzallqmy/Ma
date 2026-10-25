@@ -65,7 +65,7 @@ fun DiseasesScreen(
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = if (isAr) {
-                    "موسوعة الأمراض والفيزيولوجيا المرضية (${state.diseases.size} مرضاً موثقاً)"
+                    "موسوعة الأمراض والفيزيولوجيا المرضية (${state.diseases.size} صفحة تعليمية)"
                 } else {
                     "Diseases & Pathophysiology Encyclopedia (${state.diseases.size} Diseases)"
                 },

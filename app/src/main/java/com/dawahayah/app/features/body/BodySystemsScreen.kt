@@ -85,9 +85,9 @@ fun BodySystemsScreen(
             Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = if (isAr) {
-                    "المرحلة الثانية: تغطية شاملة للأجهزة الـ 13 مع مسارات تفصيلية للأعضاء والتراكيب التشريحية وفق معيار Terminologia Anatomica (TA2) وعارض 3D التفاعلي."
+                    "فهرس الأجهزة والأعضاء المتاحة ومصطلحاتها. يختلف مقدار التفاصيل بين الأجهزة؛ النصوص التعليمية بانتظار المراجعة العلمية."
                 } else {
-                    "Stage 02: Full 13-system index with detailed organ & sub-structure pathways per Terminologia Anatomica (TA2) and interactive 3D GLB viewer."
+                    "Explore the available systems, organs and terminology. Detail varies by system; educational text awaits scientific review."
                 },
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
