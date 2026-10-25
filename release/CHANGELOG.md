@@ -1,9 +1,21 @@
-# Dawa & Hayah
+# دواء وحياة — 0.9.0 RC3
 
-- Offline anatomical atlas, disease/ingredient pages, sources and bookmarks.
-- Verified optional pack downloads with interruption recovery and atomic installation.
-- Bilingual pharmacy academy, original learning activities and educational calculators.
-- Device-approved learner account synchronization and server-enforced editorial review.
-- Explicit privacy policy and gated clinical publication.
+إصدار تجريبي تعليمي بطلب مالك المشروع، دون اشتراط وجود مراجع علمي حاليًا. حالة المحتوى الطبي **غير مراجع علميًا**؛ المعرّفات المرجعية الحقيقية لا تعني اعتماد النصوص السريرية.
 
-A stable release is forbidden until release/readiness.json is completed truthfully, an exact-commit qualified clinical approval is supplied independently, permanent signing secrets are configured, and verification passes. The current build is testing-only. Temporary test certificates are not production certificates; uninstalling a test build removes its local data.
+## البيانات المتاحة داخل التطبيق ودون اتصال
+
+- 13 جهازًا و10 أعضاء تشريحية.
+- 18 صفحة مرض تعليمية، مرتبطة بمراجعها.
+- 8 مواد فعالة بأسماء حقيقية ومعرّفات RxNorm، مع ملف توثيق الاستعلامات الأصلية في المستودع.
+- 9 مسارات تمهيدية، تضم 9 دروس و18 سؤالًا تعليميًا.
+- حزم اختيارية للقلب والأنسجة والمحتوى التنفسي؛ نموذج القلب رسم تعليمي تخطيطي، وليس تصويرًا تشريحيًا سريريًا.
+
+أُرفق DATA-INVENTORY.json بجرد مستخرج من ملفات APK الفعلية وبصماتها وقائمة المصادر. النصوص التعليمية مؤلفة ومرتبطة بمراجع؛ ليست استيرادًا كاملًا أو تدقيقًا علميًا مستقلًا لتلك المراجع. لا تتضمن النسخة جرعات علاجية معتمدة أو منتجات محلية موثقة لم تُتحقق بياناتها.
+
+## الوظائف
+
+البحث والمفضلة والقراءة دون اتصال، تنزيل الحزم مع فحص البصمة والاستئناف، دروس واختبارات وحاسبات تعليمية، ربط الحساب ومزامنة المحاولات، والتصدير والاستعادة اليدويان للبيانات الشخصية.
+
+## التثبيت
+
+Android 8 أو أحدث، بمعالج ARM64. الإصدار 0.9.0-rc.3، ورقم البناء 11. توقيع الاختبار مؤقت وقد يختلف عن النسخة السابقة. صدّر بياناتك الشخصية من الإعدادات قبل أي إزالة؛ إزالة التطبيق تحذف بياناته المحلية. الإصدار مخصص للتجربة والتعليم، ولم يُختبر بعد على جهاز فعلي أو يعتمد كمرجع لاتخاذ قرار علاجي.
