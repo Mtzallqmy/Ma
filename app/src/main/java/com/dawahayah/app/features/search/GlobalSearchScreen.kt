@@ -29,7 +29,8 @@ import com.dawahayah.app.ui.components.UnboxedMetadataLine
 fun GlobalSearchScreen(
     state: MainUiState,
     onQueryChange: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onOpenContent: (String, String) -> Unit = { _, _ -> }
 ) {
     val isAr = state.settings.language == AppLanguage.ARABIC
 
@@ -42,7 +43,7 @@ fun GlobalSearchScreen(
         item {
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = if (isAr) "البحث المحلي المطبع (العربية · الإنجليزية · اللاتينية)" else "Normalized Local Search (Arabic · English · Latin)",
+                text = if (isAr) "البحث في المكتبة" else "Search the library",
                 style = MaterialTheme.typography.headlineMedium
             )
             Spacer(modifier = Modifier.height(6.dp))
@@ -94,6 +95,7 @@ fun GlobalSearchScreen(
 
         items(state.searchResults, key = { "${it.category}_${it.itemId}" }) { hit ->
             Card(
+                onClick = { onOpenContent(hit.category, hit.itemId) },
                 shape = RoundedCornerShape(14.dp),
                 colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
                 border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),

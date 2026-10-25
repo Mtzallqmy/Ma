@@ -21,8 +21,8 @@ import com.dawahayah.app.core.storage.AppThemeMode
 private val LightColors = lightColorScheme(
     primary = MedicalDeepTeal,
     onPrimary = MedicalIvory,
-    primaryContainer = MedicalTurquoise,
-    onPrimaryContainer = LightSurfacePure,
+    primaryContainer = androidx.compose.ui.graphics.Color(0xFFD9EFEA),
+    onPrimaryContainer = androidx.compose.ui.graphics.Color(0xFF103E38),
     secondary = AcademicGold,
     onSecondary = AcademicNavy,
     secondaryContainer = LightSurfaceMuted,

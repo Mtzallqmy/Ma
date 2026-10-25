@@ -1,6 +1,9 @@
 package com.dawahayah.app
 
 import android.os.Bundle
+import android.net.Uri
+import androidx.compose.material.icons.automirrored.outlined.ArrowBack
+import com.dawahayah.app.features.reader.KnowledgeReaderScreen
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -94,13 +97,22 @@ fun DawaHayahMainScaffold(
         }
     }
 
+    fun openContent(type: String, id: String) {
+        navController.navigate("reader/${Uri.encode(type)}/${Uri.encode(id)}") { launchSingleTop = true }
+    }
+
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             TopAppBar(
+                navigationIcon = {
+                    if (currentRoute !in PrimaryBottomTab.entries.map { it.route }) IconButton(onClick={navController.popBackStack()}) {
+                        Icon(Icons.AutoMirrored.Outlined.ArrowBack, if(isAr) "رجوع" else "Back")
+                    }
+                },
                 title = {
                     Text(
-                        text = if (isAr) "دواء وحياة · علم الدواء لفهم الحياة" else "Dawa & Hayah",
+                        text = if (isAr) "دواء وحياة" else "Dawa & Hayah",
                         style = MaterialTheme.typography.titleLarge
                     )
                 },
@@ -168,6 +180,10 @@ fun DawaHayahMainScaffold(
                 navController = navController,
                 startDestination = PrimaryBottomTab.HOME.route
             ) {
+                composable("reader/{type}/{id}") { entry ->
+                    KnowledgeReaderScreen(state, entry.arguments?.getString("type").orEmpty(), entry.arguments?.getString("id").orEmpty(),
+                        ::openContent, viewModel::recordReading, viewModel::toggleBookmark)
+                }
                 composable(AuxiliaryRoutes.ACADEMY) {
                     val app = androidx.compose.ui.platform.LocalContext.current.applicationContext as DawaHayahApplication
                     com.dawahayah.app.features.academy.AcademyScreen(app.container.academyRepository, isAr)
@@ -176,7 +192,9 @@ fun DawaHayahMainScaffold(
                     HomeScreen(
                         state = state,
                         onNavigateTab = { tab -> navController.navigate(tab.route) },
-                        onNavigateAuxiliary = { route -> navController.navigate(route) }
+                        onNavigateAuxiliary = { route -> navController.navigate(route) },
+                        onOpenContent = ::openContent,
+                        onSync = viewModel::browseCloudCatalog
                     )
                 }
                 composable(PrimaryBottomTab.BODY_SYSTEMS.route) {
@@ -214,7 +232,8 @@ fun DawaHayahMainScaffold(
                 composable(AuxiliaryRoutes.GLOBAL_SEARCH) {
                     GlobalSearchScreen(
                         state = state,
-                        onQueryChange = viewModel::updateSearchQuery
+                        onQueryChange = viewModel::updateSearchQuery,
+                        onOpenContent = ::openContent
                     )
                 }
                 composable(AuxiliaryRoutes.PACK_DOWNLOADS) {
