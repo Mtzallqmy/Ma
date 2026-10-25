@@ -48,6 +48,7 @@ fun KnowledgeReaderScreen(state:MainUiState,type:String,id:String,
     LaunchedEffect(id) {onRead(id,type,titleAr,titleEn)}
     val sourceIds=(system?.sourceIds?:organ?.sourceIds?:disease?.citationIds?:medicine?.citationIds?:listOfNotNull(lesson?.sourceId,structure?.sourceId)).distinct()
     val sources=state.sources.filter{it.id in sourceIds}
+    val adaptedNotes = sourceIds.any { it.startsWith("src-openstax-2026-") }
     val intro=when {
         system!=null->text(system.descriptionAr,system.descriptionEn)
         organ!=null->text(organ.summaryAr,organ.summaryEn)
@@ -97,10 +98,11 @@ fun KnowledgeReaderScreen(state:MainUiState,type:String,id:String,
                     Icon(Icons.Outlined.BookmarkBorder,null);Text(if(saved)text("محفوظ","Saved")else text("حفظ","Save"))
                 }
                 TextButton(onClick={
-                    val shared="${text(titleAr,titleEn)}\n$intro\n\n"+text("محتوى تعليمي غير مراجع علميًا — دواء وحياة","Educational, not clinically reviewed — Dawa & Hayah")+"\n"+sources.joinToString("\n"){it.title+"\n"+it.url}
+                    val shared="${text(titleAr,titleEn)}\n$intro\n\n"+text("محتوى تعليمي غير مراجع علميًا — دواء وحياة","Educational, not clinically reviewed — Dawa & Hayah")+"\n"+sources.joinToString("\n"){it.title+"\n"+it.url+"\n"+it.license+"\n"+it.attribution}
                     context.startActivity(Intent.createChooser(Intent(Intent.ACTION_SEND).setType("text/plain").putExtra(Intent.EXTRA_TEXT,shared),text("مشاركة مع المصدر","Share with source")))
                 }) {Icon(Icons.Outlined.Share,null);Text(text("مشاركة","Share"))}
             }
+            if(adaptedNotes) Text(text("ملخص دراسي مقتبس ومترجم — CC BY-NC-SA 4.0؛ راجع الحقوق أدناه.","Adapted study summary — CC BY-NC-SA 4.0; see rights below."), style=MaterialTheme.typography.bodySmall)
             Surface(color=MaterialTheme.colorScheme.secondaryContainer,shape=MaterialTheme.shapes.medium) {
                 Text(text("مادة تعليمية؛ وجود المصادر لا يثبت المراجعة السريرية.","Educational material; references do not establish clinical review."),Modifier.padding(12.dp),style=MaterialTheme.typography.bodySmall)
             }

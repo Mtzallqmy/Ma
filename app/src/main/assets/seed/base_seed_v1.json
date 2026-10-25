@@ -912,6 +912,206 @@
       "sections": [],
       "structures": [],
       "figures": []
+    },
+    {
+      "id": "organ-femur",
+      "systemId": "sys-skeletal",
+      "nameAr": "عظم الفخذ",
+      "nameEn": "Femur",
+      "latinName": "",
+      "summaryAr": "عظم طويل يمتد بين الورك والركبة. يوضح تنظيم جسم العظم ونهايتيه.",
+      "summaryEn": "A long bone between hip and knee, illustrating the shaft and ends of a long bone.",
+      "sourceIds": [
+        "src-openstax-2026-bone"
+      ],
+      "has3dAsset": false,
+      "sections": [
+        {
+          "id": "sec-femur-foundation",
+          "organId": "organ-femur",
+          "sectionKey": "ANATOMY_FUNCTION",
+          "titleAr": "البنية والوظيفة",
+          "titleEn": "Structure and function",
+          "bodyAr": "يحيط العظم الكثيف بالتجويف النخاعي في الجسم، بينما تحتوي النهايتان على عظم إسفنجي. يغطي الغضروف المفصلي السطوح المشاركة في المفاصل.",
+          "bodyEn": "Compact bone surrounds the shaft cavity; spongy bone occupies the ends. Articular cartilage covers joint surfaces.",
+          "orderIndex": 1
+        }
+      ]
+    },
+    {
+      "id": "organ-biceps-brachii",
+      "systemId": "sys-muscular",
+      "nameAr": "العضلة ذات الرأسين العضدية",
+      "nameEn": "Biceps brachii",
+      "latinName": "",
+      "summaryAr": "عضلة في مقدمة العضد تسهم في ثني المرفق واستلقاء الساعد.",
+      "summaryEn": "An anterior arm muscle contributing to elbow flexion and forearm supination.",
+      "sourceIds": [
+        "src-openstax-2026-muscle"
+      ],
+      "has3dAsset": false,
+      "sections": [
+        {
+          "id": "sec-biceps-brachii-foundation",
+          "organId": "organ-biceps-brachii",
+          "sectionKey": "ANATOMY_FUNCTION",
+          "titleAr": "البنية والوظيفة",
+          "titleEn": "Structure and function",
+          "bodyAr": "للعضلة رأسان وتعبر مفصلي الكتف والمرفق. تسهم أيضًا في ثني الذراع عند الكتف؛ وتساعد العضلة العضدية العميقة لها في ثني المرفق.",
+          "bodyEn": "It has two heads and crosses shoulder and elbow. It also assists shoulder flexion; the deeper brachialis contributes to elbow flexion.",
+          "orderIndex": 1
+        }
+      ]
+    },
+    {
+      "id": "organ-spleen",
+      "systemId": "sys-immune-lymphatic",
+      "nameAr": "الطحال",
+      "nameEn": "Spleen",
+      "latinName": "",
+      "summaryAr": "عضو لمفي ثانوي يرتبط بالمعدة ويسهم في تنقية الدم والاستجابة المناعية.",
+      "summaryEn": "A secondary lymphoid organ associated with the stomach, contributing to blood filtration and immune responses.",
+      "sourceIds": [
+        "src-openstax-2026-lymph"
+      ],
+      "has3dAsset": false,
+      "sections": [
+        {
+          "id": "sec-spleen-foundation",
+          "organId": "organ-spleen",
+          "sectionKey": "ANATOMY_FUNCTION",
+          "titleAr": "البنية والوظيفة",
+          "titleEn": "Structure and function",
+          "bodyAr": "يحتوي على لب أحمر ولب أبيض. تسهم خلاياه البلعمية في إزالة كريات الدم الحمراء المتقادمة ومواد أخرى من الدم؛ ويشارك في الاستجابة لمستضدات تصل عبر الدم.",
+          "bodyEn": "It contains red and white pulp. Phagocytic cells remove ageing red cells and other material; immune cells respond to blood-borne antigens.",
+          "orderIndex": 1
+        }
+      ]
+    },
+    {
+      "id": "organ-skin",
+      "systemId": "sys-integumentary",
+      "nameAr": "الجلد",
+      "nameEn": "Skin",
+      "latinName": "",
+      "summaryAr": "غلاف الجسم الواقي، ويتكون من البشرة والأدمة.",
+      "summaryEn": "The protective body covering, comprising epidermis and dermis.",
+      "sourceIds": [
+        "src-openstax-2026-skin"
+      ],
+      "has3dAsset": false,
+      "sections": [
+        {
+          "id": "sec-skin-foundation",
+          "organId": "organ-skin",
+          "sectionKey": "ANATOMY_FUNCTION",
+          "titleAr": "البنية والوظيفة",
+          "titleEn": "Structure and function",
+          "bodyAr": "البشرة ظهارة متقرنة لا تحتوي أوعية دموية. تضم الأدمة أوعية وأعصابًا وبنى ملحقة. يقع النسيج تحت الجلد أسفل الأدمة ويحتوي نسيجًا ضامًا ودهنيًا.",
+          "bodyEn": "The keratinized epidermis lacks blood vessels. The dermis contains vessels, nerves and accessory structures. Subcutaneous connective and fatty tissue lies beneath the dermis.",
+          "orderIndex": 1
+        }
+      ]
+    },
+    {
+      "id": "organ-ovaries",
+      "systemId": "sys-reproductive",
+      "nameAr": "المبيضان",
+      "nameEn": "Ovaries",
+      "latinName": "",
+      "summaryAr": "غدتان تناسليتان في الحوض تحتويان الخلايا البيضية وتنتجان هرمونات تناسلية.",
+      "summaryEn": "Paired pelvic gonads containing oocytes and producing reproductive hormones.",
+      "sourceIds": [
+        "src-openstax-2026-ovary"
+      ],
+      "has3dAsset": false,
+      "sections": [
+        {
+          "id": "sec-ovaries-foundation",
+          "organId": "organ-ovaries",
+          "sectionKey": "ANATOMY_FUNCTION",
+          "titleAr": "البنية والوظيفة",
+          "titleEn": "Structure and function",
+          "bodyAr": "تحتوي القشرة على جريبات، يتألف كل منها من خلية بيضية وخلايا داعمة. يضم اللب الداخلي أوعية دموية ولمفية وأعصابًا.",
+          "bodyEn": "The cortex contains follicles formed by an oocyte and supporting cells. The inner medulla contains blood and lymph vessels and nerves.",
+          "orderIndex": 1
+        }
+      ]
+    },
+    {
+      "id": "organ-testes",
+      "systemId": "sys-reproductive",
+      "nameAr": "الخصيتان",
+      "nameEn": "Testes",
+      "latinName": "",
+      "summaryAr": "غدتان تناسليتان داخل الصفن تنتجان الحيوانات المنوية والأندروجينات.",
+      "summaryEn": "Paired gonads within the scrotum producing sperm and androgens.",
+      "sourceIds": [
+        "src-openstax-2026-testis"
+      ],
+      "has3dAsset": false,
+      "sections": [
+        {
+          "id": "sec-testes-foundation",
+          "organId": "organ-testes",
+          "sectionKey": "ANATOMY_FUNCTION",
+          "titleAr": "البنية والوظيفة",
+          "titleEn": "Structure and function",
+          "bodyAr": "تقسم حواجز من نسيج ضام الخصية إلى فصيصات تضم الأنابيب المنوية. تتكون الحيوانات المنوية في هذه الأنابيب ثم تنتقل إلى البربخ لاستكمال نضجها.",
+          "bodyEn": "Connective tissue septa divide each testis into lobules containing seminiferous tubules. Sperm form there and move to the epididymis for further maturation.",
+          "orderIndex": 1
+        }
+      ]
+    },
+    {
+      "id": "organ-eye",
+      "systemId": "sys-special-senses",
+      "nameAr": "العين",
+      "nameEn": "Eye",
+      "latinName": "",
+      "summaryAr": "عضو الإبصار؛ تحتوي شبكيته على مستقبلات ضوئية.",
+      "summaryEn": "The organ of vision; its retina contains photoreceptors.",
+      "sourceIds": [
+        "src-openstax-2026-senses"
+      ],
+      "has3dAsset": false,
+      "sections": [
+        {
+          "id": "sec-eye-foundation",
+          "organId": "organ-eye",
+          "sectionKey": "ANATOMY_FUNCTION",
+          "titleAr": "البنية والوظيفة",
+          "titleEn": "Structure and function",
+          "bodyAr": "تستجيب العصي والمخاريط للضوء. تعالج دوائر الشبكية الإشارة، وتكوّن محاور خلاياها العقدية العصب البصري.",
+          "bodyEn": "Rods and cones respond to light. Retinal circuits process signals; ganglion-cell axons form the optic nerve.",
+          "orderIndex": 1
+        }
+      ]
+    },
+    {
+      "id": "organ-inner-ear",
+      "systemId": "sys-special-senses",
+      "nameAr": "الأذن الداخلية",
+      "nameEn": "Inner ear",
+      "latinName": "",
+      "summaryAr": "تضم تراكيب للسمع والتوازن.",
+      "summaryEn": "Contains structures for hearing and balance.",
+      "sourceIds": [
+        "src-openstax-2026-senses"
+      ],
+      "has3dAsset": false,
+      "sections": [
+        {
+          "id": "sec-inner-ear-foundation",
+          "organId": "organ-inner-ear",
+          "sectionKey": "ANATOMY_FUNCTION",
+          "titleAr": "البنية والوظيفة",
+          "titleEn": "Structure and function",
+          "bodyAr": "تسهم الخلايا الشعرية في القوقعة في تحويل الاهتزاز إلى إشارة عصبية. تسهم بنى الدهليز والقنوات نصف الدائرية في استشعار وضع الرأس وحركته.",
+          "bodyEn": "Cochlear hair cells transduce vibration. Vestibular structures and semicircular canals help sense head position and movement.",
+          "orderIndex": 1
+        }
+      ]
     }
   ],
   "diseases": [
@@ -3758,6 +3958,76 @@
       "accessedAt": "2026-10-24",
       "license": "RxNorm non-proprietary identifiers; RxNav Terms of Service apply",
       "attribution": "NLM RxNav exact name lookup and IN concept properties, retrieved 2026-10-24."
+    },
+    {
+      "id": "src-openstax-2026-bone",
+      "title": "OpenStax Anatomy and Physiology 2e — 6.3 Bone Structure",
+      "url": "https://openstax.org/books/anatomy-and-physiology-2e/pages/6-3-bone-structure",
+      "publisher": "OpenStax, Rice University",
+      "publicationDate": "2022",
+      "accessedAt": "2026-10-25",
+      "license": "CC BY-NC-SA 4.0 — https://creativecommons.org/licenses/by-nc-sa/4.0/",
+      "attribution": "OpenStax Anatomy and Physiology 2e, 6.3 Bone Structure. Brief English study summary and Arabic adaptation by Dawa & Hayah (2026); no images reproduced. New adapted notes are CC BY-NC-SA 4.0; this does not relicense application code. No independent clinical review or endorsement claimed."
+    },
+    {
+      "id": "src-openstax-2026-muscle",
+      "title": "OpenStax Anatomy and Physiology 2e — 11.5 Muscles of the Pectoral Girdle and Upper Limbs",
+      "url": "https://openstax.org/books/anatomy-and-physiology-2e/pages/11-5-muscles-of-the-pectoral-girdle-and-upper-limbs",
+      "publisher": "OpenStax, Rice University",
+      "publicationDate": "2022",
+      "accessedAt": "2026-10-25",
+      "license": "CC BY-NC-SA 4.0 — https://creativecommons.org/licenses/by-nc-sa/4.0/",
+      "attribution": "OpenStax Anatomy and Physiology 2e, 11.5 Muscles of the Pectoral Girdle and Upper Limbs. Brief English study summary and Arabic adaptation by Dawa & Hayah (2026); no images reproduced. New adapted notes are CC BY-NC-SA 4.0; this does not relicense application code. No independent clinical review or endorsement claimed."
+    },
+    {
+      "id": "src-openstax-2026-lymph",
+      "title": "OpenStax Anatomy and Physiology 2e — 21.1 Anatomy of the Lymphatic and Immune Systems",
+      "url": "https://openstax.org/books/anatomy-and-physiology-2e/pages/21-1-anatomy-of-the-lymphatic-and-immune-systems",
+      "publisher": "OpenStax, Rice University",
+      "publicationDate": "2022",
+      "accessedAt": "2026-10-25",
+      "license": "CC BY-NC-SA 4.0 — https://creativecommons.org/licenses/by-nc-sa/4.0/",
+      "attribution": "OpenStax Anatomy and Physiology 2e, 21.1 Anatomy of the Lymphatic and Immune Systems. Brief English study summary and Arabic adaptation by Dawa & Hayah (2026); no images reproduced. New adapted notes are CC BY-NC-SA 4.0; this does not relicense application code. No independent clinical review or endorsement claimed."
+    },
+    {
+      "id": "src-openstax-2026-skin",
+      "title": "OpenStax Anatomy and Physiology 2e — 5.1 Layers of the Skin",
+      "url": "https://openstax.org/books/anatomy-and-physiology-2e/pages/5-1-layers-of-the-skin",
+      "publisher": "OpenStax, Rice University",
+      "publicationDate": "2022",
+      "accessedAt": "2026-10-25",
+      "license": "CC BY-NC-SA 4.0 — https://creativecommons.org/licenses/by-nc-sa/4.0/",
+      "attribution": "OpenStax Anatomy and Physiology 2e, 5.1 Layers of the Skin. Brief English study summary and Arabic adaptation by Dawa & Hayah (2026); no images reproduced. New adapted notes are CC BY-NC-SA 4.0; this does not relicense application code. No independent clinical review or endorsement claimed."
+    },
+    {
+      "id": "src-openstax-2026-ovary",
+      "title": "OpenStax Anatomy and Physiology 2e — 27.2 Anatomy and Physiology of the Ovarian Reproductive System",
+      "url": "https://openstax.org/books/anatomy-and-physiology-2e/pages/27-2-anatomy-and-physiology-of-the-ovarian-reproductive-system",
+      "publisher": "OpenStax, Rice University",
+      "publicationDate": "2022",
+      "accessedAt": "2026-10-25",
+      "license": "CC BY-NC-SA 4.0 — https://creativecommons.org/licenses/by-nc-sa/4.0/",
+      "attribution": "OpenStax Anatomy and Physiology 2e, 27.2 Anatomy and Physiology of the Ovarian Reproductive System. Brief English study summary and Arabic adaptation by Dawa & Hayah (2026); no images reproduced. New adapted notes are CC BY-NC-SA 4.0; this does not relicense application code. No independent clinical review or endorsement claimed."
+    },
+    {
+      "id": "src-openstax-2026-testis",
+      "title": "OpenStax Anatomy and Physiology 2e — 27.1 Anatomy and Physiology of the Testicular Reproductive System",
+      "url": "https://openstax.org/books/anatomy-and-physiology-2e/pages/27-1-anatomy-and-physiology-of-the-testicular-reproductive-system",
+      "publisher": "OpenStax, Rice University",
+      "publicationDate": "2022",
+      "accessedAt": "2026-10-25",
+      "license": "CC BY-NC-SA 4.0 — https://creativecommons.org/licenses/by-nc-sa/4.0/",
+      "attribution": "OpenStax Anatomy and Physiology 2e, 27.1 Anatomy and Physiology of the Testicular Reproductive System. Brief English study summary and Arabic adaptation by Dawa & Hayah (2026); no images reproduced. New adapted notes are CC BY-NC-SA 4.0; this does not relicense application code. No independent clinical review or endorsement claimed."
+    },
+    {
+      "id": "src-openstax-2026-senses",
+      "title": "OpenStax Anatomy and Physiology 2e — 14.1 Sensory Perception",
+      "url": "https://openstax.org/books/anatomy-and-physiology-2e/pages/14-1-sensory-perception",
+      "publisher": "OpenStax, Rice University",
+      "publicationDate": "2022",
+      "accessedAt": "2026-10-25",
+      "license": "CC BY-NC-SA 4.0 — https://creativecommons.org/licenses/by-nc-sa/4.0/",
+      "attribution": "OpenStax Anatomy and Physiology 2e, 14.1 Sensory Perception. Brief English study summary and Arabic adaptation by Dawa & Hayah (2026); no images reproduced. New adapted notes are CC BY-NC-SA 4.0; this does not relicense application code. No independent clinical review or endorsement claimed."
     }
   ]
 }
