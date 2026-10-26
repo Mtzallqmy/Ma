@@ -42,7 +42,7 @@ class LocalAnatomyWebView(
     private val meshNames = verifiedModel?.meshNames ?: contract.selectableSubMeshes
     private var released = false
     private var pageReady = false
-    private var selectedMesh = "Ventriculus_Sinister"
+    private var selectedMesh = if("Ventriculus_Sinister" in meshNames) "Ventriculus_Sinister" else meshNames.first()
     private var transparent = false
     private var isolated = false
     private var dark = true
@@ -67,7 +67,12 @@ class LocalAnatomyWebView(
             fallback = { reason -> post { if (!released) onFallback(reason) } },
             loaded = { count -> post {
                 if (!released) {
-                    if (count == meshNames.size) { applyControls(); onModelLoaded(count) }
+                    if (count == meshNames.size) {
+                        applyControls()
+                        postVisualStateCallback(1L, object : VisualStateCallback() {
+                            override fun onComplete(requestId: Long) { if(!released) onModelLoaded(count) }
+                        })
+                    }
                     else onFallback("Unexpected mesh count")
                 }
             } }

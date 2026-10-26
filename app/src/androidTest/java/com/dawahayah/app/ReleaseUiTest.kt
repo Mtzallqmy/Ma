@@ -23,6 +23,7 @@ class ReleaseUiTest {
   try {
    runBlocking {preferences.setLanguage(AppLanguage.ENGLISH);preferences.setThemeMode(AppThemeMode.DARK);preferences.setFontScale(1.4f)}
    compose.waitUntil(15000){compose.onAllNodesWithContentDescription("Settings & About").fetchSemanticsNodes().isNotEmpty()}
+   listOf("Home","Body Systems","Diseases","Medicines","My Library").forEach { compose.onNodeWithContentDescription(it).assertIsDisplayed() }
    VerificationScreenshots.save(compose.activity,"home-en-dark-large",compose.onRoot().captureToImage().asAndroidBitmap())
    compose.onNodeWithContentDescription("Settings & About").performClick()
    compose.onNodeWithText("Privacy and data policy").performScrollTo().performClick()

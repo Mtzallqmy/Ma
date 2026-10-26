@@ -47,10 +47,31 @@ class SourcedAnatomyTest {
                 }
                 try {
                     assertTrue("Source GLB timeout",ready.await(40,TimeUnit.SECONDS));assertNull(failure.get());assertEquals(5,count.get())
-                    androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().waitForIdleSync()
-                    val screenshot = androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().uiAutomation.takeScreenshot()
-                    assertNotNull("Model screenshot", screenshot)
-                    VerificationScreenshots.save(app, "bodyparts-five-meshes", screenshot!!)
+                    val drawn=CountDownLatch(1)
+                    scenario.onActivity { viewer.postOnAnimation { viewer.postOnAnimation { drawn.countDown() } } }
+                    assertTrue("First visible frame timeout",drawn.await(10,TimeUnit.SECONDS))
+                    val instrumentation=androidx.test.platform.app.InstrumentationRegistry.getInstrumentation()
+                    fun modelPixels(bitmap:android.graphics.Bitmap):Int {
+                        var count=0
+                        for(y in bitmap.height/5 until bitmap.height*4/5 step 3) {
+                            for(x in bitmap.width/10 until bitmap.width*9/10 step 3) {
+                                val pixel=bitmap.getPixel(x,y)
+                                val red=android.graphics.Color.red(pixel);val green=android.graphics.Color.green(pixel)
+                                if(red>50 && red>green*1.4)count++
+                            }
+                        }
+                        return count
+                    }
+                    var screenshot=instrumentation.uiAutomation.takeScreenshot()
+                    val deadline=android.os.SystemClock.uptimeMillis()+5000
+                    while((screenshot==null || modelPixels(screenshot)<50) && android.os.SystemClock.uptimeMillis()<deadline) {
+                        android.os.SystemClock.sleep(100)
+                        screenshot=instrumentation.uiAutomation.takeScreenshot()
+                    }
+                    assertNotNull("Model screenshot",screenshot)
+                    val visibleScreenshot=requireNotNull(screenshot)
+                    VerificationScreenshots.save(app,"bodyparts-five-meshes",visibleScreenshot)
+                    assertTrue("Loaded meshes must produce visible coloured anatomy pixels",modelPixels(visibleScreenshot)>=50)
                     scenario.onActivity {assertTrue(viewer.settings.blockNetworkLoads);viewer.updateControls("Valva_mitralis",false,true,true,setOf("Aorta_ascendens"))}
                 } finally {scenario.onActivity{viewer.releaseViewer()}}
             }

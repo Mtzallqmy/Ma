@@ -87,6 +87,7 @@ fun DawaHayahMainScaffold(
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route ?: PrimaryBottomTab.HOME.route
     val isAr = state.settings.language == AppLanguage.ARABIC
+    val largeNavigationText = androidx.compose.ui.platform.LocalDensity.current.fontScale >= 1.3f
     val snackbarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(state.transientBannerMessage) {
@@ -151,6 +152,7 @@ fun DawaHayahMainScaffold(
                 PrimaryBottomTab.entries.forEach { tab ->
                     NavigationBarItem(
                         selected = currentRoute == tab.route,
+                        alwaysShowLabel = !largeNavigationText,
                         onClick = {
                             navController.navigate(tab.route) {
                                 popUpTo(PrimaryBottomTab.HOME.route) { saveState = true }
@@ -165,7 +167,14 @@ fun DawaHayahMainScaffold(
                             )
                         },
                         label = {
-                            Text(if (isAr) tab.labelAr else tab.labelEn)
+                            val label = if (isAr) tab.labelAr else when(tab) {
+                                PrimaryBottomTab.BODY_SYSTEMS -> "Body"
+                                PrimaryBottomTab.MEDICINES -> "Drugs"
+                                PrimaryBottomTab.MY_LIBRARY -> "Library"
+                                else -> tab.labelEn
+                            }
+                            Text(label, maxLines=if(largeNavigationText || !isAr) 1 else 2,
+                                overflow=androidx.compose.ui.text.style.TextOverflow.Ellipsis)
                         }
                     )
                 }
