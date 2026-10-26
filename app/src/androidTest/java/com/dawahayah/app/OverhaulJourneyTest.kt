@@ -1,6 +1,5 @@
 package com.dawahayah.app
 
-import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -47,6 +46,6 @@ class OverhaulJourneyTest {
         screenshot("reader-ar")
     }
     private fun screenshot(name:String) {
-        VerificationScreenshots.save(compose.activity, name, compose.onRoot().captureToImage().asAndroidBitmap())
+        VerificationScreenshots.capture(compose.activity, name)
     }
 }

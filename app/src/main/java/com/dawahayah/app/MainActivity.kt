@@ -33,6 +33,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -151,6 +152,7 @@ fun DawaHayahMainScaffold(
             NavigationBar {
                 PrimaryBottomTab.entries.forEach { tab ->
                     NavigationBarItem(
+                        modifier = Modifier.testTag("navigation_${tab.route}"),
                         selected = currentRoute == tab.route,
                         alwaysShowLabel = !largeNavigationText,
                         onClick = {

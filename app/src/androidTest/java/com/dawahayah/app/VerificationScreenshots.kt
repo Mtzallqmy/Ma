@@ -7,6 +7,13 @@ import java.io.File
 
 /** Keep evidence outside app-owned storage, which AGP removes when uninstalling test APKs. */
 object VerificationScreenshots {
+    fun capture(context: Context, name: String) {
+        val instrumentation = InstrumentationRegistry.getInstrumentation()
+        instrumentation.waitForIdleSync()
+        val bitmap = checkNotNull(instrumentation.uiAutomation.takeScreenshot()) { "Screen capture unavailable" }
+        save(context, name, bitmap)
+    }
+
     fun save(context: Context, name: String, bitmap: Bitmap) {
         require(name.matches(Regex("[a-z0-9-]+")))
         val file = File(context.getExternalFilesDir(null), "$name.png")
