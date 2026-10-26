@@ -7,7 +7,7 @@ permissions:
   contents: read
 concurrency:
   group: overhaul-arm64-release
-  cancel-in-progress: false
+  cancel-in-progress: true
 jobs:
   quality:
     uses: ./.github/workflows/android-ci.yml
@@ -59,6 +59,7 @@ jobs:
           cp release/readiness.json dist/READINESS.json
           cp release/OVERHAUL_RC4.md dist/CHANGELOG.md
           cp docs/ANATOMY_ASSET_LICENSES.md dist/ANATOMY-LICENSES.md
+          cp public/anatomy/BODYParts3D-LICENSE.txt dist/
           cp app/src/main/assets/anatomy/*source.json dist/
           cp app/build/outputs/mapping/release/mapping.txt dist/R8-MAPPING.txt
           python3 - <<'PY'
@@ -138,5 +139,6 @@ jobs:
           assert len(reports)==2 and all(json.loads(p.read_text())['passed'] for p in reports)
           assert {json.loads(p.read_text())['api'] for p in reports}=={'26','35'}
           PY
+          test "$(gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/release/overhaul-arm64" --jq .object.sha)" = "$GITHUB_SHA"
           zip -rq dist/RELEASE-DEVICE-EVIDENCE.zip evidence/
           gh release create "v0.9.0-rc.4-overhaul-${GITHUB_RUN_NUMBER}" dist/* --target "$GITHUB_SHA" --title "دواء وحياة RC4 — ARM64 Release تعليمي" --notes-file release/OVERHAUL_RC4.md --prerelease

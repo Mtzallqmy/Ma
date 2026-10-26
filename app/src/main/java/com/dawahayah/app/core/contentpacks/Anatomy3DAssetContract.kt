@@ -108,8 +108,8 @@ class Stage01AnatomyAssetPlayer : AnatomyAssetPlayerContract {
         }
         return AssetPlayerState.Stage01IntroductoryDiagram(
             asset = asset,
-            noticeAr = "لا توجد نسخة 3D محلية مثبتة لهذا العضو بعد — يُعرض المخطط التشريحي ثنائي الأبعاد الموثق.",
-            noticeEn = "No local 3D model installed for this organ yet — showing verified 2D anatomical diagram."
+            noticeAr = "لا توجد نسخة 3D محلية مثبتة لهذا العضو بعد — يُعرض الرسم التعليمي ثنائي الأبعاد.",
+            noticeEn = "No local 3D model installed for this organ yet — showing the educational 2D schematic."
         )
     }
 
@@ -144,82 +144,6 @@ class Stage01AnatomyAssetPlayer : AnatomyAssetPlayerContract {
                     "Nodus_Sinuatrialis"
                 ),
                 requiredPackId = "heart-model-low-v1"
-            ),
-            Anatomy3DAsset(
-                assetId = "3d-cor-chambers-high-v1",
-                organId = "organ-heart",
-                systemId = "sys-cardiovascular",
-                anatomicalLabelAr = "أطلس القلب التشريحي عالي الدقة (High LOD Cloud Pack)",
-                anatomicalLabelEn = "High-Detail Heart Anatomical Atlas (High LOD Cloud Pack)",
-                latinTerminology = "Cor (Trabeculae carneae, Valvae atrioventriculares)",
-                objectKey = "anatomical-3d/cor_chambers_high_v1.glb",
-                localRelativePath = null,
-                qualityLevel = Anatomy3DAsset.QualityLevel.HIGH_ATLAS,
-                triangleBudgetMax = 65_000,
-                sizeBytesBudgetMax = 8_500_000L,
-                actualSizeBytes = 6_420_000L,
-                sha256Checksum = "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-                license = "CC-BY-SA-4.0 (Z-Anatomy / BodyParts3D High-Detail Mesh — Cloud Pack)",
-                attribution = "Z-Anatomy / BodyParts3D (DBCLS Japan) / FIPAT TA2",
-                sourceUrl = "https://www.z-anatomy.com/",
-                isAvailableInStage01 = false,
-                stage01FallbackDiagramAsset = "graphics/cor_anatomy_diagram.svg",
-                provenanceCategory = "VERIFIED_SCIENTIFIC_MESH",
-                selectableSubMeshes = listOf(
-                    "Atrium_Dextrum",
-                    "Atrium_Sinistrum",
-                    "Ventriculus_Dexter",
-                    "Ventriculus_Sinister",
-                    "Valva_Atrioventricularis_Sinistra",
-                    "Valva_Aortae"
-                ),
-                requiredPackId = "heart-model-high-v1"
-            ),
-            Anatomy3DAsset(
-                assetId = "3d-pulmones-bronchi-v1",
-                organId = "organ-lungs",
-                systemId = "sys-respiratory",
-                anatomicalLabelAr = "الرئتان والشجرة القصبية (Pulmones)",
-                anatomicalLabelEn = "Lungs & Bronchial Tree (Pulmones)",
-                latinTerminology = "Pulmones et Arbor bronchialis",
-                objectKey = "anatomical-3d/pulmones_bronchi_v1.glb",
-                localRelativePath = null,
-                qualityLevel = Anatomy3DAsset.QualityLevel.STANDARD_EDUCATIONAL,
-                triangleBudgetMax = 40_000,
-                sizeBytesBudgetMax = 5_800_000L,
-                actualSizeBytes = 4_150_000L,
-                sha256Checksum = "8f434346648f6b96df89dda901c5176b10a6d83961dd3c1ac88b59b2dc327aa4",
-                license = "CC-BY-SA-4.0 (Z-Anatomy Candidate — Cloud Pack)",
-                attribution = "Terminologia Anatomica (FIPAT) / Dawa & Hayah",
-                sourceUrl = "https://fipat.library.dal.ca/",
-                isAvailableInStage01 = false,
-                stage01FallbackDiagramAsset = "graphics/cor_anatomy_diagram.svg",
-                provenanceCategory = "VERIFIED_SCIENTIFIC_MESH",
-                selectableSubMeshes = listOf("Pulmo_Dexter", "Pulmo_Sinister", "Trachea", "Bronchi_Principales"),
-                requiredPackId = "lungs-model-standard-v1"
-            ),
-            Anatomy3DAsset(
-                assetId = "3d-ren-nephron-v1",
-                organId = "organ-kidneys",
-                systemId = "sys-renal",
-                anatomicalLabelAr = "الكلية والقشرة واللب الكلوي (Ren)",
-                anatomicalLabelEn = "Kidney Cortex, Medulla & Pelvis (Ren)",
-                latinTerminology = "Ren (Cortex renalis, Medulla renalis, Pelvis renalis)",
-                objectKey = "anatomical-3d/ren_cross_section_v1.glb",
-                localRelativePath = null,
-                qualityLevel = Anatomy3DAsset.QualityLevel.STANDARD_EDUCATIONAL,
-                triangleBudgetMax = 35_000,
-                sizeBytesBudgetMax = 4_500_000L,
-                actualSizeBytes = 3_410_000L,
-                sha256Checksum = "2c26b46b68ffc68ff99b453c1d30413413422d706483bfa0f98a5e886266e7ae",
-                license = "CC-BY-SA-4.0 (Z-Anatomy Candidate — Cloud Pack)",
-                attribution = "Terminologia Anatomica (FIPAT) / Dawa & Hayah",
-                sourceUrl = "https://fipat.library.dal.ca/",
-                isAvailableInStage01 = false,
-                stage01FallbackDiagramAsset = "graphics/cor_anatomy_diagram.svg",
-                provenanceCategory = "VERIFIED_SCIENTIFIC_MESH",
-                selectableSubMeshes = listOf("Cortex_Renalis", "Pyramides_Renales", "Pelvis_Renalis", "Ureter"),
-                requiredPackId = "kidney-model-standard-v1"
             )
         )
     }

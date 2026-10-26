@@ -156,19 +156,19 @@ fun SettingsAndAboutScreen(
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
-                        text = "الشعار: علم الدواء لفهم الحياة",
+                        text = if (isAr) "علم الدواء لفهم الحياة" else "Pharmacology to understand life",
                         style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.secondary
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = "من تطوير وبرمجة الدكتور الصيدلاني معتز العلقمي — اليمن، تعز — 2026 م.",
+                        text = if (isAr) "الدكتور الصيدلاني معتز العلقمي — اليمن، تعز — 2026 م." else "Dr. Pharmacist Moataz Al-Alqami — Taiz, Yemen — 2026",
                         style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.SemiBold),
                         color = MaterialTheme.colorScheme.onPrimary
                     )
                     Spacer(modifier = Modifier.height(6.dp))
                     Text(
-                        text = "المرحلة الأولى (Prompt 01 of 05) · Android minSdk=26 · Room SQLite + Neon Contract · إصدار 22 أكتوبر 2026",
+                        text = (if (isAr) "الإصدار " else "Version ") + com.dawahayah.app.BuildConfig.VERSION_NAME + " · Android 8.0+",
                         style = MaterialTheme.typography.labelMedium,
                         color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.85f)
                     )

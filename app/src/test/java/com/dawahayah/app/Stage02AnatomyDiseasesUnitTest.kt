@@ -51,11 +51,12 @@ class Stage02AnatomyDiseasesUnitTest {
     }
 
     @Test
-    fun `Stage01AnatomyAssetPlayer requests pack download for high-LOD cloud atlas when not installed`() {
+    fun `Stage01AnatomyAssetPlayer requests download for an uninstalled optional pack`() {
         val player = Stage01AnatomyAssetPlayer()
-        val heartHighAsset = Stage01AnatomyAssetPlayer.STAGE_01_REGISTERED_3D_CONTRACTS.first {
-            it.assetId == "3d-cor-chambers-high-v1"
-        }
+        val heartHighAsset = Stage01AnatomyAssetPlayer.STAGE_01_REGISTERED_3D_CONTRACTS.first().copy(
+            assetId = "test-optional-pack", localRelativePath = null, isAvailableInStage01 = false,
+            requiredPackId = "test-optional-pack", qualityLevel = Anatomy3DAsset.QualityLevel.HIGH_ATLAS
+        )
         val state = player.resolveAssetState(
             asset = heartHighAsset,
             isPackInstalled = false,
@@ -63,7 +64,7 @@ class Stage02AnatomyDiseasesUnitTest {
         )
         assertTrue(state is AssetPlayerState.RequiresPackDownload)
         val req = state as AssetPlayerState.RequiresPackDownload
-        assertEquals("heart-model-high-v1", req.requiredPackId)
+        assertEquals("test-optional-pack", req.requiredPackId)
         assertEquals(Anatomy3DAsset.QualityLevel.HIGH_ATLAS, req.asset.qualityLevel)
     }
 }

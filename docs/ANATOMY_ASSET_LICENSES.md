@@ -1,22 +1,16 @@
-# سجل تراخيص ونسب الأصول التشريحية والمجسمات ثلاثية الأبعاد (Anatomy & 3D Asset Licenses)
-## مشروع «دواء وحياة — Dawa & Hayah» — المرحلة الثانية (Stage 02)
+# Anatomy assets shipped or downloadable in RC4
 
----
+This register supersedes the historical Stage 02 list. File integrity and source attribution do not establish independent clinical review. The application is an educational prerelease.
 
-## 1. السياسة الصارمة لتراخيص الأصول البصرية والتشريحية
-يمنع في مشروع «دواء وحياة» استخدام أي صورة أو مخطط أو مجسم ثلاثي الأبعاد مجهول المصدر أو خاضع لحقوق ملكية مغلقة. كما يلتزم التطبيق **بالتمييز الصريح في واجهة المستخدم وفي قاعدة البيانات (`provenanceCategory`)** بين:
-1. `VERIFIED_SCIENTIFIC_MESH`: مجسمات تشريحية علمية مرجعية مدققة من أطالس مفتوحة المصدر (مثل Z-Anatomy / BodyParts3D).
-2. `SCHEMATIC_EDUCATIONAL_MESH`: مجسمات تعليمية تخطيطية متعددة الأجزاء مبنية وموسومة وفق معيار TA2 لشرح العلاقات التشريحية والوظيفية على الجوال.
-3. `VERIFIED_SCIENTIFIC_DIAGRAM`: مخططات تشريحية متجهية ثنائية الأبعاد موثقة.
+| Asset | Actual distribution | Source / license | Changes and scope |
+|---|---|---|---|
+| OpenStax heart plate | Bundled `assets/anatomy/openstax-heart.jpg`, 777,730 bytes | [OpenStaxCollege via Wikimedia Commons](https://commons.wikimedia.org/wiki/File:2008_Internal_Anatomy_of_the_HeartN.jpg), [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/) | Original JPEG, resized only for display. SHA-256 `5d962a658cab2538378fa846e2276c67389902c51968d64950873b9850938437`. |
+| BodyParts3D cardiac subset | Optional `bodyparts-cardiac-v1.glb`, 1,623,364 bytes | DBCLS; [Kevin Mattheus Moerman STL mirror, pinned revision](https://github.com/Kevin-Mattheus-Moerman/BodyParts3D/tree/f0eeb6e843380cfe6b83797cf8c3e1af74de5e61), [CC BY-SA 2.1 Japan](https://creativecommons.org/licenses/by-sa/2.1/jp/deed.en) from that mirror | Five parts: ascending aorta, aortic arch, tricuspid, mitral and pulmonary valves. Shared rotation, centering and uniform scale, welded vertices, normals and study colours; no simplification. SHA-256 `b50c7a983e53f6e517b3174a81677bd6e2a68cef5d6253598563e5f64badc470`. Not a complete heart. |
+| Original schematic GLB | Bundled `assets/models/cor_chambers_low_v1.glb`, 50,576 bytes | Dawa & Hayah, Dr. Pharmacist Moataz Al-Alqami, 2026, [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) as declared in the original project | Six stylized educational components. **Not** an imported anatomical atlas. SHA-256 `56ed783e8a6b79c81972767616f67580fc5aec564b6368da5bc54b74c2659ef8`. Terminology references do not certify geometry. |
+| Original conduction schematic | Bundled `assets/graphics/cor_anatomy_diagram.svg` | Dawa & Hayah, 2026, CC BY 4.0 as declared in the SVG | Educational vector schematic. The former `VERIFIED_SCIENTIFIC_DIAGRAM` claim was corrected; no independent scientific validation is claimed. |
 
----
+BodyParts3D attribution: BodyParts3D, (c) The Database Center for Life Science licensed under CC Attribution-Share Alike 2.1 Japan; STL mirror conversion by Kevin Mattheus Moerman; GLB conversion by Dawa & Hayah. Original per-part URLs, file hashes and geometry counts are in `bodyparts-cardiac-source.json`; the converted file retains the mirror's license in `public/anatomy/BODYParts3D-LICENSE.txt`. Do not infer a different license from a newer upstream dataset.
 
-## 2. جدول الأصول المسجلة في المرحلة الثانية
+The former high-detail heart, lung and kidney entries had no verified file delivery and included unsupported sizes/checksums/license claims. They are removed from the active Android asset registry and are **not released assets**. Historical database rows or documents are not proof of downloadable files. Existing personal data is retained.
 
-| معرف الأصل (`assetId`) | الملف / المسار | الفئة (`provenanceCategory`) | الرخصة | النسب العلمي (`attribution`) | بصمة SHA-256 |
-|---|---|---|---|---|---|
-| `3d-cor-chambers-low-v1` | `assets/models/cor_chambers_low_v1.glb` (`50,576 bytes`) | `SCHEMATIC_EDUCATIONAL_MESH` | `CC-BY-4.0` | دواء وحياة — د. معتز العلقمي — 2026 م (مسميات העقد الست وفق FIPAT TA2) | `56ed783e8a6b79c81972767616f67580fc5aec564b6368da5bc54b74c2659ef8` |
-| `fig-cor-conduction-v1` | `assets/graphics/cor_anatomy_diagram.svg` | `VERIFIED_SCIENTIFIC_DIAGRAM` | `CC-BY-4.0` | دواء وحياة — مبني على مراجع OpenStax Anatomy & Physiology 2e و FIPAT TA2 | `0fcd952a44a2ebb991661b33146c4d8efda2e0434f825b2adcd9aba23ccc862e` |
-| `3d-cor-chambers-high-v1` | `anatomical-3d/cor_chambers_high_v1.glb` (حزمة سحابية اختيارية) | `VERIFIED_SCIENTIFIC_MESH` | `CC-BY-SA-4.0` | Z-Anatomy / BodyParts3D (Database Center for Life Science, Japan) | مسجل في عقد الحزمة السحابية |
-| `3d-pulmones-bronchi-v1` | `anatomical-3d/pulmones_bronchi_v1.glb` (حزمة سحابية اختيارية) | `VERIFIED_SCIENTIFIC_MESH` | `CC-BY-SA-4.0` | Z-Anatomy / BodyParts3D / FIPAT TA2 | مسجل في عقد الحزمة السحابية |
-| `3d-ren-nephron-v1` | `anatomical-3d/ren_cross_section_v1.glb` (حزمة سحابية اختيارية) | `VERIFIED_SCIENTIFIC_MESH` | `CC-BY-SA-4.0` | Z-Anatomy / BodyParts3D / FIPAT TA2 | مسجل في عقد الحزمة السحابية |
+Eight new anatomy study notes use short adaptations/translations from the linked OpenStax 2e pages under **CC BY-NC-SA 4.0**, as stated on the source pages at import. Their exact citations and attribution travel with the records; the license applies to these adaptations, not all application code. No claim of a complete legacy-content license audit is made.

@@ -192,9 +192,9 @@ private fun DiseaseStructuredDetailCard(
             if (disease.relatedDrugClasses.isNotEmpty()) {
                 Text(
                     text = if (isAr) {
-                        "الفئات الدوائية المرتبطة (تمهيداً للمرحلة الثالثة): ${disease.relatedDrugClasses.joinToString(" · ")}"
+                        "الفئات الدوائية للدراسة: ${disease.relatedDrugClasses.joinToString(" · ")}"
                     } else {
-                        "Linked Pharmacotherapy Classes (Stage 03 Bridge): ${disease.relatedDrugClasses.joinToString(" · ")}"
+                        "Drug classes for study: ${disease.relatedDrugClasses.joinToString(" · ")}"
                     },
                     style = MaterialTheme.typography.bodySmall,
                     fontWeight = FontWeight.SemiBold,
