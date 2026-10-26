@@ -67,7 +67,6 @@ fun GlobalSearchScreen(
             Spacer(modifier = Modifier.height(10.dp))
             OutlinedTextField(
                 value = state.searchQuery,
-                singleLine = true,
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
                 keyboardActions = KeyboardActions(onSearch = { keyboard?.hide() }),
                 onValueChange = onQueryChange,
