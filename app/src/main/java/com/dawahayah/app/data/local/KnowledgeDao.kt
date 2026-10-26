@@ -80,6 +80,9 @@ interface KnowledgeDao {
     @Query("SELECT * FROM organ_sections ORDER BY organId ASC, orderIndex ASC")
     fun observeAllOrganSections(): Flow<List<OrganSectionEntity>>
 
+    @Query("UPDATE science_figures SET titleAr=:titleAr, titleEn=:titleEn, provenanceType='SCHEMATIC_EDUCATIONAL' WHERE id=:id AND titleEn=:oldTitle AND provenanceType IN ('SCHEMATIC_EDUCATIONAL','VERIFIED_SCIENTIFIC_DIAGRAM')")
+    suspend fun correctLegacySchematicCaption(id:String, oldTitle:String, titleAr:String, titleEn:String)
+
     @Query("SELECT * FROM science_figures ORDER BY organId ASC, id ASC")
     fun observeAllScienceFigures(): Flow<List<ScienceFigureEntity>>
 

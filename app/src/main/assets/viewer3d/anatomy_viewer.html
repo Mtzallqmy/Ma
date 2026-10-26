@@ -33,7 +33,7 @@
      * Supports:
      * - Parsing binary glTF 2.0 (.glb) chunks (JSON + BIN) into typed Float32/Uint16 buffers
      * - Orbit rotation, pinch/wheel zoom, two-finger/right-drag pan
-     * - Ray-ellipsoid / bounding-sphere picking on named TA2 sub-meshes
+     * - Exact ray-triangle picking on named source meshes
      * - Layer visibility toggle, isolate selected mesh, semi-transparent X-ray mode
      * - Light/Dark canvas background & WebGL failure fallback
      */
@@ -206,7 +206,7 @@
           }
           sceneParts = loaded;
           const dt = Math.round(performance.now() - t0);
-          hudTelemetry.textContent = 'GLB Loaded (' + Math.round(len / 1024) + ' KB · ' + dt + ' ms · ' + sceneParts.length + ' TA2 Meshes)';
+          hudTelemetry.textContent = 'GLB Loaded (' + Math.round(len / 1024) + ' KB · ' + dt + ' ms · ' + sceneParts.length + ' anatomical parts)';
           render();
           if (window.AndroidAnatomyBridge && window.AndroidAnatomyBridge.onModelLoaded)
             window.AndroidAnatomyBridge.onModelLoaded(sceneParts.length);

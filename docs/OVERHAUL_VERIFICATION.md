@@ -14,13 +14,14 @@ Work branch: `feat/dawa-hayah-real-production-overhaul` · [PR #9](https://githu
 
 ## Live Neon changes
 
-All migrations are additive, checked twice on isolated branch `br-blue-sunset-b9i12jus` before applying to `br-steep-moon-b9kxm3uf`, project `icy-mode-02911943`, database `appdb`.
+Migrations 013–015 are additive; 016 corrects two exact legacy captions without deleting records. All are checked twice on isolated branch `br-blue-sunset-b9i12jus` before applying to `br-steep-moon-b9kxm3uf`, project `icy-mode-02911943`, database `appdb`.
 
 | Migration | Actual changes |
 | --- | --- |
 | 013 | Heart plate source, organ citation and verified media metadata |
 | 014 | BodyParts3D source, media metadata, optional pack and file manifest, citations |
 | 015 | Eight organs, eight sections, seven section-specific sources, citations and unreviewed attribution records |
+| 016 | Correct two legacy schematic captions that incorrectly claimed scientific verification, conditional on their exact old titles |
 
 Read-back after 015: 18 organs, zero systems without an organ, zero editorial reviews. No human review date was assigned to the new notes. Existing 18 diseases and eight active ingredients remain clinical drafts in Neon; the public API excludes those drafts. Locally bundled educational summaries are labelled unreviewed. These counts must not be described as clinically validated monographs.
 
@@ -40,6 +41,7 @@ The newly consulted OpenStax text pages currently state CC BY-NC-SA 4.0. Their s
 ## Verification
 
 - Local API/authorization/contract suite: 13 tests passed.
+- JVM report from `7680994`: 29 tests passed, zero failed or ignored.
 - Actual browser geometry implementation: two Node tests passed, covering nearest surface, hidden/isolation filtering, misses and inverse camera/aspect calculations.
 - Generated Room v7 schema was retrieved from the real CI build and is committed for future migration comparison. Historical v1–v6 migration fixtures remain reconstructed, not historical customer databases.
 - [Run 40226106473](https://github.com/Mtzallqmy/Ma/actions/runs/40226106473) passed Kotlin unit tests, Android Lint, security/dependency gates and debug assembly. Device tests exposed two new test defects (offscreen lazy-item lookup and non-void JUnit method); both were fixed in `58c219c`. This earlier pass is not evidence that later device tests passed.

@@ -13,9 +13,15 @@ object VerificationScreenshots {
         file.outputStream().use { check(bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)) }
         val automation = InstrumentationRegistry.getInstrumentation().uiAutomation
         val destination = "/sdcard/Download/dawa-hayah-verification"
-        val command = "mkdir -p '$destination' && cp '${file.absolutePath}' '$destination/$name.png' && echo copied"
-        val descriptor = automation.executeShellCommand(command)
-        val output = android.os.ParcelFileDescriptor.AutoCloseInputStream(descriptor).bufferedReader().use { it.readText() }
-        check(output.trim() == "copied") { "Could not retain screenshot: $output" }
+        // UiAutomation executes a command directly; shell operators/quotes are not parsed.
+        fun command(value: String): String {
+            val descriptor = automation.executeShellCommand(value)
+            return android.os.ParcelFileDescriptor.AutoCloseInputStream(descriptor).bufferedReader().use { it.readText() }
+        }
+        command("mkdir -p $destination")
+        command("cp ${file.absolutePath} $destination/$name.png")
+        check(command("ls $destination/$name.png").trim() == "$destination/$name.png") {
+            "Could not retain screenshot $name"
+        }
     }
 }

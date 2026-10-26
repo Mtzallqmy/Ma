@@ -38,6 +38,7 @@ class SeedDatabaseInitializer(
 ) {
 
     suspend fun ensureSeededIfEmpty() = withContext(Dispatchers.IO) {
+        correctLegacySchematicCaptions()
         clearUnsupportedLegacyReviewLabels()
         refreshBundledPackMetadata()
         if (dao.getSyncValue("seed_revision") != null) {
@@ -55,6 +56,13 @@ class SeedDatabaseInitializer(
         persistBundle(seedBundle)
         ensureMedicineMetadata()
         refreshBundledPackMetadata()
+    }
+
+    private suspend fun correctLegacySchematicCaptions() {
+        if (dao.getSyncValue("legacy_schematic_captions_v1") != null) return
+        dao.correctLegacySchematicCaption("fig-cor-conduction-v1","Verified Anatomical Diagram: Four Chambers & Conduction Pathway of the Heart (Cor)","مخطط تعليمي: حجرات القلب ومسار التوصيل الكهربائي","Educational schematic: cardiac chambers and conduction pathway")
+        dao.correctLegacySchematicCaption("fig-lungs-alveoli-v1","Verified Diagram: Bronchial Tree & Alveolar-Capillary Unit","مخطط تعليمي: الشجرة القصبية والوحدة السنخية الشعرية","Educational schematic: bronchial tree and alveolar-capillary unit")
+        dao.putSyncValue(SyncStateEntity("legacy_schematic_captions_v1", "1"))
     }
 
     private suspend fun refreshBundledPackMetadata() {

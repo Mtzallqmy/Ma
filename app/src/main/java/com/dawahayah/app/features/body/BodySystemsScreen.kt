@@ -387,9 +387,9 @@ private fun OrganDetailedEncyclopediaCard(
             } else {
                 Text(
                     text = if (isAr) {
-                        "حالة المجسم ثلاثي الأبعاد: لا توجد نسخة 3D محلية لهذا العضو بعد؛ يُعتمد على الشرح البنيوي والمخططات التشريحية ثنائية الأبعاد الموثقة."
+                        "حالة المجسم ثلاثي الأبعاد: لا توجد نسخة 3D محلية لهذا العضو بعد؛ يتوفر الشرح البنيوي والرسوم التعليمية المتاحة."
                     } else {
-                        "3D Status: No local 3D model for this organ yet; relying on verified structural text and 2D diagrams."
+                        "3D Status: No local 3D model for this organ yet; available structural descriptions and educational figures are shown."
                     },
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant

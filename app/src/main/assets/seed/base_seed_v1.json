@@ -448,9 +448,9 @@
         {
           "id": "fig-cor-conduction-v1",
           "organId": "organ-heart",
-          "titleAr": "مخطط تشريحي موثق: الحجرات الأربع ومسار التوصيل الكهربائي للقلب (Cor)",
-          "titleEn": "Verified Anatomical Diagram: Four Chambers & Conduction Pathway of the Heart (Cor)",
-          "provenanceType": "VERIFIED_SCIENTIFIC_DIAGRAM",
+          "titleAr": "مخطط تعليمي: حجرات القلب ومسار التوصيل الكهربائي",
+          "titleEn": "Educational schematic: cardiac chambers and conduction pathway",
+          "provenanceType": "SCHEMATIC_EDUCATIONAL",
           "license": "CC-BY-4.0 (Dawa & Hayah Vector Diagram based on TA2 & OpenStax)",
           "attribution": "دواء وحياة — وفق معيار FIPAT TA2 و OpenStax Anatomy & Physiology 2e",
           "annotations": [
@@ -602,9 +602,9 @@
         {
           "id": "fig-lungs-alveoli-v1",
           "organId": "organ-lungs",
-          "titleAr": "مخطط تشريحي موثق: الشجرة القصبية والوحدة السنخية الشعرية",
-          "titleEn": "Verified Diagram: Bronchial Tree & Alveolar-Capillary Unit",
-          "provenanceType": "VERIFIED_SCIENTIFIC_DIAGRAM",
+          "titleAr": "مخطط تعليمي: الشجرة القصبية والوحدة السنخية الشعرية",
+          "titleEn": "Educational schematic: bronchial tree and alveolar-capillary unit",
+          "provenanceType": "SCHEMATIC_EDUCATIONAL",
           "license": "CC-BY-4.0 (Dawa & Hayah Educational Diagram based on OpenStax)",
           "attribution": "دواء وحياة — وفق معيار TA2 و OpenStax",
           "annotations": [

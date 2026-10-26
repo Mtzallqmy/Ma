@@ -5,7 +5,6 @@ on:
   push:
     branches:
       - main
-      - "feat/dawa-hayah-real-production-overhaul"
       - "ai-studio/stage-**"
       - "work/stage-**"
       - "integration/stage03-**"
