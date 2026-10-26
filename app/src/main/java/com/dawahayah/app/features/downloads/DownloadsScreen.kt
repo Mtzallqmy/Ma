@@ -4,6 +4,8 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -27,13 +29,15 @@ import com.dawahayah.app.domain.model.PackInstallState
 import com.dawahayah.app.features.settings.MainUiState
 import com.dawahayah.app.ui.components.UnboxedMetadataLine
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun DownloadsScreen(
     state: MainUiState,
     onInstallPack: (String, Boolean) -> Unit,
     onDeletePack: (String) -> Unit,
     onRefreshCloudCatalog: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onPausePack: (String) -> Unit = {}
 ) {
     val isAr = state.settings.language == AppLanguage.ARABIC
 
@@ -46,15 +50,15 @@ fun DownloadsScreen(
         item {
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = if (isAr) "مدير الحزم غير المتصلة (ContentPackManager)" else "Offline Content Pack Manager",
+                text = if (isAr) "التنزيلات والمساحة" else "Downloads & storage",
                 style = MaterialTheme.typography.headlineMedium
             )
             Spacer(modifier = Modifier.height(6.dp))
             Text(
                 text = if (isAr) {
-                    "يتم تنزيل الحزم إلى مجلد staging مؤقت، وفحص بصمة SHA-256 والحجم ومسارات الملفات، ثم تثبيتها ذرياً في التخزين الدائم للتطبيق (filesDir/content_packs)."
+                    "حمّل الحزم التي تحتاجها للقراءة دون إنترنت. يُفحص اكتمال الملفات قبل التثبيت، ويمكن حذف الحزم مع الاحتفاظ بملاحظاتك ومفضلتك."
                 } else {
-                    "Packs are staged in a temporary directory, verified against SHA-256 checksums and path traversal rules, then atomically promoted to persistent storage."
+                    "Download the packs you need for offline use. Files are verified before installation. Removing a pack preserves your notes and bookmarks."
                 },
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -84,10 +88,8 @@ fun DownloadsScreen(
                     Spacer(modifier = Modifier.height(4.dp))
                     UnboxedMetadataLine(
                         items = listOf(
-                            "ID: ${pack.id}",
                             "v${pack.version}",
-                            "Scope: ${pack.scopeType}/${pack.scopeId}",
-                            "Size: ${pack.sizeBytes} Bytes"
+                            android.text.format.Formatter.formatFileSize(androidx.compose.ui.platform.LocalContext.current,pack.sizeBytes)
                         )
                     )
                     Spacer(modifier = Modifier.height(8.dp))
@@ -133,27 +135,22 @@ fun DownloadsScreen(
                     }
 
                     Spacer(modifier = Modifier.height(12.dp))
-                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        if (pack.installState != PackInstallState.COMPLETED) {
+                    FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        if (pack.installState == PackInstallState.RUNNING || pack.installState == PackInstallState.QUEUED) {
+                            OutlinedButton(onClick={onPausePack(pack.id)}) { Text(if(isAr) "إيقاف مؤقت" else "Pause") }
+                        } else if (pack.installState != PackInstallState.COMPLETED) {
                             Button(
                                 onClick = { onInstallPack(pack.id, false) }
                             ) {
                                 Text(
-                                    if (pack.isBundledOfflineDemoAvailable) {
+                                    if (pack.installState == PackInstallState.PAUSED) {
+                                        if (isAr) "استئناف التنزيل" else "Resume download"
+                                    } else if (pack.isBundledOfflineDemoAvailable) {
                                         if (isAr) "تثبيت الحزمة وفحص SHA-256" else "Install & Verify SHA-256"
                                     } else {
                                         if (isAr) "طلب من سحابة Neon" else "Fetch from Neon Cloud"
                                     }
                                 )
-                            }
-                            if (pack.isBundledOfflineDemoAvailable) {
-                                OutlinedButton(
-                                    onClick = { onInstallPack(pack.id, true) }
-                                ) {
-                                    Text(
-                                        if (isAr) "اختبار رفض بصمة تالفة" else "Test Corrupted Hash Reject"
-                                    )
-                                }
                             }
                         } else {
                             OutlinedButton(

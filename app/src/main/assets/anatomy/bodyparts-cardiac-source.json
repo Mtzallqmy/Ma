@@ -1,0 +1,64 @@
+{
+  "packId": "bodyparts-cardiac-v1",
+  "assetId": "asset-bodyparts-cardiac-v1",
+  "sizeBytes": 1623364,
+  "sha256": "b50c7a983e53f6e517b3174a81677bd6e2a68cef5d6253598563e5f64badc470",
+  "license": "CC BY-SA 2.1 Japan",
+  "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.1/jp/deed.en",
+  "attribution": "BodyParts3D, (c) The Database Center for Life Science licensed under CC Attribution-Share Alike 2.1 Japan; STL mirror conversion by Kevin Mattheus Moerman; GLB conversion by Dawa & Hayah.",
+  "sourceRevision": "f0eeb6e843380cfe6b83797cf8c3e1af74de5e61",
+  "sourceUrl": "https://github.com/Kevin-Mattheus-Moerman/BodyParts3D/tree/f0eeb6e843380cfe6b83797cf8c3e1af74de5e61",
+  "changes": "Shared rotation, centering and uniform scale, vertex welding, normals and study colours. No geometry simplification. Five structures, not a complete heart.",
+  "parts": [
+    {
+      "fma": "FMA3736",
+      "node": "Aorta_ascendens",
+      "nameAr": "الأبهر الصاعد",
+      "nameEn": "Ascending aorta",
+      "sourceUrl": "https://raw.githubusercontent.com/Kevin-Mattheus-Moerman/BodyParts3D/f0eeb6e843380cfe6b83797cf8c3e1af74de5e61/assets/BodyParts3D_data/stl/FMA3736.stl",
+      "sourceSha256": "c99fcd415e7d7df717446f32601324b53656a96c41ff9190c766e39381e108e3",
+      "triangles": 2156,
+      "vertices": 1080
+    },
+    {
+      "fma": "FMA3768",
+      "node": "Arcus_aortae",
+      "nameAr": "قوس الأبهر",
+      "nameEn": "Aortic arch",
+      "sourceUrl": "https://raw.githubusercontent.com/Kevin-Mattheus-Moerman/BodyParts3D/f0eeb6e843380cfe6b83797cf8c3e1af74de5e61/assets/BodyParts3D_data/stl/FMA3768.stl",
+      "sourceSha256": "d45fa63a0dda6f6cea8e5db8bdd3fba851fe8e4dd5c679afe68ae47eb6ad56eb",
+      "triangles": 3282,
+      "vertices": 1643
+    },
+    {
+      "fma": "FMA7234",
+      "node": "Valva_tricuspidalis",
+      "nameAr": "الصمام ثلاثي الشرفات",
+      "nameEn": "Tricuspid valve",
+      "sourceUrl": "https://raw.githubusercontent.com/Kevin-Mattheus-Moerman/BodyParts3D/f0eeb6e843380cfe6b83797cf8c3e1af74de5e61/assets/BodyParts3D_data/stl/FMA7234.stl",
+      "sourceSha256": "96e2470c9ddd5fa0970014235abe2686d4c6084b1ed514edfec37677a7ae377e",
+      "triangles": 47268,
+      "vertices": 23608
+    },
+    {
+      "fma": "FMA7235",
+      "node": "Valva_mitralis",
+      "nameAr": "الصمام التاجي",
+      "nameEn": "Mitral valve",
+      "sourceUrl": "https://raw.githubusercontent.com/Kevin-Mattheus-Moerman/BodyParts3D/f0eeb6e843380cfe6b83797cf8c3e1af74de5e61/assets/BodyParts3D_data/stl/FMA7235.stl",
+      "sourceSha256": "e434d63f98d789acff6943ae244713d524d2abf6aa6020445a46bd24bc03d70c",
+      "triangles": 19102,
+      "vertices": 9529
+    },
+    {
+      "fma": "FMA7246",
+      "node": "Valva_trunci_pulmonalis",
+      "nameAr": "الصمام الرئوي",
+      "nameEn": "Pulmonary valve",
+      "sourceUrl": "https://raw.githubusercontent.com/Kevin-Mattheus-Moerman/BodyParts3D/f0eeb6e843380cfe6b83797cf8c3e1af74de5e61/assets/BodyParts3D_data/stl/FMA7246.stl",
+      "sourceSha256": "b1436a72cf5727be01c02fe08bda7eaefd667af6cfbbcd6261f915a61e7f48dc",
+      "triangles": 18202,
+      "vertices": 9109
+    }
+  ]
+}

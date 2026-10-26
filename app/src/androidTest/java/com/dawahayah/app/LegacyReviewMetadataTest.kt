@@ -15,6 +15,15 @@ class LegacyReviewMetadataTest {
   val context=ApplicationProvider.getApplicationContext<Context>();val db=Room.inMemoryDatabaseBuilder(context,DawaHayahDatabase::class.java).build()
   try {
    val initializer=SeedDatabaseInitializer(context,db.knowledgeDao());initializer.ensureSeededIfEmpty()
+   val original = db.knowledgeDao().observeAllScienceFigures().first().first { it.id == "fig-cor-conduction-v1" }
+   val editedFigure = db.knowledgeDao().observeAllScienceFigures().first().first { it.id == "fig-lungs-alveoli-v1" }.copy(titleEn="Independently edited title")
+   db.knowledgeDao().insertScienceFigures(listOf(original.copy(titleEn="Verified Anatomical Diagram: Four Chambers & Conduction Pathway of the Heart (Cor)",provenanceType="VERIFIED_SCIENTIFIC_DIAGRAM"),editedFigure))
+   db.openHelper.writableDatabase.execSQL("DELETE FROM sync_state WHERE `key`='legacy_schematic_captions_v1'")
+   initializer.ensureSeededIfEmpty()
+   val corrected = db.knowledgeDao().observeAllScienceFigures().first().associateBy { it.id }
+   assertEquals("SCHEMATIC_EDUCATIONAL",corrected.getValue(original.id).provenanceType)
+   assertEquals(original.titleEn,corrected.getValue(original.id).titleEn)
+   assertEquals(editedFigure.titleEn,corrected.getValue(editedFigure.id).titleEn)
    val diseases=db.knowledgeDao().observeAllDiseases().first();assertTrue(diseases.all{it.reviewStatus=="EDUCATIONAL_UNREVIEWED"&&it.humanReviewedAt==null})
    val first=diseases[0].id;val reviewed=diseases[1].id
    db.openHelper.writableDatabase.execSQL("UPDATE diseases SET reviewStatus='verified',humanReviewedAt='2026-10-22' WHERE id=?",arrayOf(first))

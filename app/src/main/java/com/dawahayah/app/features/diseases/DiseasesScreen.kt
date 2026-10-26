@@ -39,7 +39,8 @@ fun DiseasesScreen(
     state: MainUiState,
     onBookmarkToggle: (String, String, String, String, String, Boolean) -> Unit,
     onRecordReading: (String, String, String, String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onOpenContent: ((String,String)->Unit)? = null
 ) {
     val isAr = state.settings.language == AppLanguage.ARABIC
     var selectedSystemFilter by rememberSaveable { mutableStateOf<String?>(null) }
@@ -65,7 +66,7 @@ fun DiseasesScreen(
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = if (isAr) {
-                    "موسوعة الأمراض والفيزيولوجيا المرضية (${state.diseases.size} مرضاً موثقاً)"
+                    "موسوعة الأمراض والفيزيولوجيا المرضية (${state.diseases.size} صفحة تعليمية)"
                 } else {
                     "Diseases & Pathophysiology Encyclopedia (${state.diseases.size} Diseases)"
                 },
@@ -137,6 +138,7 @@ fun DiseasesScreen(
                     onCardClick = {
                         expandedDiseaseId = if (expandedDiseaseId == disease.id) null else disease.id
                         onRecordReading(disease.id, "DISEASE", disease.nameAr, disease.nameEn)
+                        onOpenContent?.invoke("DISEASE",disease.id)
                     }
                 )
 
@@ -190,9 +192,9 @@ private fun DiseaseStructuredDetailCard(
             if (disease.relatedDrugClasses.isNotEmpty()) {
                 Text(
                     text = if (isAr) {
-                        "الفئات الدوائية المرتبطة (تمهيداً للمرحلة الثالثة): ${disease.relatedDrugClasses.joinToString(" · ")}"
+                        "الفئات الدوائية للدراسة: ${disease.relatedDrugClasses.joinToString(" · ")}"
                     } else {
-                        "Linked Pharmacotherapy Classes (Stage 03 Bridge): ${disease.relatedDrugClasses.joinToString(" · ")}"
+                        "Drug classes for study: ${disease.relatedDrugClasses.joinToString(" · ")}"
                     },
                     style = MaterialTheme.typography.bodySmall,
                     fontWeight = FontWeight.SemiBold,

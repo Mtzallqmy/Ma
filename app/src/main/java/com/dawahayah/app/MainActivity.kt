@@ -1,6 +1,9 @@
 package com.dawahayah.app
 
 import android.os.Bundle
+import android.net.Uri
+import androidx.compose.material.icons.automirrored.outlined.ArrowBack
+import com.dawahayah.app.features.reader.KnowledgeReaderScreen
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -30,6 +33,10 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -74,7 +81,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, androidx.compose.ui.ExperimentalComposeUiApi::class)
 @Composable
 fun DawaHayahMainScaffold(
     viewModel: MainViewModel
@@ -84,6 +91,7 @@ fun DawaHayahMainScaffold(
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route ?: PrimaryBottomTab.HOME.route
     val isAr = state.settings.language == AppLanguage.ARABIC
+    val largeNavigationText = androidx.compose.ui.platform.LocalDensity.current.fontScale >= 1.3f
     val snackbarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(state.transientBannerMessage) {
@@ -94,14 +102,25 @@ fun DawaHayahMainScaffold(
         }
     }
 
+    fun openContent(type: String, id: String) {
+        navController.navigate("reader/${Uri.encode(type)}/${Uri.encode(id)}") { launchSingleTop = true }
+    }
+
     Scaffold(
+        modifier = Modifier.semantics { testTagsAsResourceId = true },
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             TopAppBar(
+                navigationIcon = {
+                    if (currentRoute !in PrimaryBottomTab.entries.map { it.route }) IconButton(onClick={navController.popBackStack()}) {
+                        Icon(Icons.AutoMirrored.Outlined.ArrowBack, if(isAr) "رجوع" else "Back")
+                    }
+                },
                 title = {
                     Text(
-                        text = if (isAr) "دواء وحياة · علم الدواء لفهم الحياة" else "Dawa & Hayah",
-                        style = MaterialTheme.typography.titleLarge
+                        text = if (isAr) "دواء وحياة" else "Dawa & Hayah",
+                        style = MaterialTheme.typography.titleLarge,
+                        maxLines = 1, overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
                     )
                 },
                 actions = {
@@ -137,7 +156,11 @@ fun DawaHayahMainScaffold(
             NavigationBar {
                 PrimaryBottomTab.entries.forEach { tab ->
                     NavigationBarItem(
+                        modifier = Modifier.testTag("navigation_${tab.route}").semantics {
+                            contentDescription = if (isAr) tab.labelAr else tab.labelEn
+                        },
                         selected = currentRoute == tab.route,
+                        alwaysShowLabel = !largeNavigationText,
                         onClick = {
                             navController.navigate(tab.route) {
                                 popUpTo(PrimaryBottomTab.HOME.route) { saveState = true }
@@ -148,11 +171,18 @@ fun DawaHayahMainScaffold(
                         icon = {
                             Icon(
                                 imageVector = tab.icon,
-                                contentDescription = if (isAr) tab.labelAr else tab.labelEn
+                                contentDescription = null
                             )
                         },
                         label = {
-                            Text(if (isAr) tab.labelAr else tab.labelEn)
+                            val label = if (isAr) tab.labelAr else when(tab) {
+                                PrimaryBottomTab.BODY_SYSTEMS -> "Body"
+                                PrimaryBottomTab.MEDICINES -> "Drugs"
+                                PrimaryBottomTab.MY_LIBRARY -> "Library"
+                                else -> tab.labelEn
+                            }
+                            Text(label, maxLines=if(largeNavigationText || !isAr) 1 else 2,
+                                overflow=androidx.compose.ui.text.style.TextOverflow.Ellipsis)
                         }
                     )
                 }
@@ -168,6 +198,22 @@ fun DawaHayahMainScaffold(
                 navController = navController,
                 startDestination = PrimaryBottomTab.HOME.route
             ) {
+                composable("reader/{type}/{id}") { entry ->
+                    KnowledgeReaderScreen(state, entry.arguments?.getString("type").orEmpty(), entry.arguments?.getString("id").orEmpty(),
+                        ::openContent, viewModel::recordReading, viewModel::toggleBookmark, viewModel::saveNote)
+                }
+                composable(AuxiliaryRoutes.SOURCED_ANATOMY) {
+                    com.dawahayah.app.features.body.SourcedAnatomyScreen(state,{viewModel.installContentPack(it)},viewModel::browseCloudCatalog,::openContent)
+                }
+                composable(AuxiliaryRoutes.DRUG_CLASSES) {
+                    com.dawahayah.app.features.tools.DrugClassesScreen(state,::openContent)
+                }
+                composable(AuxiliaryRoutes.INTERACTIONS) {
+                    com.dawahayah.app.features.tools.InteractionsScreen(state)
+                }
+                composable(AuxiliaryRoutes.CALCULATORS) {
+                    com.dawahayah.app.features.academy.CalculatorPanel(isAr)
+                }
                 composable(AuxiliaryRoutes.ACADEMY) {
                     val app = androidx.compose.ui.platform.LocalContext.current.applicationContext as DawaHayahApplication
                     com.dawahayah.app.features.academy.AcademyScreen(app.container.academyRepository, isAr)
@@ -176,7 +222,9 @@ fun DawaHayahMainScaffold(
                     HomeScreen(
                         state = state,
                         onNavigateTab = { tab -> navController.navigate(tab.route) },
-                        onNavigateAuxiliary = { route -> navController.navigate(route) }
+                        onNavigateAuxiliary = { route -> navController.navigate(route) },
+                        onOpenContent = ::openContent,
+                        onSync = viewModel::browseCloudCatalog
                     )
                 }
                 composable(PrimaryBottomTab.BODY_SYSTEMS.route) {
@@ -185,21 +233,24 @@ fun DawaHayahMainScaffold(
                         onBookmarkToggle = viewModel::toggleBookmark,
                         onRecordReading = viewModel::recordReading,
                         onInstallPack = { packId -> viewModel.installContentPack(packId) },
-                        onOpenAnatomyScenes = { navController.navigate(AuxiliaryRoutes.ANATOMY_SCENES) }
+                        onOpenAnatomyScenes = { navController.navigate(AuxiliaryRoutes.ANATOMY_SCENES) },
+                        onOpenContent = ::openContent
                     )
                 }
                 composable(PrimaryBottomTab.DISEASES.route) {
                     DiseasesScreen(
                         state = state,
                         onBookmarkToggle = viewModel::toggleBookmark,
-                        onRecordReading = viewModel::recordReading
+                        onRecordReading = viewModel::recordReading,
+                        onOpenContent = ::openContent
                     )
                 }
                 composable(PrimaryBottomTab.MEDICINES.route) {
                     MedicinesScreen(
                         state = state,
                         onBookmarkToggle = viewModel::toggleBookmark,
-                        onRecordReading = viewModel::recordReading
+                        onRecordReading = viewModel::recordReading,
+                        onOpenContent = ::openContent
                     )
                 }
                 composable(PrimaryBottomTab.MY_LIBRARY.route) {
@@ -208,13 +259,15 @@ fun DawaHayahMainScaffold(
                         onRemoveBookmark = { id, type, ar, en, sub ->
                             viewModel.toggleBookmark(id, type, ar, en, sub, true)
                         },
-                        onNavigateAuxiliary = { route -> navController.navigate(route) }
+                        onNavigateAuxiliary = { route -> navController.navigate(route) },
+                        onOpenContent = ::openContent
                     )
                 }
                 composable(AuxiliaryRoutes.GLOBAL_SEARCH) {
                     GlobalSearchScreen(
                         state = state,
-                        onQueryChange = viewModel::updateSearchQuery
+                        onQueryChange = viewModel::updateSearchQuery,
+                        onOpenContent = ::openContent
                     )
                 }
                 composable(AuxiliaryRoutes.PACK_DOWNLOADS) {
@@ -222,20 +275,15 @@ fun DawaHayahMainScaffold(
                         state = state,
                         onInstallPack = viewModel::installContentPack,
                         onDeletePack = viewModel::deleteContentPack,
-                        onRefreshCloudCatalog = viewModel::browseCloudCatalog
+                        onRefreshCloudCatalog = viewModel::browseCloudCatalog,
+                        onPausePack = viewModel::pauseContentPack
                     )
                 }
                 composable(AuxiliaryRoutes.ANATOMY_SCENES) {
-                    AnatomyScenesScreen(state = state)
+                    AnatomyScenesScreen(state = state, onOpenSourced={navController.navigate(AuxiliaryRoutes.SOURCED_ANATOMY)})
                 }
                 composable(AuxiliaryRoutes.SOURCES_AND_LICENSES) {
-                    SettingsAndAboutScreen(
-                        state = state,
-                        onLanguageChange = viewModel::setLanguage,
-                        onThemeModeChange = viewModel::setThemeMode,
-                        onFontScaleChange = viewModel::setFontScale,
-                        onWifiOnlyChange = viewModel::setWifiOnlyDownloads
-                    )
+                    com.dawahayah.app.features.tools.SourcesScreen(state)
                 }
                 composable(AuxiliaryRoutes.SETTINGS_AND_ABOUT) {
                     SettingsAndAboutScreen(

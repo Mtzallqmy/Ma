@@ -1,0 +1,28 @@
+name: Import licensed BodyParts3D cardiac geometry
+on:
+  push:
+    branches: ["feat/dawa-hayah-real-production-overhaul"]
+    paths: ["scripts/import-bodyparts-cardiac.py", ".github/workflows/import-bodyparts-cardiac.yml"]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Convert licensed scientific geometry, preserving provenance
+        run: python3 scripts/import-bodyparts-cardiac.py
+      - name: Commit optional asset outside the APK
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/anatomy app/src/main/assets/anatomy/bodyparts-cardiac-source.json
+          if ! git diff --cached --quiet; then
+            git commit -m "data(anatomy): add attributed BodyParts3D cardiac GLB as optional content"
+            git push origin HEAD:feat/dawa-hayah-real-production-overhaul
+          fi

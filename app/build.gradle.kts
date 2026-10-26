@@ -14,8 +14,8 @@ android {
         applicationId = "com.dawahayah.app"
         minSdk = 26
         targetSdk = 35
-        versionCode = providers.gradleProperty("APP_VERSION_CODE").orElse("10").get().toInt()
-        versionName = providers.gradleProperty("APP_VERSION_NAME").orElse("0.9.0-rc.2").get()
+        versionCode = providers.gradleProperty("APP_VERSION_CODE").orElse("12").get().toInt()
+        versionName = providers.gradleProperty("APP_VERSION_NAME").orElse("0.9.0-rc.4").get()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -42,9 +42,12 @@ android {
             // Never commit signing keys or silently reuse the beta test key.
             isMinifyEnabled = true
             isShrinkResources = true
-            // ARM64-v8a 64-bit target configuration ready for Stage 03 (0.5.0 Beta) and Stage 05 (1.0.0 Release)
+            // The emulator counterpart uses identical optimized code/resources. Distribution
+            // always uses the default ARM64 APK and independently verifies its ABI.
             ndk {
-                abiFilters += listOf("arm64-v8a")
+                val verificationAbi = providers.gradleProperty("RELEASE_VERIFICATION_ABI").orNull
+                require(verificationAbi == null || verificationAbi == "x86_64")
+                abiFilters += listOf(verificationAbi ?: "arm64-v8a")
             }
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),

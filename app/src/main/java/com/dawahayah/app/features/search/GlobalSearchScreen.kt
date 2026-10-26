@@ -3,7 +3,8 @@ package com.dawahayah.app.features.search
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,37 +21,45 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.dawahayah.app.core.storage.AppLanguage
 import com.dawahayah.app.features.settings.MainUiState
 import com.dawahayah.app.ui.components.UnboxedMetadataLine
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun GlobalSearchScreen(
     state: MainUiState,
     onQueryChange: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onOpenContent: (String, String) -> Unit = { _, _ -> }
 ) {
+    val keyboard = LocalSoftwareKeyboardController.current
     val isAr = state.settings.language == AppLanguage.ARABIC
 
     LazyColumn(
         modifier = modifier
-            .fillMaxSize()
+            .fillMaxSize().testTag("search_results")
             .padding(horizontal = 16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         item {
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = if (isAr) "البحث المحلي المطبع (العربية · الإنجليزية · اللاتينية)" else "Normalized Local Search (Arabic · English · Latin)",
+                text = if (isAr) "البحث في المكتبة" else "Search the library",
                 style = MaterialTheme.typography.headlineMedium
             )
             Spacer(modifier = Modifier.height(6.dp))
             Text(
                 text = if (isAr) {
-                    "يدعم تطبيع الهمزات (أ/إ/آ ← ا) والتاء المربوطة (ة ← ه) والمصطلحات المرادفة دون المساس بالنص العلمي الأصلي."
+                    "ابحث بالعربية أو الإنجليزية أو بالمصطلح التشريحي. يعمل البحث في المحتوى المحفوظ على جهازك."
                 } else {
-                    "Supports Arabic hamza and taa marbuta normalization plus Latin anatomical synonyms completely offline."
+                    "Search in Arabic, English or anatomical terminology. Results come from the content saved on your device."
                 },
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -58,6 +67,8 @@ fun GlobalSearchScreen(
             Spacer(modifier = Modifier.height(10.dp))
             OutlinedTextField(
                 value = state.searchQuery,
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+                keyboardActions = KeyboardActions(onSearch = { keyboard?.hide() }),
                 onValueChange = onQueryChange,
                 label = {
                     Text(
@@ -66,18 +77,19 @@ fun GlobalSearchScreen(
                     )
                 },
                 singleLine = true,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth().testTag("search_query")
             )
+            if(state.searchResults.isNotEmpty())Text(if(isAr) "${state.searchResults.size} نتيجة" else "${state.searchResults.size} results",modifier=Modifier.testTag("search_has_results"))
             Spacer(modifier = Modifier.height(8.dp))
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 OutlinedButton(onClick = { onQueryChange("القلب") }) {
-                    Text("القلب / Cor")
+                    Text(if(isAr) "القلب" else "Heart")
                 }
                 OutlinedButton(onClick = { onQueryChange("اوميبرازول") }) {
-                    Text("اوميبرازول (بدون همزة)")
+                    Text(if(isAr) "أوميبرازول" else "Omeprazole")
                 }
                 OutlinedButton(onClick = { onQueryChange("معده") }) {
-                    Text("معده (هاء بدل ة)")
+                    Text(if(isAr) "المعدة" else "Stomach")
                 }
             }
         }
@@ -92,12 +104,22 @@ fun GlobalSearchScreen(
             }
         }
 
+        if(state.searchResults.isEmpty()) {
+            val choices=com.dawahayah.app.core.locale.ArabicSearchNormalizer.suggestions(state.searchQuery,
+                state.activeIngredients.flatMap{listOf(it.nameAr,it.nameEn)}+state.organs.flatMap{listOfNotNull(it.nameAr,it.nameEn,it.latinName)}+state.diseases.flatMap{listOf(it.nameAr,it.nameEn)})
+            if(choices.isNotEmpty())item {
+                Text(if(isAr) "هل تقصد؟" else "Did you mean?")
+                choices.forEach { choice -> OutlinedButton(onClick={onQueryChange(choice)}) {Text(choice)} }
+            }
+        }
+
         items(state.searchResults, key = { "${it.category}_${it.itemId}" }) { hit ->
             Card(
+                onClick = { onOpenContent(hit.category, hit.itemId) },
                 shape = RoundedCornerShape(14.dp),
                 colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
                 border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth().testTag("hit_${hit.itemId}")
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     Text(
@@ -107,7 +129,14 @@ fun GlobalSearchScreen(
                     Spacer(modifier = Modifier.height(4.dp))
                     UnboxedMetadataLine(
                         items = listOfNotNull(
-                            hit.category,
+                            when(hit.category) {
+                                "BODY_SYSTEM" -> if(isAr) "جهاز" else "System"
+                                "ORGAN" -> if(isAr) "عضو" else "Organ"
+                                "DISEASE" -> if(isAr) "مرض" else "Disease"
+                                "MEDICINE", "ACTIVE_INGREDIENT" -> if(isAr) "مادة فعالة" else "Ingredient"
+                                "ANATOMICAL_STRUCTURE" -> if(isAr) "تركيب تشريحي" else "Structure"
+                                else -> if(isAr) "موضوع" else "Topic"
+                            },
                             if (isAr) hit.titleEn else hit.titleAr,
                             hit.latinSubtitle
                         )

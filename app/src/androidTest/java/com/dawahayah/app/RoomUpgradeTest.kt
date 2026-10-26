@@ -17,11 +17,11 @@ import org.junit.runner.RunWith
 class RoomUpgradeTest {
     @Test fun versionOneAndTwoUpgradeWithoutLosingUserData() = runBlocking {
         val context = ApplicationProvider.getApplicationContext<Context>()
-        for (legacyVersion in listOf(1, 2, 3, 4, 5)) {
+        for (legacyVersion in listOf(1, 2, 3, 4, 5, 6)) {
             val name = "upgrade-from-$legacyVersion.db"
             context.deleteDatabase(name)
             fun open() = Room.databaseBuilder(context, DawaHayahDatabase::class.java, name)
-                .addMigrations(DawaHayahDatabase.MIGRATION_1_2, DawaHayahDatabase.MIGRATION_2_3, DawaHayahDatabase.MIGRATION_3_4, DawaHayahDatabase.MIGRATION_4_5, DawaHayahDatabase.MIGRATION_5_6).build()
+                .addMigrations(DawaHayahDatabase.MIGRATION_1_2, DawaHayahDatabase.MIGRATION_2_3, DawaHayahDatabase.MIGRATION_3_4, DawaHayahDatabase.MIGRATION_4_5, DawaHayahDatabase.MIGRATION_5_6, DawaHayahDatabase.MIGRATION_6_7).build()
             var db = open()
             SeedDatabaseInitializer(context, db.knowledgeDao()).ensureSeededIfEmpty()
             db.knowledgeDao().upsertBookmark(BookmarkEntity("cor", "ORGAN", "القلب", "Heart", "", 1))
@@ -39,9 +39,10 @@ class RoomUpgradeTest {
                     .forEach { raw.execSQL("DROP TABLE `$it`") }
                 }
                 if (legacyVersion < 5) rebuildWithout(raw, "active_ingredients", setOf("detailsJson"))
-                listOf("academy_content", "academy_attempts", "academy_drafts").forEach { raw.execSQL("DROP TABLE `$it`") }
+                if (legacyVersion < 6) listOf("academy_content", "academy_attempts", "academy_drafts").forEach { raw.execSQL("DROP TABLE `$it`") }
                 if (legacyVersion < 4) raw.execSQL("DROP TABLE IF EXISTS sync_state")
                 else raw.execSQL("DELETE FROM sync_state WHERE `key`='medicine_metadata_seed'")
+                raw.execSQL("DROP TABLE user_notes")
                 raw.version = legacyVersion
                 raw.setTransactionSuccessful()
             } finally { raw.endTransaction(); raw.close() }

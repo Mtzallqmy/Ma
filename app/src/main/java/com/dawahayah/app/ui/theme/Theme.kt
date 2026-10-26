@@ -5,6 +5,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Typography
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
+import androidx.compose.runtime.SideEffect
+import androidx.compose.ui.platform.LocalView
+import androidx.core.view.WindowCompat
+import android.app.Activity
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.platform.LocalDensity
@@ -21,8 +25,8 @@ import com.dawahayah.app.core.storage.AppThemeMode
 private val LightColors = lightColorScheme(
     primary = MedicalDeepTeal,
     onPrimary = MedicalIvory,
-    primaryContainer = MedicalTurquoise,
-    onPrimaryContainer = LightSurfacePure,
+    primaryContainer = androidx.compose.ui.graphics.Color(0xFFD9EFEA),
+    onPrimaryContainer = androidx.compose.ui.graphics.Color(0xFF103E38),
     secondary = AcademicGold,
     onSecondary = AcademicNavy,
     secondaryContainer = LightSurfaceMuted,
@@ -112,6 +116,15 @@ fun DawaHayahTheme(
         AppThemeMode.LIGHT -> false
         AppThemeMode.DARK -> true
         AppThemeMode.SYSTEM -> isSystemInDarkTheme()
+    }
+    val view = LocalView.current
+    if (!view.isInEditMode) SideEffect {
+        (view.context as? Activity)?.let { activity ->
+            WindowCompat.getInsetsController(activity.window, view).apply {
+                isAppearanceLightStatusBars = !useDark
+                isAppearanceLightNavigationBars = !useDark
+            }
+        }
     }
     val colorScheme = if (useDark) DarkColors else LightColors
     val layoutDirection = if (language.isRtl) LayoutDirection.Rtl else LayoutDirection.Ltr

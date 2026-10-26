@@ -7,8 +7,8 @@ sealed interface AppResult<out T> {
 
 sealed class AppError(val messageAr: String, val messageEn: String) {
     data object CloudBackendNotConfigured : AppError(
-        messageAr = "البيانات السحابية (Neon) غير متصلة بعد في هذه النسخة؛ يعمل التطبيق بكامل قاعدته التأسيسية والحزم المحلية دون إنترنت.",
-        messageEn = "Neon Cloud backend is not connected yet in this build; all foundational content and local packs operate fully offline."
+        messageAr = "عنوان خدمة المحتوى غير مُعدّ لهذه النسخة. يمكنك قراءة المحتوى المحفوظ على جهازك.",
+        messageEn = "The content service endpoint is not configured for this build. Saved content remains available offline."
     )
 
     data object NetworkUnavailable : AppError(

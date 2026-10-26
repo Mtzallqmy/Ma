@@ -126,5 +126,6 @@ class DawaHayahApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         container = AppContainer(this)
+        com.dawahayah.app.data.sync.KnowledgeSyncWorker.schedule(this)
     }
 }

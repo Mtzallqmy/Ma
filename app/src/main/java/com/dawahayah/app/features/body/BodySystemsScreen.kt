@@ -48,7 +48,8 @@ fun BodySystemsScreen(
     onRecordReading: (String, String, String, String) -> Unit,
     onInstallPack: (String) -> Unit,
     onOpenAnatomyScenes: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onOpenContent: ((String,String)->Unit)? = null
 ) {
     val isAr = state.settings.language == AppLanguage.ARABIC
     var selectedSystemId by rememberSaveable { mutableStateOf<String?>(null) }
@@ -85,9 +86,9 @@ fun BodySystemsScreen(
             Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = if (isAr) {
-                    "المرحلة الثانية: تغطية شاملة للأجهزة الـ 13 مع مسارات تفصيلية للأعضاء والتراكيب التشريحية وفق معيار Terminologia Anatomica (TA2) وعارض 3D التفاعلي."
+                    "فهرس الأجهزة والأعضاء المتاحة ومصطلحاتها. يختلف مقدار التفاصيل بين الأجهزة؛ النصوص التعليمية بانتظار المراجعة العلمية."
                 } else {
-                    "Stage 02: Full 13-system index with detailed organ & sub-structure pathways per Terminologia Anatomica (TA2) and interactive 3D GLB viewer."
+                    "Explore the available systems, organs and terminology. Detail varies by system; educational text awaits scientific review."
                 },
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -206,7 +207,7 @@ fun BodySystemsScreen(
                 },
                 metadataItems = listOf(
                     if (system.hasDetailedPathway) {
-                        if (isAr) "مسار تفصيلي كامل (المرحلة 02)" else "Full Detailed Pathway (Stage 02)"
+                        if (isAr) "استكشف التفاصيل المتاحة" else "Explore available detail"
                     } else {
                         if (isAr) "مفهرس موسوعياً" else "Indexed System"
                     },
@@ -230,6 +231,7 @@ fun BodySystemsScreen(
                 onCardClick = {
                     selectedSystemId = if (selectedSystemId == system.id) null else system.id
                     onRecordReading(system.id, "BODY_SYSTEM", system.nameAr, system.nameEn)
+                    onOpenContent?.invoke("BODY_SYSTEM",system.id)
                 }
             )
         }
@@ -287,6 +289,7 @@ fun BodySystemsScreen(
                     onCardClick = {
                         selectedOrganId = if (selectedOrganId == organ.id) null else organ.id
                         onRecordReading(organ.id, "ORGAN", organ.nameAr, organ.nameEn)
+                    onOpenContent?.invoke("ORGAN",organ.id)
                     }
                 )
 
@@ -384,9 +387,9 @@ private fun OrganDetailedEncyclopediaCard(
             } else {
                 Text(
                     text = if (isAr) {
-                        "حالة المجسم ثلاثي الأبعاد: لا توجد نسخة 3D محلية لهذا العضو بعد؛ يُعتمد على الشرح البنيوي والمخططات التشريحية ثنائية الأبعاد الموثقة."
+                        "حالة المجسم ثلاثي الأبعاد: لا توجد نسخة 3D محلية لهذا العضو بعد؛ يتوفر الشرح البنيوي والرسوم التعليمية المتاحة."
                     } else {
-                        "3D Status: No local 3D model for this organ yet; relying on verified structural text and 2D diagrams."
+                        "3D Status: No local 3D model for this organ yet; available structural descriptions and educational figures are shown."
                     },
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant

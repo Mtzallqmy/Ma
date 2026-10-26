@@ -22,6 +22,15 @@ class ReleaseUiTest {
   try {
    runBlocking {preferences.setLanguage(AppLanguage.ENGLISH);preferences.setThemeMode(AppThemeMode.DARK);preferences.setFontScale(1.4f)}
    compose.waitUntil(15000){compose.onAllNodesWithContentDescription("Settings & About").fetchSemanticsNodes().isNotEmpty()}
+   compose.waitForIdle()
+   compose.runOnIdle {
+    assertFalse(androidx.core.view.WindowCompat.getInsetsController(compose.activity.window,compose.activity.window.decorView).isAppearanceLightStatusBars)
+   }
+   VerificationScreenshots.capture(compose.activity,"home-en-dark-large")
+   listOf("home","body_systems","diseases","medicines","my_library").forEach {
+    compose.onNodeWithTag("navigation_$it").assertIsDisplayed().assertHasClickAction()
+   }
+   listOf("Home","Body Systems","Diseases","Medicines","My Library").forEach { compose.onNodeWithContentDescription(it).assertExists() }
    compose.onNodeWithContentDescription("Settings & About").performClick()
    compose.onNodeWithText("Privacy and data policy").performScrollTo().performClick()
    compose.onNodeWithText(PRIVACY_EN).assertExists()

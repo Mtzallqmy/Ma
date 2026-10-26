@@ -48,6 +48,8 @@ data class MainUiState(
     val bookmarks: List<Bookmark> = emptyList(),
     val readingProgress: List<ReadingProgress> = emptyList(),
     val anatomy3DContracts: List<Anatomy3DAsset> = Stage01AnatomyAssetPlayer.STAGE_01_REGISTERED_3D_CONTRACTS,
+    val notes: List<com.dawahayah.app.data.local.UserNoteEntity> = emptyList(),
+    val lastSyncAt: Long? = null,
     val searchQuery: String = "",
     val searchResults: List<SearchHit> = emptyList(),
     val transientBannerMessage: String? = null
@@ -59,6 +61,7 @@ class MainViewModel(
 
     private val _isRefreshingCloud = MutableStateFlow(false)
     private val _isSeedInitializing = MutableStateFlow(true)
+    private var searchJob: kotlinx.coroutines.Job? = null
     private val _searchQuery = MutableStateFlow("")
     private val _searchResults = MutableStateFlow<List<SearchHit>>(emptyList())
     private val _transientBannerMessage = MutableStateFlow<String?>(null)
@@ -124,7 +127,9 @@ class MainViewModel(
             searchResults = q2.fourth,
             transientBannerMessage = q2.fifth
         )
-    }.combine(_isRefreshingCloud) { state, refreshing -> state.copy(isRefreshingCloud = refreshing) }.stateIn(
+    }.combine(container.database.knowledgeDao().observeNotes()) { state, notes -> state.copy(notes=notes) }
+     .combine(container.database.knowledgeDao().observeSyncValue("last_sync_at")) { state, time -> state.copy(lastSyncAt=time?.toLongOrNull()) }
+     .combine(_isRefreshingCloud) { state, refreshing -> state.copy(isRefreshingCloud = refreshing) }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5_000),
         initialValue = MainUiState()
@@ -132,8 +137,23 @@ class MainViewModel(
 
     fun updateSearchQuery(newQuery: String) {
         _searchQuery.value = newQuery
+        searchJob?.cancel()
+        searchJob = viewModelScope.launch {
+            kotlinx.coroutines.delay(180)
+            val hits = container.knowledgeRepository.searchLocalKnowledge(newQuery)
+            if (_searchQuery.value == newQuery) _searchResults.value = hits
+        }
+    }
+
+    fun saveNote(itemId:String, itemType:String, text:String) {
+        if (text.length > 20000) return
         viewModelScope.launch {
-            _searchResults.value = container.knowledgeRepository.searchLocalKnowledge(newQuery)
+            try {
+                container.database.knowledgeDao().upsertNote(com.dawahayah.app.data.local.UserNoteEntity(itemId,itemType,text,System.currentTimeMillis()))
+                _transientBannerMessage.value = if(uiState.value.settings.language==AppLanguage.ARABIC) "حُفظت الملاحظة على هذا الجهاز" else "Note saved on this device"
+            } catch (_: Exception) {
+                _transientBannerMessage.value = if(uiState.value.settings.language==AppLanguage.ARABIC) "تعذر حفظ الملاحظة؛ حاول مجددًا" else "Could not save note; please retry"
+            }
         }
     }
 
@@ -250,6 +270,8 @@ class MainViewModel(
             } finally { _isRefreshingCloud.value = false }
         }
     }
+
+    fun pauseContentPack(packId:String) { container.cancelPackDownload(packId) }
 
     fun deleteContentPack(packId: String) {
         container.cancelPackDownload(packId)

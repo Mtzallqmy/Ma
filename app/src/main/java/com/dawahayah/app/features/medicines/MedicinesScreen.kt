@@ -29,7 +29,8 @@ fun MedicinesScreen(
     state: MainUiState,
     onBookmarkToggle: (String, String, String, String, String, Boolean) -> Unit,
     onRecordReading: (String, String, String, String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onOpenContent: ((String,String)->Unit)? = null
 ) {
     val isAr = state.settings.language == AppLanguage.ARABIC
     val bookmarks = state.bookmarks.map { it.itemId }.toSet()
@@ -84,7 +85,7 @@ fun MedicinesScreen(
         item { Spacer(Modifier.height(24.dp)) }
     }
     state.activeIngredients.firstOrNull { it.id == selectedId }?.let {
-        MedicineDetailDialog(it,isAr,state.sources.associateBy { source->source.id }) { selectedId=null }
+        MedicineDetailDialog(it,isAr,state.sources.associateBy { source->source.id },onOpenReader=onOpenContent?.let { open -> { selectedId=null; open("MEDICINE",it.id) } }) { selectedId=null }
     }
 }
 
@@ -99,7 +100,7 @@ private fun SourceLink(id:String,sources:Map<String,MedicalSource>,isAr:Boolean)
 }
 
 @Composable
-private fun MedicineDetailDialog(item:ActiveIngredient,isAr:Boolean,sources:Map<String,MedicalSource>,onDismiss:()->Unit) {
+private fun MedicineDetailDialog(item:ActiveIngredient,isAr:Boolean,sources:Map<String,MedicalSource>,onOpenReader:(()->Unit)?=null,onDismiss:()->Unit) {
     val clipboard=LocalClipboardManager.current
     val handler=LocalUriHandler.current
     var tab by rememberSaveable(item.id) {mutableStateOf(0)}
@@ -108,6 +109,7 @@ private fun MedicineDetailDialog(item:ActiveIngredient,isAr:Boolean,sources:Map<
     fun empty()=if(isAr) "لا توجد سجلات منشورة مستوفية لشروط المراجعة والمصدر." else "No published records satisfy the source and review requirements."
     AlertDialog(onDismissRequest=onDismiss,title={Text(if(isAr)item.nameAr else item.nameEn)},text={
         Column(Modifier.height(430.dp)) {
+            if(onOpenReader!=null) TextButton(onClick=onOpenReader) {Text(if(isAr) "صفحة القراءة والملاحظات" else "Reading page & notes")}
             ScrollableTabRow(selectedTabIndex=tab,edgePadding=0.dp) {names.forEachIndexed { i,label -> Tab(selected=tab==i,onClick={tab=i},text={Text(label)})}}
             Column(Modifier.weight(1f).verticalScroll(rememberScrollState()),verticalArrangement=Arrangement.spacedBy(10.dp)) {
                 when(tab) {

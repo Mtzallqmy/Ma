@@ -28,3 +28,7 @@ dist/
 .vite/
 
 neon/functions/public-api/panel/panel.js
+
+# Python tooling caches
+__pycache__/
+*.pyc

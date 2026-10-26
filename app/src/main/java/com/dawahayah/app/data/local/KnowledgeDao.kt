@@ -9,6 +9,15 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface KnowledgeDao {
+    @Query("SELECT * FROM user_notes ORDER BY updatedAt DESC")
+    fun observeNotes(): Flow<List<UserNoteEntity>>
+    @Query("SELECT * FROM user_notes")
+    suspend fun allNotes(): List<UserNoteEntity>
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsertNote(note: UserNoteEntity)
+    @Query("SELECT value FROM sync_state WHERE `key` = :key")
+    fun observeSyncValue(key: String): Flow<String?>
+
 
     @Query("SELECT value FROM sync_state WHERE `key` = :key")
     suspend fun getSyncValue(key: String): String?
@@ -71,6 +80,9 @@ interface KnowledgeDao {
     @Query("SELECT * FROM organ_sections ORDER BY organId ASC, orderIndex ASC")
     fun observeAllOrganSections(): Flow<List<OrganSectionEntity>>
 
+    @Query("UPDATE science_figures SET titleAr=:titleAr, titleEn=:titleEn, provenanceType='SCHEMATIC_EDUCATIONAL' WHERE id=:id AND titleEn=:oldTitle AND provenanceType IN ('SCHEMATIC_EDUCATIONAL','VERIFIED_SCIENTIFIC_DIAGRAM')")
+    suspend fun correctLegacySchematicCaption(id:String, oldTitle:String, titleAr:String, titleEn:String)
+
     @Query("SELECT * FROM science_figures ORDER BY organId ASC, id ASC")
     fun observeAllScienceFigures(): Flow<List<ScienceFigureEntity>>
 
@@ -108,22 +120,22 @@ interface KnowledgeDao {
     fun observeReadingProgress(): Flow<List<ReadingProgressEntity>>
 
     // Normalized Local Search Queries (Arabic, English, and Latin TA2)
-    @Query("SELECT * FROM body_systems WHERE normalizedSearchText LIKE '%' || :normalizedQuery || '%'")
+    @Query("SELECT * FROM body_systems WHERE normalizedSearchText LIKE '%' || :normalizedQuery || '%' ESCAPE '\\' LIMIT 100")
     suspend fun searchBodySystems(normalizedQuery: String): List<BodySystemEntity>
 
-    @Query("SELECT * FROM organs WHERE normalizedSearchText LIKE '%' || :normalizedQuery || '%'")
+    @Query("SELECT * FROM organs WHERE normalizedSearchText LIKE '%' || :normalizedQuery || '%' ESCAPE '\\' LIMIT 100")
     suspend fun searchOrgans(normalizedQuery: String): List<OrganEntity>
 
-    @Query("SELECT * FROM anatomical_structures WHERE normalizedSearchText LIKE '%' || :normalizedQuery || '%'")
+    @Query("SELECT * FROM anatomical_structures WHERE normalizedSearchText LIKE '%' || :normalizedQuery || '%' ESCAPE '\\' LIMIT 100")
     suspend fun searchAnatomicalStructures(normalizedQuery: String): List<AnatomicalStructureEntity>
 
-    @Query("SELECT * FROM diseases WHERE normalizedSearchText LIKE '%' || :normalizedQuery || '%'")
+    @Query("SELECT * FROM diseases WHERE normalizedSearchText LIKE '%' || :normalizedQuery || '%' ESCAPE '\\' LIMIT 100")
     suspend fun searchDiseases(normalizedQuery: String): List<DiseaseEntity>
 
-    @Query("SELECT * FROM active_ingredients WHERE normalizedSearchText LIKE '%' || :normalizedQuery || '%'")
+    @Query("SELECT * FROM active_ingredients WHERE normalizedSearchText LIKE '%' || :normalizedQuery || '%' ESCAPE '\\' LIMIT 100")
     suspend fun searchActiveIngredients(normalizedQuery: String): List<ActiveIngredientEntity>
 
-    @Query("SELECT * FROM local_contents WHERE normalizedSearchText LIKE '%' || :normalizedQuery || '%'")
+    @Query("SELECT * FROM local_contents WHERE normalizedSearchText LIKE '%' || :normalizedQuery || '%' ESCAPE '\\' LIMIT 100")
     suspend fun searchLocalContents(normalizedQuery: String): List<LocalContentEntity>
 
     // Inserts & Updates

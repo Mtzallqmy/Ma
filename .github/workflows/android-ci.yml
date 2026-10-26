@@ -1,6 +1,7 @@
 name: Dawa & Hayah — Android CI & ARM64 Build Check
 
 on:
+  workflow_call:
   workflow_dispatch:
   push:
     branches:
@@ -64,6 +65,9 @@ jobs:
       - name: Published API snapshot contract tests
         run: node --test neon/functions/public-api/*.test.js
 
+      - name: Verify actual anatomy ray picking geometry
+        run: node --test scripts/anatomy-math.test.cjs
+
       - name: Run Kotlin Unit Tests (Search Normalizer, SHA-256 Verifier, Pack Manager)
         run: ./gradlew :app:testDebugUnitTest --stacktrace --info
 
@@ -74,6 +78,12 @@ jobs:
           name: dawa-hayah-jvm-test-reports
           path: app/build/reports/tests/testDebugUnitTest/
           retention-days: 7
+
+      - name: Upload generated Room schemas
+        uses: actions/upload-artifact@v4
+        with:
+          name: room-schemas
+          path: app/schemas/
 
       - name: Run Android Lint
         run: ./gradlew :app:lintDebug --stacktrace
@@ -116,7 +126,14 @@ jobs:
           target: google_apis
           arch: x86_64
           disable-animations: true
-          script: ./gradlew :app:connectedDebugAndroidTest --stacktrace
+          script: |
+            bash scripts/run-device-verification.sh
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: native-ui-api${{ matrix.api }}
+          path: ui-verification/
+          if-no-files-found: warn
       - uses: actions/upload-artifact@v4
         if: always()
         with:

@@ -33,14 +33,16 @@ class LocalAnatomyWebView(
     context: Context,
     private val onMeshSelected: (String) -> Unit,
     private val onFallback: (String) -> Unit,
-    private val onModelLoaded: (Int) -> Unit = {}
+    private val onModelLoaded: (Int) -> Unit = {},
+    private val verifiedModel: VerifiedAnatomyModel? = null
 ) : WebView(context) {
     private val scope = MainScope()
     private val contract = Stage01AnatomyAssetPlayer.STAGE_01_REGISTERED_3D_CONTRACTS
         .first { it.localRelativePath == MODEL_PATH }
+    private val meshNames = verifiedModel?.meshNames ?: contract.selectableSubMeshes
     private var released = false
     private var pageReady = false
-    private var selectedMesh = "Ventriculus_Sinister"
+    private var selectedMesh = if("Ventriculus_Sinister" in meshNames) "Ventriculus_Sinister" else meshNames.first()
     private var transparent = false
     private var isolated = false
     private var dark = true
@@ -61,11 +63,16 @@ class LocalAnatomyWebView(
             cacheMode = WebSettings.LOAD_NO_CACHE
         }
         addJavascriptInterface(AnatomyJavascriptBridge(
-            selected = { name -> post { if (!released && name in contract.selectableSubMeshes) onMeshSelected(name) } },
+            selected = { name -> post { if (!released && name in meshNames) onMeshSelected(name) } },
             fallback = { reason -> post { if (!released) onFallback(reason) } },
             loaded = { count -> post {
                 if (!released) {
-                    if (count == contract.selectableSubMeshes.size) { applyControls(); onModelLoaded(count) }
+                    if (count == meshNames.size) {
+                        applyControls()
+                        postVisualStateCallback(1L, object : VisualStateCallback() {
+                            override fun onComplete(requestId: Long) { if(!released) onModelLoaded(count) }
+                        })
+                    }
                     else onFallback("Unexpected mesh count")
                 }
             } }
@@ -76,6 +83,8 @@ class LocalAnatomyWebView(
 
             override fun shouldInterceptRequest(view: WebView, request: WebResourceRequest): WebResourceResponse? =
                 if (request.url.toString() == VIEWER_URL) null
+                else if(request.url.toString()=="file:///android_asset/viewer3d/anatomy_math.js")
+                    WebResourceResponse("application/javascript", "utf-8", context.assets.open("viewer3d/anatomy_math.js"))
                 else WebResourceResponse("text/plain", "utf-8", ByteArrayInputStream(ByteArray(0)))
 
             override fun onPageFinished(view: WebView, url: String) {
@@ -84,9 +93,15 @@ class LocalAnatomyWebView(
                 scope.launch {
                     try {
                         val encoded = withContext(Dispatchers.IO) {
-                            val bytes = context.assets.open(MODEL_PATH).use { it.readBytes() }
-                            check(bytes.size.toLong() == contract.actualSizeBytes &&
-                                IntegrityVerifier.verifySha256(bytes, contract.sha256Checksum)) { "Model integrity failed" }
+                            val model = verifiedModel
+                            val bytes = if(model==null) context.assets.open(MODEL_PATH).use { it.readBytes() }
+                                else {
+                                    check(model.file.canonicalPath.startsWith(context.filesDir.canonicalPath+java.io.File.separator))
+                                    check(model.sizeBytes in 1..8_388_608 && model.file.length()==model.sizeBytes)
+                                    model.file.readBytes()
+                                }
+                            check(bytes.size.toLong() == (model?.sizeBytes ?: contract.actualSizeBytes) &&
+                                IntegrityVerifier.verifySha256(bytes, model?.sha256 ?: contract.sha256Checksum)) { "Model integrity failed" }
                             Base64.encodeToString(bytes, Base64.NO_WRAP)
                         }
                         if (!released) evaluateJavascript("window.loadGlbFromBase64 && window.loadGlbFromBase64(${JSONObject.quote(encoded)});", null)
@@ -109,7 +124,7 @@ class LocalAnatomyWebView(
 
     private fun applyControls() {
         if (!pageReady || released) return
-        val layers = contract.selectableSubMeshes.joinToString(";") {
+        val layers = meshNames.joinToString(";") {
             "v.toggleLayer(${JSONObject.quote(it)},${it !in hidden})"
         }
         evaluateJavascript("(function(){var v=window.viewerControl;if(!v)return;v.selectMesh(${JSONObject.quote(selectedMesh)});v.setTransparentMode($transparent);v.setIsolateMode($isolated);v.setDarkCanvas($dark);$layers;})();", null)
@@ -129,3 +144,5 @@ class LocalAnatomyWebView(
         const val BRIDGE_NAME = "AndroidAnatomyBridge"
     }
 }
+
+data class VerifiedAnatomyModel(val file:java.io.File,val sizeBytes:Long,val sha256:String,val meshNames:List<String>)

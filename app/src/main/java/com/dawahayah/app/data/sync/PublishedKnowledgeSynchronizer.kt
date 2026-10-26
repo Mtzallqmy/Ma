@@ -60,6 +60,8 @@ class PublishedKnowledgeSynchronizer(
                     dao.putSyncValue(SyncStateEntity("cloud_owned_ids", json.encodeToString(ids)))
                     dao.putSyncValue(SyncStateEntity("snapshot", encoded))
                 }
+                dao.putSyncValue(SyncStateEntity("last_sync_at", System.currentTimeMillis().toString()))
+                dao.putSyncValue(SyncStateEntity("last_sync_revision", snapshot.revision))
                 AppResult.Success(groups.sumOf { it.size })
             }
         } catch (e: CancellationException) { throw e }

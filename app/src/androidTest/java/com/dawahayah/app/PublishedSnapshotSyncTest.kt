@@ -77,7 +77,13 @@ class PublishedSnapshotSyncTest {
             assertTrue("Live snapshot failed: $result", result is AppResult.Success)
             val persisted = json.decodeFromString<PublishedSnapshot>(db.knowledgeDao().getSyncValue("snapshot")!!)
             assertTrue(persisted.complete)
-            assertTrue(persisted.bundle.systems.isNotEmpty())
+            assertEquals(13, persisted.bundle.systems.size)
+            assertTrue("Every published system has an organ", persisted.bundle.systems.all { system ->
+                persisted.bundle.organs.any { it.systemId == system.id }
+            })
+            val skin = persisted.bundle.organs.first { it.id == "organ-skin" }
+            assertTrue(skin.sections.any { it.bodyAr.isNotBlank() && it.bodyEn.isNotBlank() })
+            assertTrue(persisted.bundle.sources.any { it.id in skin.sourceIds && it.url.startsWith("https://openstax.org/") })
             assertFalse(persisted.bundle.diseases.any { it.reviewStatus == "DRAFT" })
             assertEquals(persisted.bundle.systems.size, db.knowledgeDao().getBodySystemsCount())
             val dao = db.knowledgeDao()
