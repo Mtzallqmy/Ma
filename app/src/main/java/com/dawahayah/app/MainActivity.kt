@@ -34,6 +34,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.contentDescription
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -152,7 +154,9 @@ fun DawaHayahMainScaffold(
             NavigationBar {
                 PrimaryBottomTab.entries.forEach { tab ->
                     NavigationBarItem(
-                        modifier = Modifier.testTag("navigation_${tab.route}"),
+                        modifier = Modifier.testTag("navigation_${tab.route}").semantics {
+                            contentDescription = if (isAr) tab.labelAr else tab.labelEn
+                        },
                         selected = currentRoute == tab.route,
                         alwaysShowLabel = !largeNavigationText,
                         onClick = {
@@ -165,7 +169,7 @@ fun DawaHayahMainScaffold(
                         icon = {
                             Icon(
                                 imageVector = tab.icon,
-                                contentDescription = if (isAr) tab.labelAr else tab.labelEn
+                                contentDescription = null
                             )
                         },
                         label = {
