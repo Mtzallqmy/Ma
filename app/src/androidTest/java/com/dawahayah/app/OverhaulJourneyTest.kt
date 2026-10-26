@@ -1,6 +1,5 @@
 package com.dawahayah.app
 
-import android.graphics.Bitmap
 import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
@@ -11,7 +10,6 @@ import org.junit.Assert.*
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import java.io.File
 
 @RunWith(AndroidJUnit4::class)
 class OverhaulJourneyTest {
@@ -20,7 +18,6 @@ class OverhaulJourneyTest {
         val container=(compose.activity.application as DawaHayahApplication).container
         runBlocking {container.preferencesDataStore.setLanguage(AppLanguage.ARABIC)}
         compose.waitUntil(20000) {compose.onAllNodesWithTag("home_search").fetchSemanticsNodes().isNotEmpty()}
-        screenshot("home-ar")
         val before=runBlocking{container.database.knowledgeDao().getSyncValue("last_sync_at")}
         compose.onNodeWithTag("home_feed").performScrollToNode(hasText("تحديث المحتوى"))
         compose.onNodeWithText("تحديث المحتوى").performClick()
@@ -28,10 +25,14 @@ class OverhaulJourneyTest {
         val persisted=runBlocking{container.database.knowledgeDao().getSyncValue("snapshot")}
         assertNotNull("HTTPS response persisted in Room",persisted)
         assertTrue(persisted!!.contains("organ-heart"))
+        compose.onNodeWithTag("home_feed").performScrollToIndex(0)
+        screenshot("home-ar")
         compose.onNodeWithContentDescription("البحث العام").performClick()
         compose.onNode(hasSetTextAction()).performTextInput("Cor")
+        compose.onNode(hasSetTextAction()).performImeAction()
         compose.waitUntil(15000){compose.onAllNodesWithTag("search_has_results").fetchSemanticsNodes().isNotEmpty()}
         compose.onNodeWithTag("search_results").performScrollToNode(hasTestTag("hit_organ-heart"))
+        screenshot("search-ar")
         compose.onNodeWithTag("hit_organ-heart").performClick()
         compose.onNodeWithTag("knowledge_reader").assertExists()
         compose.onNodeWithTag("knowledge_reader").performScrollToNode(hasTestTag("reader_note"))
@@ -46,8 +47,6 @@ class OverhaulJourneyTest {
         screenshot("reader-ar")
     }
     private fun screenshot(name:String) {
-        val directory=File(compose.activity.getExternalFilesDir(null),"verification").also{it.mkdirs()}
-        val bitmap=compose.onRoot().captureToImage().asAndroidBitmap()
-        File(directory,"$name.png").outputStream().use{bitmap.compress(Bitmap.CompressFormat.PNG,100,it)}
+        VerificationScreenshots.save(compose.activity, name, compose.onRoot().captureToImage().asAndroidBitmap())
     }
 }

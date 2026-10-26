@@ -3,5 +3,5 @@
 set +e
 ./gradlew :app:connectedDebugAndroidTest --stacktrace
 verification_status=$?
-adb pull /sdcard/Android/data/com.dawahayah.app.debug/files/verification ui-verification
+adb pull /sdcard/Download/dawa-hayah-verification ui-verification
 exit "$verification_status"

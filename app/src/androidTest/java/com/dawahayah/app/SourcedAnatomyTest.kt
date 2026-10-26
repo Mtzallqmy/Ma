@@ -47,6 +47,10 @@ class SourcedAnatomyTest {
                 }
                 try {
                     assertTrue("Source GLB timeout",ready.await(40,TimeUnit.SECONDS));assertNull(failure.get());assertEquals(5,count.get())
+                    androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().waitForIdleSync()
+                    val screenshot = androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().uiAutomation.takeScreenshot()
+                    assertNotNull("Model screenshot", screenshot)
+                    VerificationScreenshots.save(app, "bodyparts-five-meshes", screenshot!!)
                     scenario.onActivity {assertTrue(viewer.settings.blockNetworkLoads);viewer.updateControls("Valva_mitralis",false,true,true,setOf("Aorta_ascendens"))}
                 } finally {scenario.onActivity{viewer.releaseViewer()}}
             }

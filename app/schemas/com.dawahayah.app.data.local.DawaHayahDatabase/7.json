@@ -1,0 +1,1880 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 7,
+    "identityHash": "7a21972ed6428224ed50d11fae4ae13b",
+    "entities": [
+      {
+        "tableName": "user_notes",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`itemId` TEXT NOT NULL, `itemType` TEXT NOT NULL, `text` TEXT NOT NULL, `updatedAt` INTEGER NOT NULL, PRIMARY KEY(`itemId`))",
+        "fields": [
+          {
+            "fieldPath": "itemId",
+            "columnName": "itemId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "itemType",
+            "columnName": "itemType",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "text",
+            "columnName": "text",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "updatedAt",
+            "columnName": "updatedAt",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "itemId"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "academy_content",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `payload` TEXT NOT NULL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "payload",
+            "columnName": "payload",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "academy_attempts",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `lessonId` TEXT NOT NULL, `lessonRevision` INTEGER NOT NULL, `answersJson` TEXT NOT NULL, `correct` INTEGER NOT NULL, `total` INTEGER NOT NULL, `completedAt` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lessonId",
+            "columnName": "lessonId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lessonRevision",
+            "columnName": "lessonRevision",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "answersJson",
+            "columnName": "answersJson",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "correct",
+            "columnName": "correct",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "total",
+            "columnName": "total",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "completedAt",
+            "columnName": "completedAt",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_academy_attempts_lessonId",
+            "unique": false,
+            "columnNames": [
+              "lessonId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_academy_attempts_lessonId` ON `${TABLE_NAME}` (`lessonId`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "academy_drafts",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`lessonId` TEXT NOT NULL, `lessonRevision` INTEGER NOT NULL, `answersJson` TEXT NOT NULL, PRIMARY KEY(`lessonId`))",
+        "fields": [
+          {
+            "fieldPath": "lessonId",
+            "columnName": "lessonId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lessonRevision",
+            "columnName": "lessonRevision",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "answersJson",
+            "columnName": "answersJson",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "lessonId"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "sync_state",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`key` TEXT NOT NULL, `value` TEXT NOT NULL, PRIMARY KEY(`key`))",
+        "fields": [
+          {
+            "fieldPath": "key",
+            "columnName": "key",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "value",
+            "columnName": "value",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "key"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "body_systems",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `nameAr` TEXT NOT NULL, `nameEn` TEXT NOT NULL, `latinName` TEXT, `descriptionAr` TEXT NOT NULL, `descriptionEn` TEXT NOT NULL, `sourceIdsCsv` TEXT NOT NULL, `lastReviewedAt` TEXT, `normalizedSearchText` TEXT NOT NULL, `hasDetailedPathway` INTEGER NOT NULL, `interSystemRelationsAr` TEXT NOT NULL, `interSystemRelationsEn` TEXT NOT NULL, `relatedDrugClassesCsv` TEXT NOT NULL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nameAr",
+            "columnName": "nameAr",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nameEn",
+            "columnName": "nameEn",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "latinName",
+            "columnName": "latinName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "descriptionAr",
+            "columnName": "descriptionAr",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "descriptionEn",
+            "columnName": "descriptionEn",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sourceIdsCsv",
+            "columnName": "sourceIdsCsv",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lastReviewedAt",
+            "columnName": "lastReviewedAt",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "normalizedSearchText",
+            "columnName": "normalizedSearchText",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "hasDetailedPathway",
+            "columnName": "hasDetailedPathway",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "interSystemRelationsAr",
+            "columnName": "interSystemRelationsAr",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "interSystemRelationsEn",
+            "columnName": "interSystemRelationsEn",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "relatedDrugClassesCsv",
+            "columnName": "relatedDrugClassesCsv",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_body_systems_normalizedSearchText",
+            "unique": false,
+            "columnNames": [
+              "normalizedSearchText"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_body_systems_normalizedSearchText` ON `${TABLE_NAME}` (`normalizedSearchText`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "organs",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `systemId` TEXT NOT NULL, `nameAr` TEXT NOT NULL, `nameEn` TEXT NOT NULL, `latinName` TEXT, `summaryAr` TEXT NOT NULL, `summaryEn` TEXT NOT NULL, `sourceIdsCsv` TEXT NOT NULL, `normalizedSearchText` TEXT NOT NULL, `locationAr` TEXT NOT NULL, `locationEn` TEXT NOT NULL, `has3dAsset` INTEGER NOT NULL, `asset3dId` TEXT, `relatedDiseaseIdsCsv` TEXT NOT NULL, `relatedDrugClassesCsv` TEXT NOT NULL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "systemId",
+            "columnName": "systemId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nameAr",
+            "columnName": "nameAr",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nameEn",
+            "columnName": "nameEn",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "latinName",
+            "columnName": "latinName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "summaryAr",
+            "columnName": "summaryAr",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "summaryEn",
+            "columnName": "summaryEn",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sourceIdsCsv",
+            "columnName": "sourceIdsCsv",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "normalizedSearchText",
+            "columnName": "normalizedSearchText",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "locationAr",
+            "columnName": "locationAr",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "locationEn",
+            "columnName": "locationEn",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "has3dAsset",
+            "columnName": "has3dAsset",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "asset3dId",
+            "columnName": "asset3dId",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "relatedDiseaseIdsCsv",
+            "columnName": "relatedDiseaseIdsCsv",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "relatedDrugClassesCsv",
+            "columnName": "relatedDrugClassesCsv",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_organs_systemId",
+            "unique": false,
+            "columnNames": [
+              "systemId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_organs_systemId` ON `${TABLE_NAME}` (`systemId`)"
+          },
+          {
+            "name": "index_organs_normalizedSearchText",
+            "unique": false,
+            "columnNames": [
+              "normalizedSearchText"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_organs_normalizedSearchText` ON `${TABLE_NAME}` (`normalizedSearchText`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "anatomical_structures",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `organId` TEXT NOT NULL, `meshNodeName` TEXT, `nameAr` TEXT NOT NULL, `nameEn` TEXT NOT NULL, `latinName` TEXT NOT NULL, `ta2Code` TEXT NOT NULL, `structureType` TEXT NOT NULL, `functionAr` TEXT NOT NULL, `functionEn` TEXT NOT NULL, `clinicalRelevanceAr` TEXT NOT NULL, `clinicalRelevanceEn` TEXT NOT NULL, `sourceId` TEXT NOT NULL, `normalizedSearchText` TEXT NOT NULL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "organId",
+            "columnName": "organId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "meshNodeName",
+            "columnName": "meshNodeName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "nameAr",
+            "columnName": "nameAr",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nameEn",
+            "columnName": "nameEn",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "latinName",
+            "columnName": "latinName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "ta2Code",
+            "columnName": "ta2Code",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "structureType",
+            "columnName": "structureType",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "functionAr",
+            "columnName": "functionAr",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "functionEn",
+            "columnName": "functionEn",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "clinicalRelevanceAr",
+            "columnName": "clinicalRelevanceAr",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "clinicalRelevanceEn",
+            "columnName": "clinicalRelevanceEn",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sourceId",
+            "columnName": "sourceId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "normalizedSearchText",
+            "columnName": "normalizedSearchText",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_anatomical_structures_organId",
+            "unique": false,
+            "columnNames": [
+              "organId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_anatomical_structures_organId` ON `${TABLE_NAME}` (`organId`)"
+          },
+          {
+            "name": "index_anatomical_structures_normalizedSearchText",
+            "unique": false,
+            "columnNames": [
+              "normalizedSearchText"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_anatomical_structures_normalizedSearchText` ON `${TABLE_NAME}` (`normalizedSearchText`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "anatomy_labels",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `structureId` TEXT NOT NULL, `organId` TEXT NOT NULL, `labelAr` TEXT NOT NULL, `labelEn` TEXT NOT NULL, `labelLatin` TEXT NOT NULL, `ta2Code` TEXT NOT NULL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "structureId",
+            "columnName": "structureId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "organId",
+            "columnName": "organId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "labelAr",
+            "columnName": "labelAr",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "labelEn",
+            "columnName": "labelEn",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "labelLatin",
+            "columnName": "labelLatin",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "ta2Code",
+            "columnName": "ta2Code",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_anatomy_labels_structureId",
+            "unique": false,
+            "columnNames": [
+              "structureId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_anatomy_labels_structureId` ON `${TABLE_NAME}` (`structureId`)"
+          },
+          {
+            "name": "index_anatomy_labels_organId",
+            "unique": false,
+            "columnNames": [
+              "organId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_anatomy_labels_organId` ON `${TABLE_NAME}` (`organId`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "organ_sections",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `organId` TEXT NOT NULL, `sectionKey` TEXT NOT NULL, `titleAr` TEXT NOT NULL, `titleEn` TEXT NOT NULL, `bodyAr` TEXT NOT NULL, `bodyEn` TEXT NOT NULL, `orderIndex` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "organId",
+            "columnName": "organId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sectionKey",
+            "columnName": "sectionKey",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "titleAr",
+            "columnName": "titleAr",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "titleEn",
+            "columnName": "titleEn",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "bodyAr",
+            "columnName": "bodyAr",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "bodyEn",
+            "columnName": "bodyEn",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "orderIndex",
+            "columnName": "orderIndex",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_organ_sections_organId",
+            "unique": false,
+            "columnNames": [
+              "organId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_organ_sections_organId` ON `${TABLE_NAME}` (`organId`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "science_figures",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `organId` TEXT NOT NULL, `titleAr` TEXT NOT NULL, `titleEn` TEXT NOT NULL, `provenanceType` TEXT NOT NULL, `license` TEXT NOT NULL, `attribution` TEXT NOT NULL, `annotationsJson` TEXT NOT NULL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "organId",
+            "columnName": "organId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "titleAr",
+            "columnName": "titleAr",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "titleEn",
+            "columnName": "titleEn",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "provenanceType",
+            "columnName": "provenanceType",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "license",
+            "columnName": "license",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "attribution",
+            "columnName": "attribution",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "annotationsJson",
+            "columnName": "annotationsJson",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_science_figures_organId",
+            "unique": false,
+            "columnNames": [
+              "organId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_science_figures_organId` ON `${TABLE_NAME}` (`organId`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "anatomy_3d_assets",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`assetId` TEXT NOT NULL, `organId` TEXT NOT NULL, `systemId` TEXT NOT NULL, `anatomicalLabelAr` TEXT NOT NULL, `anatomicalLabelEn` TEXT NOT NULL, `latinTerminology` TEXT NOT NULL, `objectKey` TEXT NOT NULL, `localRelativePath` TEXT, `qualityLevel` TEXT NOT NULL, `triangleBudgetMax` INTEGER NOT NULL, `sizeBytesBudgetMax` INTEGER NOT NULL, `actualSizeBytes` INTEGER NOT NULL, `sha256Checksum` TEXT NOT NULL, `license` TEXT NOT NULL, `attribution` TEXT NOT NULL, `sourceUrl` TEXT NOT NULL, `isOfflineBundled` INTEGER NOT NULL, `provenanceCategory` TEXT NOT NULL, PRIMARY KEY(`assetId`))",
+        "fields": [
+          {
+            "fieldPath": "assetId",
+            "columnName": "assetId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "organId",
+            "columnName": "organId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "systemId",
+            "columnName": "systemId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "anatomicalLabelAr",
+            "columnName": "anatomicalLabelAr",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "anatomicalLabelEn",
+            "columnName": "anatomicalLabelEn",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "latinTerminology",
+            "columnName": "latinTerminology",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "objectKey",
+            "columnName": "objectKey",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "localRelativePath",
+            "columnName": "localRelativePath",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "qualityLevel",
+            "columnName": "qualityLevel",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "triangleBudgetMax",
+            "columnName": "triangleBudgetMax",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sizeBytesBudgetMax",
+            "columnName": "sizeBytesBudgetMax",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "actualSizeBytes",
+            "columnName": "actualSizeBytes",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sha256Checksum",
+            "columnName": "sha256Checksum",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "license",
+            "columnName": "license",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "attribution",
+            "columnName": "attribution",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sourceUrl",
+            "columnName": "sourceUrl",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isOfflineBundled",
+            "columnName": "isOfflineBundled",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "provenanceCategory",
+            "columnName": "provenanceCategory",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "assetId"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_anatomy_3d_assets_organId",
+            "unique": false,
+            "columnNames": [
+              "organId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_anatomy_3d_assets_organId` ON `${TABLE_NAME}` (`organId`)"
+          },
+          {
+            "name": "index_anatomy_3d_assets_systemId",
+            "unique": false,
+            "columnNames": [
+              "systemId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_anatomy_3d_assets_systemId` ON `${TABLE_NAME}` (`systemId`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "diseases",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `primarySystemId` TEXT NOT NULL, `nameAr` TEXT NOT NULL, `nameEn` TEXT NOT NULL, `introductionAr` TEXT NOT NULL, `introductionEn` TEXT NOT NULL, `citationIdsCsv` TEXT NOT NULL, `reviewStatus` TEXT NOT NULL, `normalizedSearchText` TEXT NOT NULL, `icd11Code` TEXT NOT NULL, `secondarySystemIdsCsv` TEXT NOT NULL, `affectedOrganIdsCsv` TEXT NOT NULL, `relatedDrugClassesCsv` TEXT NOT NULL, `importedAt` TEXT NOT NULL, `humanReviewedAt` TEXT, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "primarySystemId",
+            "columnName": "primarySystemId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nameAr",
+            "columnName": "nameAr",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nameEn",
+            "columnName": "nameEn",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "introductionAr",
+            "columnName": "introductionAr",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "introductionEn",
+            "columnName": "introductionEn",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "citationIdsCsv",
+            "columnName": "citationIdsCsv",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "reviewStatus",
+            "columnName": "reviewStatus",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "normalizedSearchText",
+            "columnName": "normalizedSearchText",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "icd11Code",
+            "columnName": "icd11Code",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "secondarySystemIdsCsv",
+            "columnName": "secondarySystemIdsCsv",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "affectedOrganIdsCsv",
+            "columnName": "affectedOrganIdsCsv",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "relatedDrugClassesCsv",
+            "columnName": "relatedDrugClassesCsv",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "importedAt",
+            "columnName": "importedAt",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "humanReviewedAt",
+            "columnName": "humanReviewedAt",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_diseases_primarySystemId",
+            "unique": false,
+            "columnNames": [
+              "primarySystemId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_diseases_primarySystemId` ON `${TABLE_NAME}` (`primarySystemId`)"
+          },
+          {
+            "name": "index_diseases_normalizedSearchText",
+            "unique": false,
+            "columnNames": [
+              "normalizedSearchText"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_diseases_normalizedSearchText` ON `${TABLE_NAME}` (`normalizedSearchText`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "disease_sections",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `diseaseId` TEXT NOT NULL, `sectionCode` TEXT NOT NULL, `titleAr` TEXT NOT NULL, `titleEn` TEXT NOT NULL, `contentAr` TEXT NOT NULL, `contentEn` TEXT NOT NULL, `informationTier` TEXT NOT NULL, `orderIndex` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "diseaseId",
+            "columnName": "diseaseId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sectionCode",
+            "columnName": "sectionCode",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "titleAr",
+            "columnName": "titleAr",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "titleEn",
+            "columnName": "titleEn",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "contentAr",
+            "columnName": "contentAr",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "contentEn",
+            "columnName": "contentEn",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "informationTier",
+            "columnName": "informationTier",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "orderIndex",
+            "columnName": "orderIndex",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_disease_sections_diseaseId",
+            "unique": false,
+            "columnNames": [
+              "diseaseId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_disease_sections_diseaseId` ON `${TABLE_NAME}` (`diseaseId`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "disease_system_links",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`diseaseId` TEXT NOT NULL, `systemId` TEXT NOT NULL, `isPrimary` INTEGER NOT NULL, PRIMARY KEY(`diseaseId`, `systemId`))",
+        "fields": [
+          {
+            "fieldPath": "diseaseId",
+            "columnName": "diseaseId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "systemId",
+            "columnName": "systemId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isPrimary",
+            "columnName": "isPrimary",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "diseaseId",
+            "systemId"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_disease_system_links_systemId",
+            "unique": false,
+            "columnNames": [
+              "systemId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_disease_system_links_systemId` ON `${TABLE_NAME}` (`systemId`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "disease_organ_links",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`diseaseId` TEXT NOT NULL, `organId` TEXT NOT NULL, PRIMARY KEY(`diseaseId`, `organId`))",
+        "fields": [
+          {
+            "fieldPath": "diseaseId",
+            "columnName": "diseaseId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "organId",
+            "columnName": "organId",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "diseaseId",
+            "organId"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_disease_organ_links_organId",
+            "unique": false,
+            "columnNames": [
+              "organId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_disease_organ_links_organId` ON `${TABLE_NAME}` (`organId`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "source_attributions",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `entityId` TEXT NOT NULL, `entityType` TEXT NOT NULL, `sourceId` TEXT NOT NULL, `importedAt` TEXT NOT NULL, `humanReviewedAt` TEXT, `reviewStatus` TEXT NOT NULL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "entityId",
+            "columnName": "entityId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "entityType",
+            "columnName": "entityType",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sourceId",
+            "columnName": "sourceId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "importedAt",
+            "columnName": "importedAt",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "humanReviewedAt",
+            "columnName": "humanReviewedAt",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "reviewStatus",
+            "columnName": "reviewStatus",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_source_attributions_entityId",
+            "unique": false,
+            "columnNames": [
+              "entityId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_source_attributions_entityId` ON `${TABLE_NAME}` (`entityId`)"
+          },
+          {
+            "name": "index_source_attributions_sourceId",
+            "unique": false,
+            "columnNames": [
+              "sourceId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_source_attributions_sourceId` ON `${TABLE_NAME}` (`sourceId`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "active_ingredients",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `nameAr` TEXT NOT NULL, `nameEn` TEXT NOT NULL, `className` TEXT NOT NULL, `generalDescriptionAr` TEXT NOT NULL, `generalDescriptionEn` TEXT NOT NULL, `safetyNote` TEXT NOT NULL, `citationIdsCsv` TEXT NOT NULL, `reviewStatus` TEXT NOT NULL, `normalizedSearchText` TEXT NOT NULL, `detailsJson` TEXT NOT NULL DEFAULT '{}', PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nameAr",
+            "columnName": "nameAr",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nameEn",
+            "columnName": "nameEn",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "className",
+            "columnName": "className",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "generalDescriptionAr",
+            "columnName": "generalDescriptionAr",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "generalDescriptionEn",
+            "columnName": "generalDescriptionEn",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "safetyNote",
+            "columnName": "safetyNote",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "citationIdsCsv",
+            "columnName": "citationIdsCsv",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "reviewStatus",
+            "columnName": "reviewStatus",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "normalizedSearchText",
+            "columnName": "normalizedSearchText",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "detailsJson",
+            "columnName": "detailsJson",
+            "affinity": "TEXT",
+            "notNull": true,
+            "defaultValue": "'{}'"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_active_ingredients_normalizedSearchText",
+            "unique": false,
+            "columnNames": [
+              "normalizedSearchText"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_active_ingredients_normalizedSearchText` ON `${TABLE_NAME}` (`normalizedSearchText`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "medical_sources",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `title` TEXT NOT NULL, `url` TEXT NOT NULL, `publisher` TEXT NOT NULL, `publicationDate` TEXT, `accessedAt` TEXT, `license` TEXT NOT NULL, `attribution` TEXT NOT NULL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "title",
+            "columnName": "title",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "url",
+            "columnName": "url",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "publisher",
+            "columnName": "publisher",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "publicationDate",
+            "columnName": "publicationDate",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "accessedAt",
+            "columnName": "accessedAt",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "license",
+            "columnName": "license",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "attribution",
+            "columnName": "attribution",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "local_contents",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `canonicalId` TEXT NOT NULL, `revision` INTEGER NOT NULL, `contentType` TEXT NOT NULL, `locale` TEXT NOT NULL, `sourceId` TEXT NOT NULL, `origin` TEXT NOT NULL, `publishedAt` TEXT NOT NULL, `reviewStatus` TEXT NOT NULL, `titleAr` TEXT NOT NULL, `titleEn` TEXT NOT NULL, `bodyAr` TEXT NOT NULL, `bodyEn` TEXT NOT NULL, `normalizedSearchText` TEXT NOT NULL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "canonicalId",
+            "columnName": "canonicalId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "revision",
+            "columnName": "revision",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "contentType",
+            "columnName": "contentType",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "locale",
+            "columnName": "locale",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sourceId",
+            "columnName": "sourceId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "origin",
+            "columnName": "origin",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "publishedAt",
+            "columnName": "publishedAt",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "reviewStatus",
+            "columnName": "reviewStatus",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "titleAr",
+            "columnName": "titleAr",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "titleEn",
+            "columnName": "titleEn",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "bodyAr",
+            "columnName": "bodyAr",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "bodyEn",
+            "columnName": "bodyEn",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "normalizedSearchText",
+            "columnName": "normalizedSearchText",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_local_contents_canonicalId",
+            "unique": false,
+            "columnNames": [
+              "canonicalId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_local_contents_canonicalId` ON `${TABLE_NAME}` (`canonicalId`)"
+          },
+          {
+            "name": "index_local_contents_normalizedSearchText",
+            "unique": false,
+            "columnNames": [
+              "normalizedSearchText"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_local_contents_normalizedSearchText` ON `${TABLE_NAME}` (`normalizedSearchText`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "pack_records",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `version` TEXT NOT NULL, `titleAr` TEXT NOT NULL, `titleEn` TEXT NOT NULL, `installState` TEXT NOT NULL, `installedAt` INTEGER, `sizeBytes` INTEGER NOT NULL, `downloadedBytes` INTEGER NOT NULL, `locale` TEXT NOT NULL, `scopeType` TEXT NOT NULL, `scopeId` TEXT NOT NULL, `assetQuality` TEXT NOT NULL, `license` TEXT NOT NULL, `attribution` TEXT NOT NULL, `isBundledOfflineDemoAvailable` INTEGER NOT NULL, `companionDependencyNotice` TEXT, `lastErrorMessage` TEXT, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "version",
+            "columnName": "version",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "titleAr",
+            "columnName": "titleAr",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "titleEn",
+            "columnName": "titleEn",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "installState",
+            "columnName": "installState",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "installedAt",
+            "columnName": "installedAt",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "sizeBytes",
+            "columnName": "sizeBytes",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "downloadedBytes",
+            "columnName": "downloadedBytes",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "locale",
+            "columnName": "locale",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "scopeType",
+            "columnName": "scopeType",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "scopeId",
+            "columnName": "scopeId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "assetQuality",
+            "columnName": "assetQuality",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "license",
+            "columnName": "license",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "attribution",
+            "columnName": "attribution",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isBundledOfflineDemoAvailable",
+            "columnName": "isBundledOfflineDemoAvailable",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "companionDependencyNotice",
+            "columnName": "companionDependencyNotice",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "lastErrorMessage",
+            "columnName": "lastErrorMessage",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "bookmarks",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`itemId` TEXT NOT NULL, `itemType` TEXT NOT NULL, `titleAr` TEXT NOT NULL, `titleEn` TEXT NOT NULL, `subtitle` TEXT NOT NULL, `savedAtEpochMillis` INTEGER NOT NULL, PRIMARY KEY(`itemId`))",
+        "fields": [
+          {
+            "fieldPath": "itemId",
+            "columnName": "itemId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "itemType",
+            "columnName": "itemType",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "titleAr",
+            "columnName": "titleAr",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "titleEn",
+            "columnName": "titleEn",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "subtitle",
+            "columnName": "subtitle",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "savedAtEpochMillis",
+            "columnName": "savedAtEpochMillis",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "itemId"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "reading_progress",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`itemId` TEXT NOT NULL, `itemType` TEXT NOT NULL, `titleAr` TEXT NOT NULL, `titleEn` TEXT NOT NULL, `progressPercent` INTEGER NOT NULL, `updatedAtEpochMillis` INTEGER NOT NULL, PRIMARY KEY(`itemId`))",
+        "fields": [
+          {
+            "fieldPath": "itemId",
+            "columnName": "itemId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "itemType",
+            "columnName": "itemType",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "titleAr",
+            "columnName": "titleAr",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "titleEn",
+            "columnName": "titleEn",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "progressPercent",
+            "columnName": "progressPercent",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "updatedAtEpochMillis",
+            "columnName": "updatedAtEpochMillis",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "itemId"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "download_tasks",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`taskId` TEXT NOT NULL, `packId` TEXT NOT NULL, `state` TEXT NOT NULL, `downloadedBytes` INTEGER NOT NULL, `totalBytes` INTEGER NOT NULL, `currentFilePath` TEXT, `errorReason` TEXT, `updatedAtEpochMillis` INTEGER NOT NULL, PRIMARY KEY(`taskId`))",
+        "fields": [
+          {
+            "fieldPath": "taskId",
+            "columnName": "taskId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "packId",
+            "columnName": "packId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "state",
+            "columnName": "state",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "downloadedBytes",
+            "columnName": "downloadedBytes",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "totalBytes",
+            "columnName": "totalBytes",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "currentFilePath",
+            "columnName": "currentFilePath",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "errorReason",
+            "columnName": "errorReason",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "updatedAtEpochMillis",
+            "columnName": "updatedAtEpochMillis",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "taskId"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "local_assets",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`assetId` TEXT NOT NULL, `packId` TEXT NOT NULL, `relativePath` TEXT NOT NULL, `absolutePersistentPath` TEXT NOT NULL, `contentType` TEXT NOT NULL, `sizeBytes` INTEGER NOT NULL, `sha256` TEXT NOT NULL, `verifiedAtEpochMillis` INTEGER NOT NULL, PRIMARY KEY(`assetId`))",
+        "fields": [
+          {
+            "fieldPath": "assetId",
+            "columnName": "assetId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "packId",
+            "columnName": "packId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "relativePath",
+            "columnName": "relativePath",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "absolutePersistentPath",
+            "columnName": "absolutePersistentPath",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "contentType",
+            "columnName": "contentType",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sizeBytes",
+            "columnName": "sizeBytes",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sha256",
+            "columnName": "sha256",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "verifiedAtEpochMillis",
+            "columnName": "verifiedAtEpochMillis",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "assetId"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_local_assets_packId",
+            "unique": false,
+            "columnNames": [
+              "packId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_local_assets_packId` ON `${TABLE_NAME}` (`packId`)"
+          }
+        ],
+        "foreignKeys": []
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '7a21972ed6428224ed50d11fae4ae13b')"
+    ]
+  }
+}

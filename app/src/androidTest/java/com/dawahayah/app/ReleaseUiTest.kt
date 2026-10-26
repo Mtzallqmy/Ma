@@ -2,6 +2,7 @@ package com.dawahayah.app
 
 import android.os.Debug
 import android.util.Log
+import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -22,6 +23,7 @@ class ReleaseUiTest {
   try {
    runBlocking {preferences.setLanguage(AppLanguage.ENGLISH);preferences.setThemeMode(AppThemeMode.DARK);preferences.setFontScale(1.4f)}
    compose.waitUntil(15000){compose.onAllNodesWithContentDescription("Settings & About").fetchSemanticsNodes().isNotEmpty()}
+   VerificationScreenshots.save(compose.activity,"home-en-dark-large",compose.onRoot().captureToImage().asAndroidBitmap())
    compose.onNodeWithContentDescription("Settings & About").performClick()
    compose.onNodeWithText("Privacy and data policy").performScrollTo().performClick()
    compose.onNodeWithText(PRIVACY_EN).assertExists()
