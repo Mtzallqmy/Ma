@@ -1,0 +1,142 @@
+name: Overhaul RC4 — verified ARM64 Release APK
+on:
+  push:
+    branches: ["release/overhaul-arm64"]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: overhaul-arm64-release
+  cancel-in-progress: false
+jobs:
+  quality:
+    uses: ./.github/workflows/android-ci.yml
+  assemble:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.9'
+      - name: Build actual ARM64 Release with R8 and release lint
+        run: |
+          ./gradlew :app:lintRelease :app:assembleRelease --stacktrace
+          mkdir -p dist verification-apk
+          cp app/build/outputs/apk/release/app-release-unsigned.apk "$RUNNER_TEMP/arm64-unsigned.apk"
+      - name: Build emulator counterpart and prove code/resource identity
+        run: |
+          ./gradlew :app:assembleRelease -PRELEASE_VERIFICATION_ABI=x86_64 --stacktrace
+          python3 scripts/compare-release-payloads.py "$RUNNER_TEMP/arm64-unsigned.apk" app/build/outputs/apk/release/app-release-unsigned.apk > dist/PAYLOAD-EQUIVALENCE.json
+      - name: Sign educational candidate and emulator counterpart
+        shell: bash
+        run: |
+          set -euo pipefail
+          umask 077
+          RC_KEY_PASSWORD=$(openssl rand -hex 24)
+          echo "::add-mask::$RC_KEY_PASSWORD"
+          export RC_KEY_PASSWORD
+          keytool -genkeypair -keystore "$RUNNER_TEMP/rc4.jks" -alias candidate \
+            -storepass "$RC_KEY_PASSWORD" -keypass "$RC_KEY_PASSWORD" -keyalg RSA -keysize 3072 \
+            -validity 365 -dname "CN=Dawa Hayah Temporary RC4 Test, O=Dawa Hayah, C=YE"
+          TOOLS="$ANDROID_HOME/build-tools/35.0.0"
+          "$TOOLS/zipalign" -f -P 16 4 "$RUNNER_TEMP/arm64-unsigned.apk" "$RUNNER_TEMP/aligned-arm64.apk"
+          "$TOOLS/apksigner" sign --ks "$RUNNER_TEMP/rc4.jks" --ks-key-alias candidate --ks-pass env:RC_KEY_PASSWORD --key-pass env:RC_KEY_PASSWORD --out dist/Dawa-Hayah-v0.9.0-rc.4-android8-arm64.apk "$RUNNER_TEMP/aligned-arm64.apk"
+          "$TOOLS/zipalign" -f -P 16 4 app/build/outputs/apk/release/app-release-unsigned.apk "$RUNNER_TEMP/aligned-x86.apk"
+          "$TOOLS/apksigner" sign --ks "$RUNNER_TEMP/rc4.jks" --ks-key-alias candidate --ks-pass env:RC_KEY_PASSWORD --key-pass env:RC_KEY_PASSWORD --out verification-apk/release-x86_64.apk "$RUNNER_TEMP/aligned-x86.apk"
+          "$TOOLS/apksigner" verify --verbose --print-certs dist/*.apk > dist/SIGNATURE.txt
+          "$TOOLS/aapt" dump badging dist/*.apk > dist/APK-METADATA.txt
+          python3 scripts/verify-release-apk.py dist/Dawa-Hayah-v0.9.0-rc.4-android8-arm64.apk 0.9.0-rc.4 > dist/APK-VERIFICATION.txt
+      - name: Inventory actual packaged bytes, licenses and build provenance
+        run: |
+          python3 scripts/release-data-inventory.py dist/Dawa-Hayah-v0.9.0-rc.4-android8-arm64.apk > dist/DATA-INVENTORY.json
+          python3 scripts/apk-sbom.py dist/Dawa-Hayah-v0.9.0-rc.4-android8-arm64.apk > dist/SBOM.spdx.json
+          ./gradlew :app:dependencies --configuration releaseRuntimeClasspath > dist/DEPENDENCIES.txt
+          cp release/readiness.json dist/READINESS.json
+          cp release/OVERHAUL_RC4.md dist/CHANGELOG.md
+          cp docs/ANATOMY_ASSET_LICENSES.md dist/ANATOMY-LICENSES.md
+          cp app/src/main/assets/anatomy/*source.json dist/
+          cp app/build/outputs/mapping/release/mapping.txt dist/R8-MAPPING.txt
+          python3 - <<'PY'
+          import json,os,pathlib
+          pathlib.Path('dist/BUILD-PROVENANCE.json').write_text(json.dumps({'commit':os.environ['GITHUB_SHA'],'runUrl':f"https://github.com/{os.environ['GITHUB_REPOSITORY']}/actions/runs/{os.environ['GITHUB_RUN_ID']}",'distribution':'educational-unreviewed-prerelease','releaseAbi':'arm64-v8a','emulatorAbi':'x86_64','physicalArm64Test':False,'signing':'temporary-candidate-key'},indent=2))
+          PY
+          cd dist
+          sha256sum *.apk > SHA256SUMS.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: overhaul-release-candidate
+          path: dist/
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        with:
+          name: release-emulator-counterpart
+          path: verification-apk/
+          retention-days: 7
+      - name: Delete temporary signing material
+        if: always()
+        run: rm -f "$RUNNER_TEMP/rc4.jks" "$RUNNER_TEMP/aligned-arm64.apk" "$RUNNER_TEMP/aligned-x86.apk"
+  release-smoke:
+    needs: assemble
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        api: [26, 35]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: release-emulator-counterpart
+          path: verification-apk/
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: ${{ matrix.api }}
+          target: google_apis
+          arch: x86_64
+          disable-animations: true
+          script: python3 scripts/release-smoke.py verification-apk/release-x86_64.apk
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: release-smoke-api${{ matrix.api }}
+          path: release-verification/
+          if-no-files-found: error
+  publish:
+    needs: [quality, assemble, release-smoke]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: overhaul-release-candidate
+          path: dist/
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: release-smoke-api*
+          path: evidence/
+      - name: Publish candidate only after all exact-commit checks pass
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json,pathlib
+          reports=list(pathlib.Path('evidence').glob('*/result.json'))
+          assert len(reports)==2 and all(json.loads(p.read_text())['passed'] for p in reports)
+          assert {json.loads(p.read_text())['api'] for p in reports}=={'26','35'}
+          PY
+          zip -rq dist/RELEASE-DEVICE-EVIDENCE.zip evidence/
+          gh release create "v0.9.0-rc.4-overhaul-${GITHUB_RUN_NUMBER}" dist/* --target "$GITHUB_SHA" --title "دواء وحياة RC4 — ARM64 Release تعليمي" --notes-file release/OVERHAUL_RC4.md --prerelease

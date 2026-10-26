@@ -36,6 +36,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -80,7 +81,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, androidx.compose.ui.ExperimentalComposeUiApi::class)
 @Composable
 fun DawaHayahMainScaffold(
     viewModel: MainViewModel
@@ -106,6 +107,7 @@ fun DawaHayahMainScaffold(
     }
 
     Scaffold(
+        modifier = Modifier.semantics { testTagsAsResourceId = true },
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             TopAppBar(

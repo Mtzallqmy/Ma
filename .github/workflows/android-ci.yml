@@ -1,6 +1,7 @@
 name: Dawa & Hayah — Android CI & ARM64 Build Check
 
 on:
+  workflow_call:
   workflow_dispatch:
   push:
     branches:

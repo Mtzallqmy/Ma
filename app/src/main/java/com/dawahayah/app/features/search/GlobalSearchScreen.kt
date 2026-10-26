@@ -77,7 +77,7 @@ fun GlobalSearchScreen(
                     )
                 },
                 singleLine = true,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth().testTag("search_query")
             )
             if(state.searchResults.isNotEmpty())Text(if(isAr) "${state.searchResults.size} نتيجة" else "${state.searchResults.size} results",modifier=Modifier.testTag("search_has_results"))
             Spacer(modifier = Modifier.height(8.dp))

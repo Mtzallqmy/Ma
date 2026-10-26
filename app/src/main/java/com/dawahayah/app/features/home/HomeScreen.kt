@@ -59,7 +59,7 @@ fun HomeScreen(state: MainUiState, onNavigateTab: (PrimaryBottomTab) -> Unit,
                     HomeEntry(if(ar) "أجهزة الجسم" else "Body systems", if(ar) "التشريح والوظائف" else "Anatomy & function", Icons.Outlined.FavoriteBorder) {onNavigateTab(PrimaryBottomTab.BODY_SYSTEMS)},
                     HomeEntry(if(ar) "موسوعة الأمراض" else "Disease library", if(ar) "الفهم والروابط العلمية" else "Knowledge & connections", Icons.Outlined.Biotech) {onNavigateTab(PrimaryBottomTab.DISEASES)},
                     HomeEntry(if(ar) "موسوعة الأدوية" else "Medicine library", if(ar) "المواد والفئات والمصادر" else "Ingredients, classes & sources", Icons.Outlined.Medication) {onNavigateTab(PrimaryBottomTab.MEDICINES)},
-                    HomeEntry(if(ar) "التشريح التفاعلي" else "Interactive anatomy", if(ar) "النماذج المتاحة" else "Available models", Icons.Outlined.ViewInAr) {onNavigateAuxiliary(AuxiliaryRoutes.ANATOMY_SCENES)},
+                    HomeEntry(if(ar) "التشريح التفاعلي" else "Interactive anatomy", if(ar) "نماذج أصلية قابلة للتنزيل" else "Sourced models to download", Icons.Outlined.ViewInAr) {onNavigateAuxiliary(AuxiliaryRoutes.SOURCED_ANATOMY)},
                     HomeEntry(if(ar) "أكاديمية الصيدلة" else "Pharmacy academy", if(ar) "دروس واختبارات وحاسبات" else "Lessons, quizzes & calculators", Icons.Outlined.School) {onNavigateAuxiliary(AuxiliaryRoutes.ACADEMY)},
                     HomeEntry(if(ar) "مكتبتي والتنزيلات" else "Saved & offline", if(ar) "المفضلة وحزم المحتوى" else "Bookmarks & content packs", Icons.Outlined.CloudDownload) {onNavigateTab(PrimaryBottomTab.MY_LIBRARY)}
                 )
